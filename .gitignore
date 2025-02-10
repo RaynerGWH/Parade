@@ -1,0 +1,34 @@
+# Ignore compiled class files
+*.class
+
+# Ignore package files
+*.jar
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore IDE-specific files
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Ignore compiled directories
+bin/
+build/
+target/
+
+# Maven-related
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+
+# Misc
+.DS_Store  # macOS
+Thumbs.db  # Windows
