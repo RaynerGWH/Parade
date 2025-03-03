@@ -15,5 +15,9 @@ public class Game {
     // Other methods...
     public static void main(String[] args) {
         System.out.println("Welcome to the Parade Card Game!");
+        // single plyaer or multiplayer (fancy console art)
+        
+        System.out.println("Would you like to play Single Player or Multi Player");
+        // 
     }
 }
