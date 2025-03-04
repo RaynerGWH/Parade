@@ -15,6 +15,8 @@ public interface Player {
     
     // Returns the player's river.
     ArrayList<Card> getRiver();
+
+    String getName();
 }
 
 // import java.util.*;
