@@ -3,9 +3,9 @@ import java.util.Scanner;
 
 public class HumanPlayer extends AbstractPlayer {
     private Scanner scanner;
-    private String name;
+    private PlayerName name;
 
-    public HumanPlayer(ArrayList<Card> hand, String name, Scanner scanner) {
+    public HumanPlayer(ArrayList<Card> hand, PlayerName name, Scanner scanner) {
         super(hand);
         this.name = name;
         // Use the passed-in scanner rather than creating a new one
@@ -45,7 +45,7 @@ public class HumanPlayer extends AbstractPlayer {
         return card;
     }
     
-    public String getName() {
+    public PlayerName getName() {
         return name;
     }
 }
