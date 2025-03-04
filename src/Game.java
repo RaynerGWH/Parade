@@ -5,6 +5,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Random;
+import java.util.Collections;
 
 public class Game {
 
@@ -14,14 +16,90 @@ public class Game {
     private Deck deck = new Deck();
     Scanner scanner = new Scanner(System.in);
     private boolean gameIsOver = false;
+    private ArrayList<Card> parade;
 
     public Game(int numberOfPlayers) {
-        if (numberOfPlayers < 2) {
+        if (numberOfPlayers < 2 || numberOfPlayers > 8) {
             throw new IllegalArgumentException("At least 2 players are required to play the game.");
         }
         players = new ArrayList<>();
+
+        Deck deck = new Deck();
+
         // Initialize players and other game components here...
-    }
+
+        //Initialising players
+        for (int i = 0; i < numberOfPlayers; i++) {
+            //initialise hand for every player
+            ArrayList<Card> hand = new ArrayList<Card>();
+            for (int j = 0; j < 5; j++) {
+                hand.add(deck.drawCard());
+            }
+            
+            //initialise name(name is picked based on the Enum, corresponding to the idx of the player)
+            PlayerName name = PlayerName.values()[i];
+            HumanPlayer p = new HumanPlayer(hand, name, scanner);
+            players.add(p);
+        }
+
+        //Initialise parade
+        parade = new ArrayList<Card>();
+        for (int i = 0; i < 6; i++) {
+            parade.add(deck.drawCard());
+        }
+
+        System.out.println(parade.toString());
+        
+        //TODO: IMPLEMENT DECIDE PLAYER LOGIC
+
+        Random random = new Random();
+        Collections.shuffle(players,random);
+
+        while (!gameIsOver) {
+            
+            //we iterate until we flag the game is over
+            for (Player p:players) {
+                //player p makes a move
+                Card choice = null;
+                if (p instanceof HumanPlayer) {
+                    HumanPlayer hp = (HumanPlayer)p;
+                    choice = hp.chooseCardToPlay();
+                } else {
+                    BeginnerComputerPlayer bcp = (BeginnerComputerPlayer)p;
+                    choice = bcp.chooseCardToPlay();
+                }
+
+                int choiceValue = choice.getValue();
+                Color choiceColor = choice.getColor();
+
+                //we now check the parade, highlighting cards that should be removed and added to your river
+                ArrayList<Card> currRiver = p.getRiver();
+
+                //for removal of the cards, we count up (VALUE) cards (excluding the card we played)
+                //from there onwards, the cards that have
+                //a) a lower value than our card
+                //b) same color as our card
+                //will be added to the player's river
+
+                
+                for (int i = choiceValue; i < parade.size(); i++) {
+                    Card checkCard = parade.get(i);
+                    int checkValue = checkCard.getValue();
+                    Color checkColor = checkCard.getColor();
+
+                    if (checkColor.equals(choiceColor) || checkValue <= choiceValue) {
+                        //TODO: remove card from parade(most likely need to create a copy of it), add to the current player's river
+                    }
+                }
+
+                //add the current card to the parade
+                parade.add(choice);
+
+
+                //TODO: implement checks for game end logic
+            }
+        }
+    }   
 
     // public void setCard() {
     //     if (!deck.isEmpty()) {
@@ -38,9 +116,11 @@ public class Game {
         System.out.println("Would you like to play Single Player or Multi Player");
         // 
         System.out.print("Enter 'R' to refer to the rulebook: ");
+        System.out.println("Enter 'S' to start the game!");
         String command = scanner.nextLine().trim().toUpperCase();
         if (command.equals("R")) {
             scrollRulebook("rulebook.txt");
+
         } else {
             System.out.println("Command not recognized.");
         }
