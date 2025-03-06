@@ -35,7 +35,7 @@ public class Deck {
     // 2. drawCard() to remove cards when a card is drawn.
     public Card drawCard() {
         if (cards.isEmpty()) {
-            throw new IllegalStateException("The deck is empty!");
+            return null;
         }
         return cards.remove(0);
     }
@@ -61,5 +61,9 @@ public class Deck {
         cards.clear();
         cards.addAll(bottomHalf);
         cards.addAll(topHalf);
+    }
+
+    public void clearDeck() {
+        cards.clear();
     }
 }

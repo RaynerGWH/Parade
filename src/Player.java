@@ -17,6 +17,7 @@ public interface Player {
     ArrayList<Card> getRiver();
 
     String getName();
+
 }
 
 // import java.util.*;

@@ -1,25 +1,29 @@
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.rmi.StubNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Random;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.HashSet;
+import java.util.TreeMap;
 
 public class Game {
 
     private final List<HumanPlayer> players;
     private final List<BeginnerComputerPlayer> npcs;
 
-    private Deck deck = new Deck();
+    private Deck deck;
     Scanner scanner = new Scanner(System.in);
     private boolean gameIsOver = false;
     private ArrayList<Card> parade;
 
-    public Game(int numberOfPlayers, int numberOfHumanPlayers) {
+    public Game() {
+        this.deck = new Deck();
+        this.players = new ArrayList<>();
+        this.npcs = new ArrayList<>();
+    }
 
+    public TreeMap<Integer, ArrayList<Player>> startGame(int numberOfPlayers, int numberOfHumanPlayers) {
         if (numberOfPlayers < 2 || numberOfPlayers > 8) {
             throw new IllegalArgumentException("At least 2 players are required to play the game.");
         }
@@ -27,10 +31,6 @@ public class Game {
         if (numberOfHumanPlayers < 0 || numberOfHumanPlayers > numberOfPlayers) {
             throw new IllegalArgumentException("Invalid number of human players.");
         }
-
-        players = new ArrayList<>();
-
-        Deck deck = new Deck();
 
         // Initialize players and other game components here...
 
@@ -61,7 +61,6 @@ public class Game {
 
         // Initialise computer players until total players reach 'numberOfPlayers'
         int currentNumPlayers = players.size();
-        npcs = new ArrayList<>();
 
         while (currentNumPlayers < numberOfPlayers) {
             ArrayList<Card> hand = new ArrayList<>();
@@ -85,7 +84,6 @@ public class Game {
             parade.add(deck.drawCard());
         }
 
-        System.out.println(parade.toString());
 
         // Dice rolling logic if the game ONLY has human players.
         int startingIndex;
@@ -107,159 +105,145 @@ public class Game {
         combinedPlayers.addAll(players);
         combinedPlayers.addAll(npcs);
 
+        ArrayList<Integer> scores = new ArrayList<Integer>();
+        for (int i = 0; i < combinedPlayers.size(); i++) {
+            scores.add(0);
+        }
+
         while (!gameIsOver) {
 
             Player currentPlayer = combinedPlayers.get(currentPlayerIndex);
-
-            // Let the current player make their move.
-            Card choice = null;
-            if (currentPlayer instanceof HumanPlayer) {
-                HumanPlayer hp = (HumanPlayer) currentPlayer;
-                choice = hp.chooseCardToPlay();
-            } else {
-                BeginnerComputerPlayer bcp = (BeginnerComputerPlayer) currentPlayer;
-                choice = bcp.chooseCardToPlay();
-            }
-
-            int choiceValue = choice.getValue();
-            Color choiceColor = choice.getColor();
-
-            // Add the current card to the parade.
-            parade.add(choice);
-            
-            // Process the parade for cards to be removed and added to the current player's
-            // river.
-            ArrayList<Card> currRiver = currentPlayer.getRiver();
-            for (int i = choiceValue; i < parade.size(); i++) {
-                Card checkCard = parade.get(i);
-                int checkValue = checkCard.getValue();
-                Color checkColor = checkCard.getColor();
-                if (checkColor.equals(choiceColor) || checkValue <= choiceValue) {
-                    // TODO: remove card from parade (or create a copy) and add to currentPlayer's river
-                }
-            }
-
-            // old code (because now we are gna iterate through the list of players and go to next turn after every while loop iteration)
-            // ============================
-            // we iterate until we flag the game is over
-            // for (Player p : combinedPlayers) {
-            // // player p makes a move
-            // Card choice = null;
-            // if (p instanceof HumanPlayer) {
-            // HumanPlayer hp = (HumanPlayer) p;
-            // choice = hp.chooseCardToPlay();
-            // } else {
-            // BeginnerComputerPlayer bcp = (BeginnerComputerPlayer) p;
-            // choice = bcp.chooseCardToPlay();
-            // }
-
-            // int choiceValue = choice.getValue();
-            // Color choiceColor = choice.getColor();
-
-            // we now check the parade, highlighting cards that should be removed and added
-            // to your river
-            // ArrayList<Card> currRiver = p.getRiver();
-
-            // for removal of the cards, we count up (VALUE) cards (excluding the card we
-            // played)
-            // from there onwards, the cards that have
-            // a) a lower value than our card
-            // b) same color as our card
-            // will be added to the player's river
-
-            // ============================
-
-            // TODO: implement checks for game end logic.
-
+            gameIsOver = turn(currentPlayer, parade, deck);
             // Shift to next players' turn.
             currentPlayerIndex = (currentPlayerIndex + 1) % combinedPlayers.size();
         }
-    }
 
-    }
+        //The only time we break out of the loop is when the game is over. now, we play one final round, without drawing
+        //to stop the drawing mechanic, we set the deck to be empty.
 
-    // public void setCard() {
-    // if (!deck.isEmpty()) {
-    // Card newCard = deck.drawCard();
-    // players.drawCard(newCard);
-    // }
-    // }
-    // Other methods...
-    public static void main(String[] args) {
-        System.out.println("Welcome to the Parade Card Game!");
-        Scanner scanner = new Scanner(System.in);
-        // single plyaer or multiplayer (fancy console art)
+        deck.clearDeck();
 
-        System.out.println("Would you like to play Single Player or Multi Player");
-        //
-        System.out.print("Enter 'R' to refer to the rulebook: ");
-        System.out.println("Enter 'S' to start the game!");
-        String command = scanner.nextLine().trim().toUpperCase();
-        if (command.equals("R")) {
-            scrollRulebook("rulebook.txt");
+        for (int i = 0; i < combinedPlayers.size() - 1; i++) {
+            System.out.println("----------FINAL TURN: NO ONE CAN DRAW CARDS----------");
 
-        } else {
-            System.out.println("Command not recognized.");
+            //everyone EXCEPT the current player index at the last turn will move. no drawing will be done here.
+            Player p = combinedPlayers.get((i + currentPlayerIndex) % combinedPlayers.size());
+            turn(p, parade, deck);
         }
-    }
 
-    public static void scrollRulebook(String filePath) {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(filePath));
-            Scanner scanner = new Scanner(System.in);
-            int linesPerPage = 15;
-            int totalPages = (int) Math.ceil((double) lines.size() / linesPerPage);
-            int currentPage = 0;
-            String input;
-
-            while (true) {
-                // Display the current page
-                int start = currentPage * linesPerPage;
-                int end = Math.min(start + linesPerPage, lines.size());
-                System.out.println("\nPage " + (currentPage + 1) + " of " + totalPages + ":");
-                for (int i = start; i < end; i++) {
-                    System.out.println(lines.get(i));
-                }
-
-                // Prompt user for input
-                System.out.print("\nEnter (N)ext, (P)revious, or (Q)uit: ");
-                input = scanner.nextLine().trim().toUpperCase();
-
-                switch (input) {
-                    case "N":
-                        if (currentPage < totalPages - 1) {
-                            currentPage++;
-                        } else {
-                            System.out.println("This is the last page.");
-                        }
-                        break;
-                    case "P":
-                        if (currentPage > 0) {
-                            currentPage--;
-                        } else {
-                            System.out.println("This is the first page.");
-                        }
-                        break;
-                    case "Q":
-                        System.out.println("Exiting rulebook.");
-                        scanner.close();
-                        return;
-                    default:
-                        System.out.println("Invalid input. Please try again.");
-                }
+        //here, the game is over. as per the rules, each player will discard 2 cards from their hand
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("---------Choose cards from your hand to discard! Your remaining cards in the hand will be added to the parade, so choose wisely!---------");
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------");
+        
+        for (Player p:combinedPlayers) {
+            if (p instanceof HumanPlayer) {
+                HumanPlayer hp = (HumanPlayer)p;
+                hp.chooseCardToDiscard();
+                hp.chooseCardToDiscard();
+            } else {
+                BeginnerComputerPlayer bcp = (BeginnerComputerPlayer)p;
+                bcp.chooseCardToDiscard();
+                bcp.chooseCardToDiscard();
             }
-        } catch (IOException e) {
-            System.out.println("Error reading rulebook file: " + e.getMessage());
+
+            //we add the rest of their hand into their river.
+            ArrayList<Card> currentRiver = p.getRiver();
+            ArrayList<Card> hand = p.getHand();
+            for (Card c:hand) {
+                currentRiver.add(c);
+            }
+            //print the river for each player, and their name
+            Collections.sort(currentRiver, new CardComparator());
+            System.out.println(String.format("River for %s: " + currentRiver.toString(), p.getName()));
+            System.out.println();
         }
+
+        //we calculate the score for each player
+        ScoreCalculator scorer = new ScoreCalculator(combinedPlayers);
+        return scorer.getScoreMap();
     }
 
+    public static boolean turn(Player currentPlayer, ArrayList<Card> parade, Deck deck) {
+
+        boolean gameIsOver = false;
+    
+        System.out.println("THE PARADE: " + parade.toString());
+        System.out.println();
+    
+        // Let the current player make their move.
+        Card choice = null;
+        if (currentPlayer instanceof HumanPlayer) {
+            HumanPlayer hp = (HumanPlayer) currentPlayer;
+            choice = hp.chooseCardToPlay();
+        } else {
+            BeginnerComputerPlayer bcp = (BeginnerComputerPlayer) currentPlayer;
+            choice = bcp.chooseCardToPlay();
+        }
+    
+        int choiceValue = choice.getValue();
+        Color choiceColor = choice.getColor();
+    
+        // Add the current card to the parade.
+        parade.add(0, choice);
+        
+        // Process the parade for cards to be removed and added to the current player's river.
+        ArrayList<Card> currRiver = currentPlayer.getRiver();
+        Iterator<Card> iterator = parade.iterator();
+    
+        for (int i = 0; i < choiceValue; i++) {
+            if (iterator.hasNext()) {
+                iterator.next();
+            }
+        }
+    
+        while (iterator.hasNext()) {
+            Card checkCard = iterator.next();
+            int checkValue = checkCard.getValue();
+            Color checkColor = checkCard.getColor();
+    
+            if (checkColor.equals(choiceColor) || checkValue <= choiceValue) {
+                currRiver.add(checkCard);
+                iterator.remove();
+            }
+        }
+    
+        //game ends if the deck is empty OR the current river has one of each color
+        if (currRiver.size() != 0) {
+            Collections.sort(currRiver, new CardComparator());
+        }
+    
+        if (currRiver.size() != 0) {
+            //create a set to store the colors of the river
+            HashSet<Color> checkColor = new HashSet<Color>();
+            for (Card c:currRiver) {
+                checkColor.add(c.getColor());
+            }
+    
+            if (checkColor.size() == 6) {
+                gameIsOver = true;
+            }
+        }
+
+        System.out.println(currRiver.toString());
+    
+        Card toDraw = deck.drawCard();
+        if (toDraw == null) {
+            gameIsOver = true;
+        } else {
+            currentPlayer.drawCard(toDraw);
+        }
+
+        return gameIsOver;
+    }
+    
     // ------------------------------------------
     // STATIC DICE ROLLING METHODS (helper functions)
     // ------------------------------------------
     public static int determineStartingPlayerIndex(List<Player> players, Scanner scanner) {
         System.out.println("Rolling dice to determine who starts first...");
         List<Integer> diceRolls = new ArrayList<>();
-
+    
         // Roll dice for each player.
         for (Player p : players) {
             if (p instanceof HumanPlayer) {
@@ -270,7 +254,7 @@ public class Game {
             System.out.println(p.getName() + " rolled: " + roll);
             diceRolls.add(roll);
         }
-
+    
         // Find highest roll.
         int highestRoll = Collections.max(diceRolls);
         List<Integer> tiedIndices = new ArrayList<>();
@@ -279,7 +263,7 @@ public class Game {
                 tiedIndices.add(i);
             }
         }
-
+    
         if (tiedIndices.size() == 1) {
             int startingIndex = tiedIndices.get(0);
             System.out.println("The highest roll was " + highestRoll + ". "
@@ -299,11 +283,11 @@ public class Game {
             return finalIndex;
         }
     }
-
+    
     private static Player tieBreaker(List<Player> candidates, Scanner scanner) {
         int highestRoll = -1;
         List<Player> winners = new ArrayList<>();
-
+    
         for (Player p : candidates) {
             if (p instanceof HumanPlayer) {
                 System.out.println(p.getName() + ", press Enter to roll your dice for the tie-breaker...");
@@ -311,7 +295,7 @@ public class Game {
             }
             int roll = rollDice();
             System.out.println(p.getName() + " rolled: " + roll);
-
+    
             if (roll > highestRoll) {
                 highestRoll = roll;
                 winners.clear();
@@ -320,7 +304,7 @@ public class Game {
                 winners.add(p);
             }
         }
-
+    
         if (winners.size() == 1) {
             return winners.get(0);
         } else {
@@ -328,8 +312,9 @@ public class Game {
             return tieBreaker(winners, scanner);
         }
     }
-
+    
     private static int rollDice() {
         return (int) (Math.random() * 6) + 1;
     }
 }
+

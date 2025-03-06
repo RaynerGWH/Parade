@@ -24,6 +24,19 @@ public class BeginnerComputerPlayer extends AbstractPlayer {
         return card;
     }
 
+    @Override
+    public Card chooseCardToDiscard() {
+        if (hand.isEmpty()) {
+            System.out.println(name + " has no cards to play.");
+            return null;
+        }
+        // Completely random selection
+        int index = random.nextInt(hand.size());
+        Card card = playCard(index);
+        System.out.println(name + " (Beginner) discards: " + card);
+        return card;
+    }
+
     public String getName() {
         return name;
     }

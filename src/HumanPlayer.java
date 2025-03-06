@@ -44,6 +44,39 @@ public class HumanPlayer extends AbstractPlayer {
         System.out.println("You played: " + card);
         return card;
     }
+
+    @Override
+    public Card chooseCardToDiscard() {
+        if (hand.isEmpty()) {
+            System.out.println("You have no cards to play.");
+            return null;
+        }
+        
+        System.out.println("Your hand:");
+        for (int i = 0; i < hand.size(); i++) {
+            System.out.println(i + ": " + hand.get(i));
+        }
+        
+        int index = -1;
+        while (true) {
+            System.out.print(name + ", enter the index of the card you want to discard: ");
+            String input = scanner.nextLine();
+            try {
+                index = Integer.parseInt(input);
+                if (index >= 0 && index < hand.size()) {
+                    break;
+                } else {
+                    System.out.println("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + ".");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+            }
+        }
+        
+        Card card = playCard(index);
+        System.out.println("You discarded: " + card);
+        return card;
+    }
     
     public String getName() {
         return name;
