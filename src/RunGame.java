@@ -24,10 +24,10 @@ public class RunGame {
                 try {
                     sc = new Scanner(System.in);
 
-                    System.out.println("Enter number of TOTAL players:");
+                    System.out.print("Enter number of TOTAL players: ");
                     totalPlayers = Integer.parseInt(sc.nextLine());
 
-                    System.out.println("Enter number of human players:");
+                    System.out.print("Enter number of human players: ");
                     humanPlayers = Integer.parseInt(sc.nextLine());
                     
                     TreeMap<Integer,ArrayList<Player>> scores = g.startGame(totalPlayers, humanPlayers);
