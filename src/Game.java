@@ -173,7 +173,8 @@ public class Game {
 
         boolean gameIsOver = false;
 
-        System.out.println("THE PARADE: " + parade.toString());
+        System.out.println("─────────────────────────────────────");
+        System.out.println("THE PARADE: " + parade);
         System.out.println();
 
         // Let the current player make their move.
@@ -188,6 +189,7 @@ public class Game {
 
         int choiceValue = choice.getValue();
         Color choiceColor = choice.getColor();
+        ArrayList<Card> takenCards = new ArrayList<>(); // Store cards to be taken
 
         // Add the current card to the parade.
         parade.add(0, choice);
@@ -210,8 +212,16 @@ public class Game {
 
             if (checkColor.equals(choiceColor) || checkValue <= choiceValue) {
                 currRiver.add(checkCard);
+                takenCards.add(checkCard);
                 iterator.remove();
             }
+        }
+
+        // Display which cards were taken
+        if (!takenCards.isEmpty()) {
+            System.out.println(currentPlayer.getName() + " takes the following cards from the parade: " + takenCards);
+        } else {
+            System.out.println(currentPlayer.getName() + " takes no cards from the parade!");
         }
 
         // game ends if the deck is empty OR the current river has one of each color
@@ -231,7 +241,7 @@ public class Game {
             }
         }
 
-        System.out.println(currRiver.toString());
+        System.out.println(currentPlayer.getName() + "'s River: " + currRiver.toString());
 
         Card toDraw = deck.drawCard();
         if (toDraw == null) {
@@ -326,7 +336,7 @@ public class Game {
             // Delay for 1 second (1000 milliseconds)
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); 
+            Thread.currentThread().interrupt();
             System.err.println("Thread was interrupted, failed to complete delay");
         }
 

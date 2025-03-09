@@ -20,23 +20,23 @@ public class RunGame {
             Scanner sc = null;
             int humanPlayers = 0;
             int totalPlayers = 0;
+
+            sc = new Scanner(System.in);
             while (true) {
                 try {
-                    sc = new Scanner(System.in);
 
                     System.out.print("Enter number of TOTAL players: ");
                     totalPlayers = Integer.parseInt(sc.nextLine());
 
                     System.out.print("Enter number of human players: ");
                     humanPlayers = Integer.parseInt(sc.nextLine());
-                    
-                    TreeMap<Integer,ArrayList<Player>> scores = g.startGame(totalPlayers, humanPlayers);
+
+                    TreeMap<Integer, ArrayList<Player>> scores = g.startGame(totalPlayers, humanPlayers);
                     System.out.println(scores.toString());
-                    
-                    //handle scoring logic to determine the winner
+
+                    // handle scoring logic to determine the winner
                     printRankings(scores);
                     return;
-
 
                 } catch (NumberFormatException e) {
                     System.out.println("Please enter a number!");
@@ -44,7 +44,7 @@ public class RunGame {
                     sc.close();
                 }
             }
-            
+
         } else {
             System.out.println("Command not recognized.");
         }
@@ -52,11 +52,12 @@ public class RunGame {
     }
 
     public static void printRankings(TreeMap<Integer, ArrayList<Player>> scores) {
+        System.out.println("\n=== FINAL RANKINGS ===");
         int rank = 1;
         for (Map.Entry<Integer, ArrayList<Player>> entry : scores.entrySet()) {
             ArrayList<Player> players = entry.getValue();
             for (Player player : players) {
-                System.out.println(getOrdinal(rank) + ": " + player.getName());
+                System.out.println(getOrdinal(rank) + ": " + player.getName() + " | Score: " + entry.getKey());
             }
             rank += players.size(); // Increase rank appropriately
         }
@@ -67,10 +68,10 @@ public class RunGame {
             return rank + "th";
         }
         return switch (rank % 10) {
-            case 1 -> rank + "st";
-            case 2 -> rank + "nd";
-            case 3 -> rank + "rd";
-            default -> rank + "th";
+            case 1 -> rank + "ST";
+            case 2 -> rank + "ND";
+            case 3 -> rank + "RD";
+            default -> rank + "TH";
         };
     }
 
