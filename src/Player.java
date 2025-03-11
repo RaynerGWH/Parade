@@ -18,4 +18,10 @@ public interface Player {
 
     String getName();
 
+    // Return card to play
+    public abstract Card chooseCardToPlay();
+
+    // Return card to discard
+    public abstract Card chooseCardToDiscard();
+
 }
