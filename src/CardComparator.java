@@ -11,6 +11,7 @@ public class CardComparator implements Comparator<Card> {
         int c1Score = 0;
         int c2Score = 0;
 
+        // TODO: Combine switch statements
         switch (c1.getColor()) {
             case PURPLE:
                 c1Score = 1;
