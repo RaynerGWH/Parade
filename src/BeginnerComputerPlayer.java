@@ -31,8 +31,8 @@ public class BeginnerComputerPlayer extends AbstractPlayer {
             return null;
         }
         // Completely random selection
-        int index = random.nextInt(hand.size());
-        Card card = playCard(index);
+        int randomCardIndex = random.nextInt(hand.size());
+        Card card = playCard(randomCardIndex);
         System.out.println(name + " (Beginner) discards: " + card);
         return card;
     }
