@@ -47,8 +47,4 @@ public abstract class AbstractPlayer implements Player {
     public ArrayList<Card> getRiver() {
         return river;
     }
-
-    public abstract Card chooseCardToPlay();
-
-    public abstract Card chooseCardToDiscard();
 }
