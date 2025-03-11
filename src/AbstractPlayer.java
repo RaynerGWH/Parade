@@ -49,4 +49,6 @@ public abstract class AbstractPlayer implements Player {
     }
 
     public abstract Card chooseCardToPlay();
+
+    public abstract Card chooseCardToDiscard();
 }
