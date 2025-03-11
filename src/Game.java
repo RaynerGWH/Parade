@@ -23,6 +23,7 @@ public class Game {
     }
 
     public TreeMap<Integer, ArrayList<Player>> startGame(int numberOfPlayers, int numberOfHumanPlayers) {
+        // Handle exception of players below 2 and above 8
         if (numberOfPlayers < 2 || numberOfPlayers > 8) {
             throw new IllegalArgumentException("At least 2 players are required to play the game.");
         }
