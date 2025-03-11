@@ -1,4 +1,3 @@
-import java.rmi.StubNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -175,6 +174,7 @@ public class Game {
 
         System.out.println("─────────────────────────────────────");
         System.out.println("THE PARADE: " + parade);
+        System.out.println("─────────────────────────────────────");
         System.out.println();
 
         // Let the current player make their move.
