@@ -92,6 +92,7 @@ public class Game {
             System.out.println(allHumanPlayers.get(startingIndex).getName() + " will start first.");
         } else {
             // For human vs npc games, just let the first human start.
+            //TODO: change this
             startingIndex = 0;
         }
         System.out.println(players.get(startingIndex).getName() + " will start first.");
@@ -123,7 +124,9 @@ public class Game {
         deck.clearDeck();
 
         for (int i = 0; i < combinedPlayers.size() - 1; i++) {
-            System.out.println("----------FINAL TURN: NO ONE CAN DRAW CARDS----------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("--------------------------------------------FINAL TURN: NO ONE CAN DRAW CARDS--------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------");
 
             // everyone EXCEPT the current player index at the last turn will move. no
             // drawing will be done here.
@@ -189,7 +192,7 @@ public class Game {
 
         int choiceValue = choice.getValue();
         Color choiceColor = choice.getColor();
-        ArrayList<Card> takenCards = new ArrayList<>(); // Store cards to be taken
+        ArrayList<Card> takenCards = new ArrayList<>(); // Store cards to be aken
 
         // Add the current card to the parade.
         parade.add(0, choice);

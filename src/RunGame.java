@@ -4,6 +4,12 @@ import java.io.*;
 
 public class RunGame {
     public static void main(String[] args) {
+
+        System.out.println(" ____   _    ____      _    ____  _____ \r\n" + //
+                        "|  _ \\ / \\  |  _ \\    / \\  |  _ \\| ____|\r\n" + //
+                        "| |_) / _ \\ | |_) |  / _ \\ | | | |  _|  \r\n" + //
+                        "|  __/ ___ \\|  _ <  / ___ \\| |_| | |___ \r\n" + //
+                        "|_| /_/   \\_\\_| \\_\\/_/   \\_\\____/|_____|");
         System.out.println("Welcome to the Parade Card Game!");
         Scanner scanner = new Scanner(System.in);
         // single plyaer or multiplayer (fancy console art)
