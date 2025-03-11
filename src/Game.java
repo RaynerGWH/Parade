@@ -15,6 +15,8 @@ public class Game {
     Scanner scanner = new Scanner(System.in);
     private boolean gameIsOver = false;
     private ArrayList<Card> parade;
+    private final int STARTING_CARD_COUNT = 5;
+    private final int INITIAL_PARADE_LENGTH = 6;
 
     public Game() {
         this.deck = new Deck();
@@ -22,6 +24,7 @@ public class Game {
         this.npcs = new ArrayList<>();
     }
 
+    // Orders 
     public TreeMap<Integer, ArrayList<Player>> startGame(int numberOfPlayers, int numberOfHumanPlayers) {
         // Handle exception of players below 2 and above 8
         if (numberOfPlayers < 2 || numberOfPlayers > 8) {
@@ -64,7 +67,7 @@ public class Game {
 
         while (currentNumPlayers < numberOfPlayers) {
             ArrayList<Card> hand = new ArrayList<>();
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < STARTING_CARD_COUNT; j++) {
                 hand.add(deck.drawCard());
             }
 
@@ -80,19 +83,20 @@ public class Game {
         // Initialise parade
         parade = new ArrayList<Card>();
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < INITIAL_PARADE_LENGTH; i++) {
             parade.add(deck.drawCard());
         }
 
         // Dice rolling logic if the game ONLY has human players.
+        // TODO: Change IF logic, don't use num of players
         int startingIndex;
         if (numberOfHumanPlayers == numberOfPlayers) {
             // Convert players list to a List<Player> if necessary.
-            List<Player> allHumanPlayers = new ArrayList<>(players);
+            List<Player> allHumanPlayers = new ArrayList<>(players); // refactor this part
             startingIndex = determineStartingPlayerIndex(allHumanPlayers, scanner);
             System.out.println(allHumanPlayers.get(startingIndex).getName() + " will start first.");
         } else {
-            // For human vs npc games, just let the first human start.
+            // For human vs npc games, just let the first human start. SHUFFLE order of players.
             //TODO: change this
             startingIndex = 0;
         }
@@ -110,8 +114,8 @@ public class Game {
             scores.add(0);
         }
 
+        // Turn function
         while (!gameIsOver) {
-
             Player currentPlayer = combinedPlayers.get(currentPlayerIndex);
             gameIsOver = turn(currentPlayer, parade, deck);
             // Shift to next players' turn.
@@ -124,6 +128,7 @@ public class Game {
 
         deck.clearDeck();
 
+        // Bring out the FINAL TURN print, then call a separate function afterwards for per round
         for (int i = 0; i < combinedPlayers.size() - 1; i++) {
             System.out.println("-------------------------------------------------------------------------------------------------------------------------");
             System.out.println("--------------------------------------------FINAL TURN: NO ONE CAN DRAW CARDS--------------------------------------------");
@@ -146,10 +151,12 @@ public class Game {
 
         for (Player p : combinedPlayers) {
             if (p instanceof HumanPlayer) {
+                //TODO: remove casting
                 HumanPlayer hp = (HumanPlayer) p;
                 hp.chooseCardToDiscard();
                 hp.chooseCardToDiscard();
             } else {
+                //TODO: remove casting
                 BeginnerComputerPlayer bcp = (BeginnerComputerPlayer) p;
                 bcp.chooseCardToDiscard();
                 bcp.chooseCardToDiscard();
@@ -183,6 +190,8 @@ public class Game {
 
         // Let the current player make their move.
         Card choice = null;
+        // TODO: REMOVE this chunk
+        // Just do this: currentPlayer.chooseCardToPlay();
         if (currentPlayer instanceof HumanPlayer) {
             HumanPlayer hp = (HumanPlayer) currentPlayer;
             choice = hp.chooseCardToPlay();
@@ -193,8 +202,7 @@ public class Game {
 
         int choiceValue = choice.getValue();
         Color choiceColor = choice.getColor();
-        ArrayList<Card> takenCards = new ArrayList<>(); // Store cards to be aken
-
+        
         // Add the current card to the parade.
         parade.add(0, choice);
 
@@ -202,6 +210,7 @@ public class Game {
         // river.
         ArrayList<Card> currRiver = currentPlayer.getRiver();
         Iterator<Card> iterator = parade.iterator();
+        List<Card> takenCards = new ArrayList<Card>();
 
         for (int i = 0; i < choiceValue; i++) {
             if (iterator.hasNext()) {
@@ -229,30 +238,33 @@ public class Game {
         }
 
         // game ends if the deck is empty OR the current river has one of each color
+        //TODO: change currRiver name
         if (currRiver.size() != 0) {
             Collections.sort(currRiver, new CardComparator());
         }
 
+        // Change to one function instead
         if (currRiver.size() != 0) {
-            // create a set to store the colors of the river
+            // create a set to store the colors of the river, avoid duplicates
             HashSet<Color> checkColor = new HashSet<Color>();
             for (Card c : currRiver) {
                 checkColor.add(c.getColor());
             }
 
+            // if per river size == 6
             if (checkColor.size() == 6) {
                 gameIsOver = true;
             }
         }
-
-        System.out.println(currentPlayer.getName() + "'s River: " + currRiver.toString());
-
+        
         Card toDraw = deck.drawCard();
         if (toDraw == null) {
             gameIsOver = true;
         } else {
             currentPlayer.drawCard(toDraw);
         }
+
+        System.out.println(currentPlayer.getName() + "'s River: " + currRiver.toString());
 
         return gameIsOver;
     }
