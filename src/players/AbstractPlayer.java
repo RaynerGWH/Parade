@@ -3,10 +3,10 @@ import java.util.Collections;
 
 public abstract class AbstractPlayer implements Player {
     // Store the player's current hand.
-    protected ArrayList<Card> hand;
+    protected List<Card> hand;
     
     // Store the player's river (score pile).
-    protected ArrayList<Card> river;
+    protected List<Card> river;
 
     // Constructor
     public AbstractPlayer(ArrayList<Card> hand) {
