@@ -19,7 +19,7 @@ public class RunGame {
         System.out.print("Enter 'R' to refer to the rulebook, or 'S' to start the game: ");
         String command = scanner.nextLine().trim().toUpperCase();
         if (command.equals("R")) {
-            scrollRulebook("rulebook.txt");
+            scrollRulebook("rulebook/rulebook.txt");
 
         } else if (command.equals("S")) {
             Game g = new Game();
