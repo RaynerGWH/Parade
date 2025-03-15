@@ -1,12 +1,11 @@
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public abstract class AbstractPlayer implements Player {
     // Store the player's current hand.
-    protected List<Card> hand;
+    protected ArrayList<Card> hand;
     
     // Store the player's river (score pile).
-    protected List<Card> river;
+    protected ArrayList<Card> river;
 
     // Constructor
     public AbstractPlayer(ArrayList<Card> hand) {
