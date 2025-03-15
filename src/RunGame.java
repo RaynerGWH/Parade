@@ -12,7 +12,7 @@ public class RunGame {
                         "|_| /_/   \\_\\_| \\_\\/_/   \\_\\____/|_____|");
         System.out.println("Welcome to the Parade Card Game!");
         Scanner scanner = new Scanner(System.in);
-        // single plyaer or multiplayer (fancy console art)
+        // single player or multiplayer (fancy console art)
 
         System.out.println("Would you like to play Single Player or Multi Player");
 
