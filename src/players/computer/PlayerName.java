@@ -1,3 +1,8 @@
+package players.computer;
+
+import cards.*;
+import players.*;
+
 // Note: The game will only support up to EIGHT players. 
 // Hence, only 8 available player names.
 

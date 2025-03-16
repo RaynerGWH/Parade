@@ -1,3 +1,7 @@
+package players;
+
+import cards.*;
+
 import java.util.*;
 
 public abstract class AbstractPlayer implements Player {

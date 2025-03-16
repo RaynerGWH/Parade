@@ -1,3 +1,5 @@
+package cards;
+
 public class Card {
 
     // Instance Variables

@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.HashSet;
 import java.util.TreeMap;
 
+import players.*;
+import players.computer.*;
+import cards.*;
+
 public class Game {
 
     private final List<HumanPlayer> players;

@@ -1,3 +1,8 @@
+package players.computer;
+
+import cards.*;
+import players.*;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Collections;

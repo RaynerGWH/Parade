@@ -1,1 +1,1 @@
-java -cp "classes" RunGame
+java -cp "cards;players;classes" RunGame
