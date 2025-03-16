@@ -1,3 +1,8 @@
+package players.computer;
+
+import players.*;
+import cards.*;
+
 import java.util.ArrayList;
 import java.util.Random;
 

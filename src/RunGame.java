@@ -1,3 +1,6 @@
+import players.*;
+import players.computer.*;
+
 import java.util.*;
 import java.nio.file.*;
 import java.io.*;

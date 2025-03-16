@@ -1,3 +1,7 @@
+import players.*;
+import players.computer.*;
+import cards.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
