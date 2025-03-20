@@ -1,10 +1,7 @@
-import java.util.*;
-import java.nio.file.*;
 import java.io.*;
-
+import java.nio.file.*;
+import java.util.*;
 import players.*;
-import players.computer.*;
-import cards.*;
 
 public class RunGame {
     public static void main(String[] args) {
@@ -42,7 +39,6 @@ public class RunGame {
                     humanPlayers = Integer.parseInt(sc.nextLine());
 
                     TreeMap<Integer, ArrayList<Player>> scores = g.startGame(totalPlayers, humanPlayers);
-                    System.out.println(scores.toString());
 
                     // handle scoring logic to determine the winner
                     printRankings(scores);
