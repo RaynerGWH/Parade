@@ -62,5 +62,4 @@ public class Account {
     public String toString() {
         return String.format("%s/%s/%d/%d/%.0f/%s", id, username, wins, losses, balance, unlockedFlairs);
     }
-    
 }

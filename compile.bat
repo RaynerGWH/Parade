@@ -1,1 +1,1 @@
-javac -d classes -cp "players;cards;src" src/RunGame.java
+javac -d classes -cp "src" src/RunGame.java

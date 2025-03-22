@@ -25,6 +25,7 @@ public class RunGame {
             scrollRulebook("rulebook/rulebook.txt");
 
         } else if (command.equals("S")) {
+            //TODO: HANDLE INITAL BET INFORMATION
             Game g = new Game();
             Scanner sc = null;
             int humanPlayers = 0;
@@ -33,7 +34,6 @@ public class RunGame {
             sc = new Scanner(System.in);
             while (true) {
                 try {
-
                     System.out.print("Enter number of TOTAL players: ");
                     totalPlayers = Integer.parseInt(sc.nextLine());
 
@@ -41,10 +41,11 @@ public class RunGame {
                     humanPlayers = Integer.parseInt(sc.nextLine());
 
                     TreeMap<Integer, ArrayList<Player>> scores = g.startGame(totalPlayers, humanPlayers);
-                    System.out.println(scores.toString());
 
                     // handle scoring logic to determine the winner
                     printRankings(scores);
+
+                    //TODO: HANDLE REWARD LOGIC
                     return;
 
                 } catch (NumberFormatException e) {
