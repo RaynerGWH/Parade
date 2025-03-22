@@ -1,9 +1,9 @@
-import players.*;
-import players.computer.*;
-
-import java.util.*;
-import java.nio.file.*;
 import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+
+import players.computer.*;
+import players.*;
 
 public class RunGame {
     public static void main(String[] args) {
