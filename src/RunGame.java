@@ -1,12 +1,30 @@
+import account.*;
+import players.*;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-import players.computer.*;
-import players.*;
-
 public class RunGame {
+    Scanner sc = new Scanner(System.in);
+    AccountFileManager acctMgr = new AccountFileManager(sc);
+
+    ArrayList<Account> accounts = new ArrayList<Account>();
+
+    //IMPORTANT
+    //in the main game, accounts will be accepted via websocket and added to this arraylist.
+    //for testing purposes, my "account" will be hardcoded in.
+
+    PlayerManager playerMgr = new PlayerManager(accounts);
+
+    //TODO: Somehow pass accounts into here.
     public static void main(String[] args) {
+
+        RunGame rg = new RunGame();
+
+        //DELETE ME
+        rg.accounts.add(rg.acctMgr.initialize());
+
 
         System.out.println(" ____   _    ____      _    ____  _____ \r\n" + //
                         "|  _ \\ / \\  |  _ \\    / \\  |  _ \\| ____|\r\n" + //
@@ -14,51 +32,54 @@ public class RunGame {
                         "|  __/ ___ \\|  _ <  / ___ \\| |_| | |___ \r\n" + //
                         "|_| /_/   \\_\\_| \\_\\/_/   \\_\\____/|_____|");
         System.out.println("Welcome to the Parade Card Game!");
-        Scanner scanner = new Scanner(System.in);
         // single player or multiplayer (fancy console art)
 
         System.out.println("Would you like to play Single Player or Multi Player");
+        //TODO: add single/multiplayer functionality
 
         System.out.print("Enter 'R' to refer to the rulebook, or 'S' to start the game: ");
-        String command = scanner.nextLine().trim().toUpperCase();
+        String command = rg.sc.nextLine().trim().toUpperCase();
         if (command.equals("R")) {
             scrollRulebook("rulebook/rulebook.txt");
 
         } else if (command.equals("S")) {
-            //TODO: HANDLE INITAL BET INFORMATION
-            Game g = new Game();
-            Scanner sc = null;
-            int humanPlayers = 0;
-            int totalPlayers = 0;
-
-            sc = new Scanner(System.in);
+            int numPlayers = rg.accounts.size();
             while (true) {
                 try {
-                    System.out.print("Enter number of TOTAL players: ");
-                    totalPlayers = Integer.parseInt(sc.nextLine());
+                    int numBots = 0;
 
-                    System.out.print("Enter number of human players: ");
-                    humanPlayers = Integer.parseInt(sc.nextLine());
+                    if (numPlayers < 8) {
+                        System.out.print("Enter number of Bots: ");
+                        numBots = Integer.parseInt(rg.sc.nextLine());
+                        if (numPlayers + numBots > 8) {
+                            throw new NumberFormatException();
+                        }
+                    }
+                    
+                    rg.playerMgr.initializeComputerPlayers(numBots);
+                    rg.playerMgr.initializeHumanPlayers();
+                    rg.playerMgr.setTurnOrder(numBots);
 
-                    TreeMap<Integer, ArrayList<Player>> scores = g.startGame(totalPlayers, humanPlayers);
+                    Game g = new Game(rg.playerMgr.getPlayers());
 
-                    // handle scoring logic to determine the winner
+                    TreeMap<Integer, ArrayList<Player>> scores = g.startGame();
+
                     printRankings(scores);
 
-                    //TODO: HANDLE REWARD LOGIC
+                    //TODO: handle reward logic
                     return;
 
                 } catch (NumberFormatException e) {
-                    System.out.println("Please enter a number!");
+                    System.out.println("Please enter a valid number!");
                 } finally {
-                    sc.close();
+                    rg.sc.close();
                 }
             }
 
         } else {
             System.out.println("Command not recognized.");
         }
-        scanner.close();
+        rg.sc.close();
     }
 
     public static void printRankings(TreeMap<Integer, ArrayList<Player>> scores) {

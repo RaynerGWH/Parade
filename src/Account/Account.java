@@ -1,8 +1,11 @@
+package account;
+
 import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Account {
+public class Account implements Serializable {
     private UUID id;
     private String username;
     private int wins;
@@ -18,6 +21,7 @@ public class Account {
         this.balance = balance;
         this.unlockedFlairs = unlockedFlairs;
     }
+
 
     //overloaded constructor(for new account)
     public Account(String username) {

@@ -1,3 +1,5 @@
+package account;
+
 public class CryptoUtils {
     private static final String SEED = "RAYNER";
     private static final byte[] SEED_BYTES = SEED.getBytes();

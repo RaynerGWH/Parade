@@ -1,6 +1,5 @@
 import cards.*;
 import players.*;
-import players.computer.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,47 +9,30 @@ import java.util.Iterator;
 import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.HashMap;
-import java.util.Map;
-
-import players.*;
-import players.computer.*;
-import cards.*;
 
 public class Game {
 
-    private final List<HumanPlayer> players;
-    private final List<BeginnerComputerPlayer> npcs;
+    private List<Player> combinedPlayers;
 
     private Deck deck;
     Scanner scanner = new Scanner(System.in);
     private boolean gameIsOver = false;
     private ArrayList<Card> parade;
-    private final int STARTING_CARD_COUNT = 5;
     private final int INITIAL_PARADE_LENGTH = 6;
 
     // Add new timer-related fields
     private boolean timedMode = false;
     private long gameStartTime;
-    private long gameDuration; // in milliseconds
+
     private long timeLimit; // in milliseconds
     private HashMap<Player, Integer> timeBonus = new HashMap<>();
 
-    public Game() {
+    public Game(ArrayList<Player> players) {
         this.deck = new Deck();
-        this.players = new ArrayList<>();
-        this.npcs = new ArrayList<>();
+        this.combinedPlayers = players;
     }
 
-    // Orders 
-    public TreeMap<Integer, ArrayList<Player>> startGame(int numberOfPlayers, int numberOfHumanPlayers) {
-        // Handle exception of players below 2 and above 8
-        if (numberOfPlayers < 2 || numberOfPlayers > 8) {
-            throw new IllegalArgumentException("At least 2 players are required to play the game.");
-        }
-
-        if (numberOfHumanPlayers < 0 || numberOfHumanPlayers > numberOfPlayers) {
-            throw new IllegalArgumentException("Invalid number of human players.");
-        }
+    public TreeMap<Integer, ArrayList<Player>> startGame() {
 
         // Game mode selection with validation
         boolean validGameMode = false;
@@ -113,50 +95,6 @@ public class Game {
             }
         }
 
-        // Initialize players and other game components here...
-
-        // Initialising players
-        for (int i = 0; i < numberOfHumanPlayers; i++) {
-            // initialise hand for every player
-            ArrayList<Card> hand = new ArrayList<Card>();
-            for (int j = 0; j < 5; j++) {
-                hand.add(deck.drawCard());
-            }
-
-            // Create the human player with their own entered name.
-            System.out.print("Enter name for human player " + (i + 1) + ": ");
-            String inputName = scanner.nextLine().trim();
-
-            // If inputName is empty, we'll simply give them a name like: "Player 1" or
-            // "Player 2".
-            if (inputName.isEmpty()) {
-                inputName = "Player " + (i + 1);
-            }
-
-            HumanPlayer p = new HumanPlayer(hand, inputName, scanner);
-            players.add(p);
-        }
-
-        // Create the computer player with the enum names.
-        PlayerNameManager nameManager = new PlayerNameManager();
-
-        // Initialise computer players until total players reach 'numberOfPlayers'
-        int currentNumPlayers = players.size();
-
-        while (currentNumPlayers < numberOfPlayers) {
-            ArrayList<Card> hand = new ArrayList<>();
-            for (int j = 0; j < STARTING_CARD_COUNT; j++) {
-                hand.add(deck.drawCard());
-            }
-
-            // Assign a unique name from the name manager
-            PlayerName computerName = nameManager.assignName();
-
-            // Create a computer player using the assigned name.
-            BeginnerComputerPlayer cp = new BeginnerComputerPlayer(hand, computerName.getDisplayName());
-            npcs.add(cp);
-            currentNumPlayers++;
-        }
 
         // Initialise parade
         parade = new ArrayList<Card>();
@@ -165,26 +103,7 @@ public class Game {
             parade.add(deck.drawCard());
         }
 
-        // Dice rolling logic if the game ONLY has human players.
-        // TODO: Change IF logic, don't use num of players
-        int startingIndex;
-        if (numberOfHumanPlayers == numberOfPlayers) {
-            // Convert players list to a List<Player> if necessary.
-            List<Player> allHumanPlayers = new ArrayList<>(players); // refactor this part
-            startingIndex = determineStartingPlayerIndex(allHumanPlayers, scanner);
-        } else {
-            // For human vs npc games, just let the first human start. SHUFFLE order of players.
-            //TODO: change this
-            startingIndex = 0;
-        }
-        System.out.println(players.get(startingIndex).getName() + " will start first.");
-
-        int currentPlayerIndex = startingIndex;
-
-        // Combine human and npc players for easy iteration of player turns.
-        List<Player> combinedPlayers = new ArrayList<>();
-        combinedPlayers.addAll(players);
-        combinedPlayers.addAll(npcs);
+        int currentPlayerIndex = 0;
 
         // Initialize time bonus map with actual players
         if (timedMode) {
@@ -203,6 +122,8 @@ public class Game {
             System.out.println("---------------------------\n");
         }
 
+
+
         ArrayList<Integer> scores = new ArrayList<Integer>();
         for (int i = 0; i < combinedPlayers.size(); i++) {
             scores.add(0);
@@ -210,6 +131,9 @@ public class Game {
 
         // Turn function
         while (!gameIsOver) {
+            for (int i = 0; i < combinedPlayers.size(); i++) {
+                System.out.println(combinedPlayers.get(i).getName());
+            }
             Player currentPlayer = combinedPlayers.get(currentPlayerIndex);
             
             // Check if time has run out in timed mode
@@ -274,19 +198,23 @@ public class Game {
         System.out.println();  // Add extra spacing before starting
 
         for (Player p : combinedPlayers) {
-            if (p instanceof HumanPlayer) {
-                //TODO: remove casting
-                HumanPlayer hp = (HumanPlayer) p;
-                hp.chooseCardToDiscard();
+                p.chooseCardToDiscard();
                 System.out.println();  // Add spacing between first and second discard
-                hp.chooseCardToDiscard();
-            } else {
-                //TODO: remove casting
-                BeginnerComputerPlayer bcp = (BeginnerComputerPlayer) p;
-                bcp.chooseCardToDiscard();
-                System.out.println();  // Add spacing between first and second discard
-                bcp.chooseCardToDiscard();
-            }
+                p.chooseCardToDiscard();
+
+            // if (p instanceof HumanPlayer) {
+            //     //TODO: remove casting
+            //     HumanPlayer hp = (HumanPlayer) p;
+            //     hp.chooseCardToDiscard();
+            //     System.out.println();  // Add spacing between first and second discard
+            //     hp.chooseCardToDiscard();
+            // } else {
+            //     //TODO: remove casting
+            //     BeginnerComputerPlayer bcp = (BeginnerComputerPlayer) p;
+            //     bcp.chooseCardToDiscard();
+            //     System.out.println();  // Add spacing between first and second discard
+            //     bcp.chooseCardToDiscard();
+            // }
 
             // we add the rest of their hand into their river.
             ArrayList<Card> currentRiver = p.getRiver();
@@ -377,15 +305,15 @@ public class Game {
 
         // Let the current player make their move.
         Card choice = null;
-        // TODO: REMOVE this chunk
-        // Just do this: currentPlayer.chooseCardToPlay();
-        if (currentPlayer instanceof HumanPlayer) {
-            HumanPlayer hp = (HumanPlayer) currentPlayer;
-            choice = hp.chooseCardToPlay();
-        } else {
-            BeginnerComputerPlayer bcp = (BeginnerComputerPlayer) currentPlayer;
-            choice = bcp.chooseCardToPlay();
-        }
+        
+        choice = currentPlayer.chooseCardToPlay();
+        // if (currentPlayer instanceof HumanPlayer) {
+        //     HumanPlayer hp = (HumanPlayer) currentPlayer;
+        //     choice = hp.chooseCardToPlay();
+        // } else {
+        //     BeginnerComputerPlayer bcp = (BeginnerComputerPlayer) currentPlayer;
+        //     choice = bcp.chooseCardToPlay();
+        // }
 
         int choiceValue = choice.getValue();
         Color choiceColor = choice.getColor();
@@ -459,147 +387,6 @@ public class Game {
         return gameIsOver;
     }
 
-    // ------------------------------------------
-    // STATIC DICE ROLLING METHODS (helper functions)
-    // ------------------------------------------
-    public static int determineStartingPlayerIndex(List<Player> players, Scanner scanner) {
-        System.out.println("Rolling dice to determine who starts first...");
-        List<Integer> diceRolls = new ArrayList<>();
-
-        // Roll dice for each player.
-        for (Player p : players) {
-            if (p instanceof HumanPlayer) {
-                System.out.print(p.getName() + ", press Enter to roll your dice...");
-                scanner.nextLine();
-            }
-            int roll = rollDice();
-            System.out.println(p.getName() + " rolled: " + roll);
-            diceRolls.add(roll);
-        }
-
-        // Find highest roll.
-        int highestRoll = Collections.max(diceRolls);
-        List<Integer> tiedIndices = new ArrayList<>();
-        for (int i = 0; i < diceRolls.size(); i++) {
-            if (diceRolls.get(i) == highestRoll) {
-                tiedIndices.add(i);
-            }
-        }
-
-        if (tiedIndices.size() == 1) {
-            int startingIndex = tiedIndices.get(0);
-            System.out.println("The highest roll was " + highestRoll + ".");
-            return startingIndex;
-        } else {
-            System.out.println("There's a tie between the following players:");
-            List<Player> tiedPlayers = new ArrayList<>();
-            for (int idx : tiedIndices) {
-                tiedPlayers.add(players.get(idx));
-                System.out.println("- " + players.get(idx).getName());
-            }
-            System.out.println("Re-rolling among tied players...");
-            Player winner = tieBreaker(tiedPlayers, scanner);
-            int finalIndex = players.indexOf(winner);
-            return finalIndex;
-        }
-    }
-
-    private static Player tieBreaker(List<Player> candidates, Scanner scanner) {
-        int highestRoll = -1;
-        List<Player> winners = new ArrayList<>();
-
-        for (Player p : candidates) {
-            if (p instanceof HumanPlayer) {
-                System.out.print(p.getName() + ", press Enter to roll your dice for the tie-breaker...");
-                scanner.nextLine();
-            }
-            int roll = rollDice();
-            System.out.println(p.getName() + " rolled: " + roll);
-
-            if (roll > highestRoll) {
-                highestRoll = roll;
-                winners.clear();
-                winners.add(p);
-            } else if (roll == highestRoll) {
-                winners.add(p);
-            }
-        }
-
-        if (winners.size() == 1) {
-            return winners.get(0);
-        } else {
-            System.out.println("There's still a tie. Re-rolling among tied players...");
-            return tieBreaker(winners, scanner);
-        }
-    }
-
-    private static int rollDice() {
-        System.out.println("Dice Rolling.....");
-
-        try {
-            // Delay for 1 second (1000 milliseconds)
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            System.err.println("Thread was interrupted, failed to complete delay");
-        }
-
-        int rollResult = (int) (Math.random() * 6) + 1;
-        printDiceFace(rollResult);
-
-        return rollResult;
-    }
-
-    // Dice Roll Ascii Art (this can be changed up later..)
-    private static void printDiceFace(int roll) {
-        switch (roll) {
-            case 1:
-                System.out.println("-----");
-                System.out.println("|   |");
-                System.out.println("| * |");
-                System.out.println("|   |");
-                System.out.println("-----");
-                break;
-            case 2:
-                System.out.println("-----");
-                System.out.println("|*  |");
-                System.out.println("|   |");
-                System.out.println("|  *|");
-                System.out.println("-----");
-                break;
-            case 3:
-                System.out.println("-----");
-                System.out.println("|*  |");
-                System.out.println("| * |");
-                System.out.println("|  *|");
-                System.out.println("-----");
-                break;
-            case 4:
-                System.out.println("-----");
-                System.out.println("|* *|");
-                System.out.println("|   |");
-                System.out.println("|* *|");
-                System.out.println("-----");
-                break;
-            case 5:
-                System.out.println("-----");
-                System.out.println("|* *|");
-                System.out.println("| * |");
-                System.out.println("|* *|");
-                System.out.println("-----");
-                break;
-            case 6:
-                System.out.println("-----");
-                System.out.println("|* *|");
-                System.out.println("|* *|");
-                System.out.println("|* *|");
-                System.out.println("-----");
-                break;
-            default:
-                System.out.println("Invalid roll");
-        }
-    }
-
     // Calculate time bonus based on how quickly the player made their move
     private int calculateTimeBonus(long turnDuration) {
         // For a 1-minute game, quick moves should be rewarded more
@@ -633,10 +420,12 @@ public class Game {
         StringBuilder progressBar = new StringBuilder("[");
         for (int i = 0; i < barLength; i++) {
             if (i < filledBars) {
-                progressBar.append("=");
-            } else if (i == filledBars && progress < 1.0) { // Only show > if not at 100%
-                progressBar.append(">");
-            } else {
+                progressBar.append("█");
+            }
+            // } else if (i == filledBars && progress < 1.0) { // Only show > if not at 100%
+            //     progressBar.append(">");
+            // } 
+            else {
                 progressBar.append(" ");
             }
         }

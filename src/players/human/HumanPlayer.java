@@ -1,6 +1,8 @@
-package players;
+package players.human;
 
 import cards.*;
+import players.AbstractPlayer;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 

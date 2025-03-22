@@ -1,3 +1,5 @@
+package account;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
@@ -9,19 +11,42 @@ public class AccountFileManager {
     private static final String HEADER = "ID/NAME/WIN/LOSS/BALANCE-[FLAIR]\n";
     private static final String USERNAME_REGEX = "^[A-Za-z0-9]+$";
 
-    public Account initialize() throws IOException, CorruptFileException, Exception {
-        File pg1File = findPg1File();
-        Account a;
-        if (pg1File == null) {
-            a = createNewAccount();
+    private Scanner sc;
 
-        } else {
-            a = processExistingFile(pg1File);
+    public AccountFileManager(Scanner sc) {
+        this.sc = sc;
+    }
+    
+    ArrayList<Account> accounts = new ArrayList<Account>();
+
+    public Account initialize() {
+        try {
+            File pg1File = findPg1File();
+            Account a;
+            if (pg1File == null) {
+                a = createNewAccount();
+
+            } else {
+                a = processExistingFile(pg1File);
+            }
+
+            save(a);
+            accounts.add(a);
+            return a;
+
+        } catch (IOException e) {
+            System.out.println("An error has occured");
+            e.printStackTrace();
+            return null;
+        } catch (CorruptFileException e) {
+            System.out.println("An error has occured");
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            System.out.println("An error has occured");
+            e.printStackTrace();
+            return null;
         }
-
-        //save(a): backup
-        save(a);
-        return a;
     }
 
     private File findPg1File() {
@@ -31,7 +56,6 @@ public class AccountFileManager {
     }
 
     private Account processExistingFile(File file) throws IOException, FileNotFoundException, CorruptFileException {
-        Scanner sc = new Scanner(file);
         byte[] encryptedData = Files.readAllBytes(file.toPath());
         byte[] decryptedData = CryptoUtils.xorCipher(encryptedData);
         String content = new String(decryptedData);
@@ -39,7 +63,6 @@ public class AccountFileManager {
 System.out.println(content);
 
         validateHeader(content);
-        sc.close();
 
         Account a = parseContent(content);
         return a;
@@ -87,43 +110,36 @@ System.out.println(content);
     }
 
     private Account createNewAccount() throws IOException {
-        Scanner sc = new Scanner(System.in);
+        System.out.print("No existing account found. Would you like to create a new account?(Y/N) > ");
+        String response = sc.nextLine().trim().toUpperCase();
 
-        try {
-            System.out.print("No existing account found. Would you like to create a new account?(Y/N) > ");
-            String response = sc.nextLine().trim().toUpperCase();
+        while (!response.equals("Y") && !response.equals("N")) {
+            System.out.println("Invalid input. Would you like to create a new account?(Y/N)");
+            response = sc.nextLine();
+        }
 
-            while (!response.equals("Y") && !response.equals("N")) {
-                System.out.println("Invalid input. Would you like to create a new account?(Y/N)");
-                response = sc.nextLine();
-            }
+        if (response.equals("Y")) {
+            while (true) {
+                System.out.print("Enter username(alphanumeric only, i.e. A-Z, a-z, 0-9) >");
+                String username = sc.nextLine();
 
-            if (response.equals("Y")) {
-                while (true) {
-                    System.out.print("Enter username(alphanumeric only, i.e. A-Z, a-z, 0-9) >");
-                    String username = sc.nextLine();
-
-                    //validate username using regex
-                    if (validateUsername(username)) {
-                        return new Account(username);
-                    }
-                    System.out.println("Invalid username (alphanumeric only).");
+                //validate username using regex
+                if (validateUsername(username)) {
+                    return new Account(username);
                 }
-
-            } else {
-                throw new IOException("An account is required to play the game. Please create an account.");
+                System.out.println("Invalid username (alphanumeric only).");
             }
-        } finally {
-            sc.close();
+
+        } else {
+            throw new IOException("An account is required to play the game. Please create an account.");
         }
     }
 
-    private boolean validateUsername(String username) throws IllegalArgumentException {
+    private boolean validateUsername(String username){
         if (username.matches(USERNAME_REGEX)) {
             return true;
         }
-
-        throw new IllegalArgumentException();
+        return false;
     }
 
     public void save(Account account) throws IOException {
@@ -137,5 +153,9 @@ System.out.println(content);
         } catch (IOException e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
+    }
+
+    public ArrayList<Account> getAccounts() {
+        return accounts;
     }
 }

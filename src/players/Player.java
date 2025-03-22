@@ -1,7 +1,6 @@
 package players;
 
 import cards.*;
-
 import java.util.ArrayList;
 
 public interface Player {
@@ -27,5 +26,4 @@ public interface Player {
 
     // Return card to discard
     public abstract Card chooseCardToDiscard();
-
 }
