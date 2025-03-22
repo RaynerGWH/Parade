@@ -1,3 +1,7 @@
+import cards.*;
+import players.*;
+import players.computer.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

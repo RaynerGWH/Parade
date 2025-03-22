@@ -1,6 +1,8 @@
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+
+import players.computer.*;
 import players.*;
 
 public class RunGame {
@@ -23,6 +25,7 @@ public class RunGame {
             scrollRulebook("rulebook/rulebook.txt");
 
         } else if (command.equals("S")) {
+            //TODO: HANDLE INITAL BET INFORMATION
             Game g = new Game();
             Scanner sc = null;
             int humanPlayers = 0;
@@ -31,7 +34,6 @@ public class RunGame {
             sc = new Scanner(System.in);
             while (true) {
                 try {
-
                     System.out.print("Enter number of TOTAL players: ");
                     totalPlayers = Integer.parseInt(sc.nextLine());
 
@@ -42,6 +44,8 @@ public class RunGame {
 
                     // handle scoring logic to determine the winner
                     printRankings(scores);
+
+                    //TODO: HANDLE REWARD LOGIC
                     return;
 
                 } catch (NumberFormatException e) {
