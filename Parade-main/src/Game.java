@@ -311,9 +311,10 @@ public class Game {
         boolean gameIsOver = false;
 
         System.out.println("\n─────────────────────────────────────");
-        System.out.println("THE PARADE: " + parade);
-        System.out.println("─────────────────────────────────────");
-        System.out.println();
+        System.out.println("THE PARADE");
+        CardPrinter.printCardRow(parade, true);
+        System.out.println("─────────────────────────────────────\n");
+        
 
         // Let the current player make their move.
         Card choice = null;
@@ -361,6 +362,7 @@ public class Game {
         System.out.println();
         if (!takenCards.isEmpty()) {
             System.out.println(currentPlayer.getName() + " takes the following cards from the parade: " + takenCards);
+            CardPrinter.printCardRow(takenCards, true);
         } else {
             System.out.println(currentPlayer.getName() + " takes no cards from the parade!");
         }
@@ -394,6 +396,7 @@ public class Game {
         }
 
         System.out.println(currentPlayer.getName() + "'s River: " + currRiver.toString());
+        CardPrinter.printCardRow(currRiver, true);
         System.out.println();
 
         return gameIsOver;

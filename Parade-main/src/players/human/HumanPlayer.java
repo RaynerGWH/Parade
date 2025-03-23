@@ -1,10 +1,10 @@
 package players.human;
 
 import cards.*;
-import players.AbstractPlayer;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
+import players.AbstractPlayer;
 
 public class HumanPlayer extends AbstractPlayer {
     private Scanner scanner;
@@ -28,6 +28,7 @@ public class HumanPlayer extends AbstractPlayer {
         int index = promptForCardIndex("play");
         Card card = playCard(index);
         System.out.println("You played: " + card);
+        CardPrinter.printCardRow(Collections.singletonList(card), false);
         return card;
     }
 
@@ -52,9 +53,10 @@ public class HumanPlayer extends AbstractPlayer {
     // Displays the current hand of the player.
     private void displayHand() {
         System.out.println("Your hand:");
-        for (int i = 0; i < hand.size(); i++) {
-            System.out.println(i + ": " + hand.get(i));
-        }
+        // for (int i = 0; i < hand.size(); i++) {
+        //     System.out.println(i + ": " + hand.get(i));
+        // }
+        CardPrinter.printCardRow(hand, false);
     }
 
     // This method asks the player for which card he wants to Play/Discard and

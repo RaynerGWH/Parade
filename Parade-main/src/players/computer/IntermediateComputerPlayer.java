@@ -8,7 +8,7 @@ import players.*;
 
 public class IntermediateComputerPlayer extends AbstractPlayer {
     private String name;
-    private final int ACTION_DELAY = 100; //hard coded action delay
+    private final int ACTION_DELAY = 2000; //hard coded action delay
 
     public IntermediateComputerPlayer(ArrayList<Card> hand, String name) {
         super(hand);
@@ -31,6 +31,7 @@ public class IntermediateComputerPlayer extends AbstractPlayer {
             int index = hand.size() - 1;
             Card card = playCard(index);
             System.out.println(name + " (Intermediate) plays: " + card);
+            CardPrinter.printCardRow(Collections.singletonList(card), false);
             return card;
         } catch (InterruptedException e) {
             System.out.println("Thread was interrupted");
@@ -52,6 +53,7 @@ public class IntermediateComputerPlayer extends AbstractPlayer {
         int index = hand.size() - 1;
         Card card = playCard(index);
         System.out.println(name + " (Intermediate) discards: " + card);
+        CardPrinter.printCardRow(Collections.singletonList(card), false);
         return card;
     }
 

@@ -18,7 +18,8 @@ public class RunGame {
     PlayerManager playerMgr = new PlayerManager(accounts);
 
     //TODO: Somehow pass accounts into here.
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    throws InterruptedException {
 
         RunGame rg = new RunGame();
 
@@ -26,12 +27,67 @@ public class RunGame {
         rg.accounts.add(rg.acctMgr.initialize());
 
 
-        System.out.println(" ____   _    ____      _    ____  _____ \r\n" + //
-                        "|  _ \\ / \\  |  _ \\    / \\  |  _ \\| ____|\r\n" + //
-                        "| |_) / _ \\ | |_) |  / _ \\ | | | |  _|  \r\n" + //
-                        "|  __/ ___ \\|  _ <  / ___ \\| |_| | |___ \r\n" + //
-                        "|_| /_/   \\_\\_| \\_\\/_/   \\_\\____/|_____|");
-        System.out.println("Welcome to the Parade Card Game!");
+        String[] paradeLetterP = {
+            "██████╗ ",
+            "██╔══██╗",
+            "██████╔╝",
+            "██╔═══╝ ",
+            "██║     ",
+            "╚═╝     "};
+
+    String[] paradeLetterA1 = {
+            " █████╗ ",
+            "██╔══██╗",
+            "███████║",
+            "██╔══██║",
+            "██║  ██║",
+            "╚═╝  ╚═╝"};
+
+    String[] paradeLetterR = {
+            "██████╗ ",
+            "██╔══██╗",
+            "██████╔╝",
+            "██╔══██╗",
+            "██║  ██║",
+            "╚═╝  ╚═╝"};
+
+    String[] paradeLetterA2 = paradeLetterA1; // Reusing A
+
+    String[] paradeLetterD = {
+            "██████╗ ",
+            "██╔══██╗",
+            "██║  ██║",
+            "██║  ██║",
+            "██████╔╝",
+            "╚═════╝ "};
+
+    String[] paradeLetterE = {
+            "███████╗",
+            "██╔════╝",
+            "█████╗  ",
+            "██╔══╝  ",
+            "███████╗",
+            "╚══════╝"};
+
+    String[][] letters = {paradeLetterP, paradeLetterA1, paradeLetterR, paradeLetterA2, paradeLetterD, paradeLetterE};
+
+    // We init delay
+    int timer = 70;
+
+    // Print letters row by row with animation
+    for (int row = 0; row < 6; row++) {
+        for (String[] letter : letters) {
+        
+            // We print out the letters
+            System.out.print(letter[row] + "");
+
+            // Create delayed response
+            Thread.sleep(timer);
+        }
+        System.out.println();
+        // Increase delay exponentially
+        timer /= 1.2;
+    }
         // single player or multiplayer (fancy console art)
 
         System.out.println("Would you like to play Single Player or Multi Player");
