@@ -47,6 +47,6 @@ To help you follow the inner workings of our game, we've included a sequence dia
 
 ---
 
-🧱 UML Diagram
+### 🧱 UML Diagram
 We also whipped up a UML diagram to give a clearer picture of our architecture—classes, relationships, inheritance, and more.
 
