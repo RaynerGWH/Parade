@@ -21,7 +21,7 @@ Our Java project brings the captivating card game **"Parade"** onto a virtual co
 
 ## 📜 Rules of Parade
 
-Not familiar with Parade? Don't worry! Check out this [link]([https://boardgamegeek.com/boardgame/37046/parade](https://cdn.1j1ju.com/medias/8f/7e/8f-parade-rulebook.pdf)) for a quick rule rundown.  
+Not familiar with Parade? Don't worry! Check out this [link](https://cdn.1j1ju.com/medias/8f/7e/8f-parade-rulebook.pdf) for a quick rule rundown.  
 It may seem a bit hard at first, but you'll quickly become an expert parade legend! 🎪✨
 
 ---
