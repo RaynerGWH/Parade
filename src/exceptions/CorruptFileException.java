@@ -1,4 +1,4 @@
-package account;
+package exceptions;
 
 public class CorruptFileException extends Exception {
     //checked exception
