@@ -1,10 +1,12 @@
 # 🎭 Parade Card Game (G2T5)
 
-*"Channeling the wonder and whimsy of nerdy CS minds to bring you a strategy game where luck collides with logic, and minds duel — one parade at a time!*
+*"Channeling the wonder and whimsy of nerdy CS minds to bring you a console strategy game where luck collides with logic, and minds duel — one parade at a time!*
 
 ![App Screenshot](images/parade_banner.png)
 
-Our Java project brings the captivating card game **"Parade"** onto a virtual console playground! This game is about understanding **when to risk it**, **when to hold back**, and **when to sacrifice**. It's not simply about showing off beautiful colors. We delved deeply into card game logic, score computation, and dynamic user interface creation while working on this project. Our task? to create a captivating digital experience that captures Parade's vibrant charm and ingenious surprises.
+Our Java project brings the captivating card game **"Parade"** onto a virtual console playground!
+
+This game is about understanding **when to risk it**, **when to hold back**, and **when to sacrifice**. It's not simply about showing off beautiful colors. We also delved deep into card game logic, how to compute the scores, and cute gamified console UIs while working on this project.
 
 ---
 
