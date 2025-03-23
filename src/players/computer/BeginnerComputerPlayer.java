@@ -11,7 +11,7 @@ import java.lang.InterruptedException;
 public class BeginnerComputerPlayer extends AbstractPlayer {
     private Random random;
     private String name;
-    private final int ACTION_DELAY = 500; //hard coded pause value(for the blitz gamemodes)
+    private final int ACTION_DELAY = 2000; //hard coded pause value(for the blitz gamemodes)
 
     public BeginnerComputerPlayer(ArrayList<Card> hand, String name) {
         super(hand);

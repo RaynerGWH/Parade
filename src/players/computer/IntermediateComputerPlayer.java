@@ -11,7 +11,7 @@ import java.lang.InterruptedException;
 
 public class IntermediateComputerPlayer extends AbstractPlayer {
     private String name;
-    private final int ACTION_DELAY = 250; //hard coded action delay
+    private final int ACTION_DELAY = 1000; //hard coded action delay
 
     public IntermediateComputerPlayer(ArrayList<Card> hand, String name) {
         super(hand);
