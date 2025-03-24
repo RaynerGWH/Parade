@@ -1,4 +1,8 @@
-import account.*;
+import Account.*;
+import cards.Deck;
+import exceptions.DeckEmptyException;
+import exceptions.DuplicateNameException;
+import exceptions.NoAvailableNPCNamesException;
 import players.*;
 
 import java.io.*;
@@ -125,7 +129,14 @@ public class RunGame {
                         return; // Game ended
                     } catch (NumberFormatException e) {
                         System.out.println("Please enter a valid number!");
-                    } finally {
+                    } catch (DeckEmptyException e) {
+                        System.out.println(e.getMessage());
+                    } catch (DuplicateNameException e) {
+                        System.out.println(e.getMessage());
+                    } catch (NoAvailableNPCNamesException e) {
+                        System.out.println(e.getMessage());
+                    } 
+                    finally {
                         rg.sc.close();
                     }
                 }

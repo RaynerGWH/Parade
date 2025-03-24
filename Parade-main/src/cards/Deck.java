@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import exceptions.DeckEmptyException;
+
 // Instance Variables
 // Constructors
 // Instance Methods
@@ -35,9 +37,9 @@ public class Deck {
     }
 
     // 2. drawCard() to remove cards when a card is drawn.
-    public Card drawCard() {
+    public Card drawCard() throws DeckEmptyException{
         if (cards.isEmpty()) {
-            return null;
+            throw new DeckEmptyException("Cannot draw from an empty deck.");
         }
         return cards.remove(0);
     }

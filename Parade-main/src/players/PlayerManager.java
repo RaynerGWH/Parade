@@ -2,10 +2,15 @@ package players;
 
 import players.computer.*;
 import cards.*;
+import exceptions.DeckEmptyException;
+import exceptions.DuplicateNameException;
+import exceptions.NoAvailableNPCNamesException;
 import players.human.HumanPlayer;
-import account.*;
+import Account.*;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import Account.Account;
 
 
 public class PlayerManager {
@@ -13,7 +18,7 @@ public class PlayerManager {
     private PlayerNameManager nameManager = new PlayerNameManager();
     private ArrayList<Player> players = new ArrayList<Player>();
     private Deck deck = new Deck();
-    private final int HAND_COUNT = 5;
+    private final int STARTING_HAND_SIZE = 5;
     private Scanner sc = new Scanner(System.in);
     // private Random random = new Random();
     
@@ -23,28 +28,39 @@ public class PlayerManager {
         this.accounts = accounts;
     }
 
-    public void initializeHumanPlayers() {
+    public void initializeHumanPlayers() throws DuplicateNameException{
+
+        // HashSet to store all initalised player names.
+        Set<String> currentNames = new HashSet<>();
+
         for (int i = 0; i < accounts.size(); i++) {
             String username = accounts.get(i).getUsername();
             if (username.isEmpty()) {
                 username = "Player " + (i + 1);
             }
+
+            // If returned false when adding username to the HashSet of currentNames, we would know that the set already contains it.
+            if (!currentNames.add(username)) {
+                throw new DuplicateNameException("Duplicate username found: " + username);
+            }
+
             ArrayList<Card> hand = initialiseHand();
 
             players.add(new HumanPlayer(hand, username, sc));
         }
     }
 
-    public ArrayList<Card> initialiseHand() {
+    public ArrayList<Card> initialiseHand() throws DeckEmptyException{
         ArrayList<Card> hand = new ArrayList<Card>();
-        for (int i = 0; i < HAND_COUNT; i++) {
-            hand.add(deck.drawCard());
+        for (int i = 0; i < STARTING_HAND_SIZE; i++) {
+            Card cardToAddToHand = deck.drawCard(); // Throws DeckEmptyException if deck is empty.
+            hand.add(cardToAddToHand);
         }
         
         return hand;
     }
 
-    public void initializeComputerPlayers(int count) {
+    public void initializeComputerPlayers(int count) throws NoAvailableNPCNamesException, DeckEmptyException{
         for (int i = 1; i <= count; i++) {
             while (true) {
                 try {
