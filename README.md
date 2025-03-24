@@ -1,16 +1,15 @@
 # 🎭 Parade Card Game (G2T5)
 
-*"Channeling the wonder and whimsy of nerdy CS minds to bring you a console strategy game where luck collides with logic, and minds duel — one parade at a time!*
+*Parading the wonder and playfulness of nerdy CS minds, presenting a console strategy game where probability meets planning, and prepared players prevail—one parade at a time!*
 
 ![App Screenshot](images/parade_banner.png)
+Programming in Java, our project provides the popular card game "Parade" in a polished virtual console playground!
 
-Our Java project brings the captivating card game **"Parade"** onto a virtual console playground!
-
-This game is about understanding **when to risk it**, **when to hold back**, and **when to sacrifice**. It's not simply about showing off beautiful colors. We also delved deep into card game logic, how to compute the scores, and cute gamified console UIs while working on this project.
+Parade play prioritizes predicting when to push forward, when to pause, and when to pay penalties. Perfecting not just pretty patterns, we pondered over precise card game logic, point calculations, and polished console UIs while producing this project.  
 
 ---
 
-## 👥 Group Members
+## 👥 Parade Participants
 
 1. GOH WOON HONG RAYNER
 2. KHOO KAR XING
@@ -21,14 +20,14 @@ This game is about understanding **when to risk it**, **when to hold back**, and
 
 ---
 
-## 📜 Rules of Parade
+## 📜 Parade Principles
 
-Not familiar with Parade? Don't worry! Check out this [link](https://cdn.1j1ju.com/medias/8f/7e/8f-parade-rulebook.pdf) for a quick rule rundown.  
-It may seem a bit hard at first, but you'll quickly become an expert parade legend! 🎪✨
+Perplexed about Parade? Panic not! Peek at this [PDF](https://cdn.1j1ju.com/medias/8f/7e/8f-parade-rulebook.pdf) for proper play principles.
+Perhaps puzzling at first, practice will pave the path to becoming a parade prodigy! 🎪✨  
 
 ---
 
-## ▶️ How to Run the App
+## ▶️ Playing Parade
 
 1. Compile the Java Code:
 
@@ -47,10 +46,10 @@ Source code
 ---
 
 ### 🔁 Sequence Diagram
-To help you follow the inner workings of our game, we've included a sequence diagram! It shows how the backend classes interact to keep the parade moving smoothly.
+Providing a practical peek into Parade’s processing, a prepared sequence diagram portrays how primary backend parts perform to propel the parade perfectly.
 
 ---
 
 ### 🧱 UML Diagram
-We also whipped up a UML diagram to give a clearer picture of our architecture—classes, relationships, inheritance, and more.
+To Present a polished perspective on Parade’s programming—portraying primary classes, proper relationships, primary patterns, and precise inheritance pathways, we prepared a UML Diagram.
 
