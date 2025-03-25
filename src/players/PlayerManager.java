@@ -21,8 +21,10 @@ public class PlayerManager {
 
     public void initializeHumanPlayers(Map<Session, Account> sessions) {
         for (Session s:sessions.keySet()) {
+System.out.println(s.getId());
             Account a = sessions.get(s);
             String username = a.getUsername();
+System.out.println(username);
             ArrayList<Card> hand = initialiseHand();
             players.add(new HumanPlayer(hand, username, sc, s));
         }

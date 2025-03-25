@@ -1,9 +1,12 @@
 package players;
 
 import cards.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public interface Player {
+
+public interface Player extends Serializable {
     // Plays a card from the hand at the given index.
     Card playCard(int idx);
     

@@ -38,7 +38,7 @@ public class Game implements Listener {
     private Scanner scanner;
 
     //To hold the card played
-    private Card cardPlayed = null;
+    private Card choice = null;
 
     // Add new timer-related fields
     private boolean timedMode = false;
@@ -303,37 +303,37 @@ public class Game implements Listener {
     public boolean turn(Player currentPlayer, ArrayList<Card> parade, Deck deck) {
 
         Session s = null;
-
         boolean gameIsOver = false;
 
         //print the following only for human players. bots -> dont care
         if (currentPlayer instanceof HumanPlayer) {
             HumanPlayer hp = (HumanPlayer)currentPlayer;
             s = hp.getSession();
+            ui.displayMessage("YOUR TURN", s);
+            //Send the player object across to sync the client instance with the server instance
+            gse.sendToCurrentPlayer(currentPlayer,s);
+
             ui.displayMessage("\n─────────────────────────────────────", s);
             ui.displayMessage("THE PARADE: " + parade, hp.getSession());
             ui.displayMessage("─────────────────────────────────────", s);
-        }
-        
-    
-        // Let the current player make their move.
-        Card choice = null;
-        
-        //How can the current user make their move?
-        while (choice == null) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                //Default: choice = 0;
-                this.cardPlayed = currentPlayer.playCard(0);
-            }
-        }
-        
-        choice = cardPlayed;
-        //Flush the card
-        cardPlayed = null;
+            //currentPlayer.chooseCardToPlay();
 
+            while (choice == null) {
+                try {
+                    synchronized(this) {
+                        this.wait();
+                    };
+                    
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    //Default: choice = 0;
+                    this.choice = currentPlayer.playCard(0);
+                }
+            }
+        } else {
+            this.choice = currentPlayer.chooseCardToPlay();
+        }
+        
         ui.broadcastMessage(currentPlayer.getName() + " played: " + choice.toString());
 
         int choiceValue = choice.getValue();
@@ -367,7 +367,6 @@ public class Game implements Listener {
         }
 
         // Display which cards were taken
-        System.out.println();
         if (!takenCards.isEmpty()) {
             ui.broadcastMessage(currentPlayer.getName() + " takes the following cards from the parade: " + takenCards);
         } else {
@@ -405,6 +404,9 @@ public class Game implements Listener {
 
         //Re send the player object via socket, to update local client's instance
         gse.sendToCurrentPlayer(currentPlayer, s);
+
+        //Flush the card
+        choice = null;
 
         return gameIsOver;
     }
@@ -468,7 +470,7 @@ public class Game implements Listener {
     @Override
     public void onCardPlayed(Account player, Card card) {
         synchronized (this) {
-            this.cardPlayed = card;
+            this.choice = card;
             notify();
         }
     }

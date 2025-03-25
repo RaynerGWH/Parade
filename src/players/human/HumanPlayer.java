@@ -3,16 +3,15 @@ package players.human;
 import cards.*;
 import players.AbstractPlayer;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import jakarta.websocket.*;
 
-public class HumanPlayer extends AbstractPlayer implements Serializable {
-    private Scanner scanner;
+public class HumanPlayer extends AbstractPlayer {
+    private transient Scanner scanner;
     private String name;
-    private Session session;
+    private transient Session session;
 
     public HumanPlayer(ArrayList<Card> hand, String name, Scanner scanner, Session session) {
         super(hand);
@@ -68,7 +67,7 @@ public class HumanPlayer extends AbstractPlayer implements Serializable {
         int index = -1;
         while (true) {
             System.out.print(name + ", enter the index of the card you want to " + action + ": ");
-            String input = scanner.nextLine();
+            String input = scanner.nextLine().trim();
             try {
                 index = Integer.parseInt(input);
                 if (index >= 0 && index < hand.size()) {
@@ -86,4 +85,12 @@ public class HumanPlayer extends AbstractPlayer implements Serializable {
         return session;
     }
 
+    public void setSession(Session newSession) {
+        this.session = newSession;
+    }
+
+    //erm
+    public void setScanner(Scanner newScanner) {
+        this.scanner = newScanner;
+    }
 }

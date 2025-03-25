@@ -1,17 +1,11 @@
 package game;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.glassfish.tyrus.server.*;
 import jakarta.websocket.*;
@@ -25,20 +19,20 @@ public class GameManager {
     private Server websocketServer;
     Scanner sc;
     PlayerManager playerMgr = new PlayerManager();
-    private Map<Session, Account> sessions;
     UserInterface ui;
     int numBots;
     GameServerEndpoint gse;
+    private Map<Session, Account> sessions;
 
     public GameManager(Scanner sc) {
         this.sc = sc;
     }
 
-    public void start(Map<Session, Account> sessions, int numBots, UserInterface ui, GameServerEndpoint gse) {
+    public void start(int numBots, UserInterface ui, GameServerEndpoint gse) {
         this.ui = ui;
-        this.sessions = sessions;
         this.numBots = numBots;
         this.gse = gse;
+        this.sessions = GameServerEndpoint.getSessionPlayers();
 
         if (ui instanceof SinglePlayerUI) {
             singleplayerHandler();
@@ -50,17 +44,18 @@ public class GameManager {
         TreeMap<Integer, ArrayList<Player>> scores = g.startGame();
         printRankings(scores);
 
+        //Handle rewards distribution here
     }
 
     public void singleplayerHandler() {
-        playerMgr.initializeHumanPlayers(sessions);
+        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers());
         botHandler(1);
     }
 
     public void multiplayerHandler() {
         humanHandler();
         playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers());
-        sessions = GameServerEndpoint.getSessionPlayers();
+System.out.println(sessions.size());
         if (sessions.size() < 8) {
             numBots = botHandler(sessions.size());
         }

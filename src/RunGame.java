@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 import account.Account;
 import account.AccountFileManager;
@@ -22,6 +23,7 @@ public class RunGame {
         GameServerEndpoint gse = null;
         GameClientEndpoint gce;
         Map<Session,Account> sessions = new HashMap<Session, Account>();
+        CountDownLatch latch = new CountDownLatch(1);
 
         System.out.println(" ____   _    ____      _    ____  _____ \r\n" + //
                 "|  _ \\ / \\  |  _ \\    / \\  |  _ \\| ____|\r\n" + //
@@ -39,34 +41,37 @@ public class RunGame {
             int numBots = 0;
             System.out.println("Would you like to play Single Player(S) or Multi Player(M)");
             command = sc.nextLine().trim().toUpperCase();
+            AccountFileManager acctMgr = new AccountFileManager(sc);
+            Account a = acctMgr.initialize();
 
             if (command.equals("S")) {
                 //Add my own account into the game
                 ui = new SinglePlayerUI();
-                AccountFileManager acctMgr = new AccountFileManager(sc);
-                Account a = acctMgr.initialize();
                 sessions.put(null,a);
-                gameMgr.start(sessions, numBots, ui, gse);
+                gameMgr.start(numBots, ui, gse);
 
             } else if (command.equals("M")) {
                 System.out.println("Please enter \"H\" to host, or \"J\" to join");
                 command = sc.nextLine();
                 if (command.equals("H")) {
+
+                    //how do i get my current session?
                     gse = new GameServerEndpoint();
                     ui = new MultiplayerUI(gse);
-                    gameMgr.start(sessions, 0, ui, gse);
+                    gameMgr.start(0, ui, gse);
                     
                 } else if (command.equals("J")) {
                     while (true) {
                         try {
-                            //System.out.print("Enter URI: ");
-                            //URI uri = new URI(sc.nextLine());
                             URI uri = new URI("ws://localhost:8080/game");
                             gce = new GameClientEndpoint(uri);
-                            return;
-
+                            Thread inputThread = new Thread(new UserInputHandler(gce));
+                            inputThread.start();
+                            latch.await();                             
                         } catch (URISyntaxException e) {
                             System.out.println("Invalid URI Entered.");
+                        } catch (InterruptedException e) {
+                            System.out.println("Connection interrupted");
                         }
                     }
                 }
