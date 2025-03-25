@@ -2,9 +2,7 @@ package game;
 
 import cards.*;
 import players.*;
-import players.human.HumanPlayer;
 import account.Account;
-import ui.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +11,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.HashSet;
 import java.util.TreeMap;
-
-import jakarta.websocket.Session;
 
 import java.util.HashMap;
 // import java.util.Map;
@@ -33,8 +29,6 @@ public class Game implements Listener {
     private ArrayList<Card> parade;
     private List<Player> combinedPlayers;
     private final int INITIAL_PARADE_LENGTH = 6;
-    private UserInterface ui;
-    private GameServerEndpoint gse;
     private Scanner scanner;
 
     //To hold the card played
@@ -47,11 +41,9 @@ public class Game implements Listener {
     private HashMap<Player, Integer> timeBonus = new HashMap<>();
     
 
-    public Game(ArrayList<Player> players, UserInterface ui, GameServerEndpoint gse, Scanner scanner) {
+    public Game(ArrayList<Player> players, Scanner scanner) {
         this.deck = new Deck();
         this.combinedPlayers = players;
-        this.ui = ui;
-        this.gse = gse;
         this.scanner = scanner;
     }
 
@@ -95,15 +87,15 @@ public class Game implements Listener {
                 switch (timeChoice) {
                     case 1:
                         timeLimit = 60 * 1000; // 1 minute in milliseconds
-                        ui.broadcastMessage("\n1-minute blitz selected!\n");
+                        System.out.print("\n1-minute blitz selected!\n");
                         break;
                     case 2: 
                         timeLimit = 5 * 60 * 1000; // 5 minutes in milliseconds
-                        ui.broadcastMessage("\n5-minute challenge selected!\n");
+                        System.out.print("\n5-minute challenge selected!\n");
                         break;
                     case 3:
                         timeLimit = 10 * 60 * 1000; // 10 minutes in milliseconds
-                        ui.broadcastMessage("\n10-minute game selected!\n");
+                        System.out.print("\n10-minute game selected!\n");
                         break;
                 }
                 
@@ -111,7 +103,7 @@ public class Game implements Listener {
                 timeBonus = new HashMap<>();
             } else if (gameModeChoice.equals("1")) {
                 validGameMode = true;
-                ui.broadcastMessage("\nClassic Mode selected!\n");
+                System.out.print("\nClassic Mode selected!\n");
                 timedMode = false;
             } else {
                 System.out.println("\nInvalid choice. Please select 1 for Classic Mode or 2 for Timed Mode.");
@@ -138,10 +130,10 @@ public class Game implements Listener {
             gameStartTime = System.currentTimeMillis();
             
             // Display time limit
-            ui.broadcastMessage("\n--- TIMED MODE ACTIVE ---");
-            ui.broadcastMessage("Time limit: " + (timeLimit / 60000) + " minutes");
-            ui.broadcastMessage("Bonus points will be awarded for quick moves!");
-            ui.broadcastMessage("---------------------------\n");
+            System.out.print("\n--- TIMED MODE ACTIVE ---");
+            System.out.print("Time limit: " + (timeLimit / 60000) + " minutes");
+            System.out.print("Bonus points will be awarded for quick moves!");
+            System.out.print("---------------------------\n");
         }
 
         ArrayList<Integer> scores = new ArrayList<Integer>();
@@ -152,13 +144,13 @@ public class Game implements Listener {
         // Turn function
         while (!gameIsOver) {
             for (int i = 0; i < combinedPlayers.size(); i++) {
-                ui.broadcastMessage(combinedPlayers.get(i).getName());
+                System.out.print(combinedPlayers.get(i).getName());
             }
             Player currentPlayer = combinedPlayers.get(currentPlayerIndex);
             
             // Check if time has run out in timed mode
             if (timedMode && System.currentTimeMillis() - gameStartTime >= timeLimit) {
-                ui.broadcastMessage("\n--- TIME'S UP! ---");
+                System.out.print("\n--- TIME'S UP! ---");
                 gameIsOver = true;
                 break;
             }
@@ -176,13 +168,13 @@ public class Game implements Listener {
                 timeBonus.put(currentPlayer, currentBonus + bonus);
                 
                 if (bonus > 0) {
-                    ui.broadcastMessage("\n" + currentPlayer.getName() + " gets " + bonus + " time bonus points for a quick move!");
+                    System.out.print("\n" + currentPlayer.getName() + " gets " + bonus + " time bonus points for a quick move!");
                 }
                 
                 // Show progress bar with remaining time
                 long elapsedTime = System.currentTimeMillis() - gameStartTime;
                 displayTimeProgressBar(elapsedTime);
-                ui.broadcastMessage("\n"); // Add extra spacing
+                System.out.print("\n"); // Add extra spacing
             }
             
             // Shift to next players' turn.
@@ -197,9 +189,9 @@ public class Game implements Listener {
 
         // Bring out the FINAL TURN print, then call a separate function afterwards for per round
         for (int i = 0; i < combinedPlayers.size() - 1; i++) {
-            ui.broadcastMessage("-------------------------------------------------------------------------------------------------------------------------");
-            ui.broadcastMessage("--------------------------------------------FINAL TURN: NO ONE CAN DRAW CARDS--------------------------------------------");
-            ui.broadcastMessage("-------------------------------------------------------------------------------------------------------------------------");
+            System.out.print("-------------------------------------------------------------------------------------------------------------------------");
+            System.out.print("--------------------------------------------FINAL TURN: NO ONE CAN DRAW CARDS--------------------------------------------");
+            System.out.print("-------------------------------------------------------------------------------------------------------------------------");
 
             // everyone EXCEPT the current player index at the last turn will move. no
             // drawing will be done here.
@@ -209,17 +201,17 @@ public class Game implements Listener {
 
         // here, the game is over. as per the rules, each player will discard 2 cards
         // from their hand
-        ui.broadcastMessage(
+        System.out.print(
                 "-----------------------------------------------------------------------------------------------------------------------------------------");
-        ui.broadcastMessage(
+        System.out.print(
                 "---------Choose cards from your hand to discard! The remaining cards in your hand will be added to your river, so choose wisely!---------");
-        ui.broadcastMessage(
+        System.out.print(
                 "-----------------------------------------------------------------------------------------------------------------------------------------");
-        ui.broadcastMessage("\n");  // Add extra spacing before starting
+        System.out.print("\n");  // Add extra spacing before starting
 
         for (Player p : combinedPlayers) {
                 p.chooseCardToDiscard();
-                ui.broadcastMessage("\n");  // Add spacing between first and second discard
+                System.out.print("\n");  // Add spacing between first and second discard
                 p.chooseCardToDiscard();
 
             // we add the rest of their hand into their river.
@@ -230,9 +222,9 @@ public class Game implements Listener {
             }
             // print the river for each player, and their name
             Collections.sort(currentRiver, new CardComparator());
-            ui.broadcastMessage("\n");  // Add spacing before showing river
-            ui.broadcastMessage(String.format("River for %s: " + currentRiver.toString(), p.getName()));
-            ui.broadcastMessage("\n");
+            System.out.print("\n");  // Add spacing before showing river
+            System.out.print(String.format("River for %s: " + currentRiver.toString(), p.getName()));
+            System.out.print("\n");
             
             // // Add separation line between players (except for the last player)
             // if (p != combinedPlayers.get(combinedPlayers.size() - 1)) {
@@ -246,19 +238,19 @@ public class Game implements Listener {
         TreeMap<Integer, ArrayList<Player>> scoreMap = scorer.getScoreMap();
         
         // Add GAME OVER banner
-        ui.broadcastMessage("\n");
-        ui.broadcastMessage(" _____                        _____                 ");
-        ui.broadcastMessage("|  __ \\                      |  _  |                ");
-        ui.broadcastMessage("| |  \\/ __ _ _ __ ___   ___  | | | |_   _____ _ __  ");
-        ui.broadcastMessage("| | __ / _` | '_ ` _ \\ / _ \\ | | | \\ \\ / / _ \\ '__| ");
-        ui.broadcastMessage("| |_\\ \\ (_| | | | | | |  __/ \\ \\_/ /\\ V /  __/ |    ");
-        ui.broadcastMessage(" \\____/\\__,_|_| |_| |_|\\___|  \\___/  \\_/ \\___|_|    ");
-        ui.broadcastMessage("                                                     ");
-        ui.broadcastMessage("\n");
+        System.out.print("\n");
+        System.out.print(" _____                        _____                 ");
+        System.out.print("|  __ \\                      |  _  |                ");
+        System.out.print("| |  \\/ __ _ _ __ ___   ___  | | | |_   _____ _ __  ");
+        System.out.print("| | __ / _` | '_ ` _ \\ / _ \\ | | | \\ \\ / / _ \\ '__| ");
+        System.out.print("| |_\\ \\ (_| | | | | | |  __/ \\ \\_/ /\\ V /  __/ |    ");
+        System.out.print(" \\____/\\__,_|_| |_| |_|\\___|  \\___/  \\_/ \\___|_|    ");
+        System.out.print("                                                     ");
+        System.out.print("\n");
         
         // Apply time bonuses if in timed mode
         if (timedMode) {
-            ui.broadcastMessage("\n--- TIME BONUS POINTS ---");
+            System.out.print("\n--- TIME BONUS POINTS ---");
             
             // Apply log2 bonus for all players
             for (Player player : combinedPlayers) {
@@ -266,7 +258,7 @@ public class Game implements Listener {
                 if (bonus > 0) {
                     // Calculate log2 deduction (rounded down to nearest integer)
                     int logDeduction = (int) (Math.log(bonus) / Math.log(2));  // log2(x) = ln(x)/ln(2)
-                    ui.broadcastMessage(player.getName() + " earned " + bonus + " bonus points, resulting in a " + 
+                    System.out.print(player.getName() + " earned " + bonus + " bonus points, resulting in a " + 
                                      logDeduction + " point deduction!");
                     
                     // Find the player in the scoreMap and adjust their score
@@ -293,7 +285,7 @@ public class Game implements Listener {
             }
             
             // Add a line break after all bonuses are displayed
-            ui.broadcastMessage("\n");
+            System.out.print("\n");
         }
         
         // Return the scoreMap so RunGame.java can use it
@@ -301,40 +293,36 @@ public class Game implements Listener {
     }
 
     public boolean turn(Player currentPlayer, ArrayList<Card> parade, Deck deck) {
-
-        Session s = null;
         boolean gameIsOver = false;
 
         //print the following only for human players. bots -> dont care
-        if (currentPlayer instanceof HumanPlayer) {
-            HumanPlayer hp = (HumanPlayer)currentPlayer;
-            s = hp.getSession();
-            ui.displayMessage("YOUR TURN", s);
-            //Send the player object across to sync the client instance with the server instance
-            gse.sendToCurrentPlayer(currentPlayer,s);
+        // if (currentPlayer instanceof HumanPlayer) {
+        //     HumanPlayer hp = (HumanPlayer)currentPlayer;
+        //     System.out.println("YOUR TURN");
 
-            ui.displayMessage("\n─────────────────────────────────────", s);
-            ui.displayMessage("THE PARADE: " + parade, hp.getSession());
-            ui.displayMessage("─────────────────────────────────────", s);
-            //currentPlayer.chooseCardToPlay();
+        System.out.println("\n─────────────────────────────────────");
+        System.out.println("THE PARADE: " + parade);
+        System.out.println("─────────────────────────────────────");
+        currentPlayer.chooseCardToPlay();
 
-            while (choice == null) {
-                try {
-                    synchronized(this) {
-                        this.wait();
-                    };
+        //     while (choice == null) {
+        //         try {
+        //             synchronized(this) {
+        //                 this.wait();
+        //             };
                     
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    //Default: choice = 0;
-                    this.choice = currentPlayer.playCard(0);
-                }
-            }
-        } else {
-            this.choice = currentPlayer.chooseCardToPlay();
-        }
+        //         } catch (InterruptedException e) {
+        //             Thread.currentThread().interrupt();
+        //             //Default: choice = 0;
+        //             this.choice = currentPlayer.playCard(0);
+        //         }
+        //     }
+        // } else {
+        //     this.choice = currentPlayer.chooseCardToPlay();
+        // }
         
-        ui.broadcastMessage(currentPlayer.getName() + " played: " + choice.toString());
+        
+        System.out.print(currentPlayer.getName() + " played: " + choice.toString());
 
         int choiceValue = choice.getValue();
         Color choiceColor = choice.getColor();
@@ -368,11 +356,11 @@ public class Game implements Listener {
 
         // Display which cards were taken
         if (!takenCards.isEmpty()) {
-            ui.broadcastMessage(currentPlayer.getName() + " takes the following cards from the parade: " + takenCards);
+            System.out.print(currentPlayer.getName() + " takes the following cards from the parade: " + takenCards);
         } else {
-            ui.broadcastMessage(currentPlayer.getName() + " takes no cards from the parade!");
+            System.out.print(currentPlayer.getName() + " takes no cards from the parade!");
         }
-        ui.broadcastMessage("\n");
+        System.out.print("\n");
 
         // game ends if the deck is empty OR the current river has one of each color
         if (currRiver.size() != 0) {
@@ -400,10 +388,9 @@ public class Game implements Listener {
             currentPlayer.drawCard(toDraw);
         }
 
-        ui.broadcastMessage(currentPlayer.getName() + "'s River: " + currRiver.toString());
+        System.out.print(currentPlayer.getName() + "'s River: " + currRiver.toString());
 
         //Re send the player object via socket, to update local client's instance
-        gse.sendToCurrentPlayer(currentPlayer, s);
 
         //Flush the card
         choice = null;
@@ -463,8 +450,8 @@ public class Game implements Listener {
         int percentage = Math.min(100, (int) (progress * 100));
         
         // Print the progress bar and time
-        ui.broadcastMessage("\nTime remaining: " + timeString);
-        ui.broadcastMessage(progressBar.toString() + " " + percentage + "%");
+        System.out.print("\nTime remaining: " + timeString);
+        System.out.print(progressBar.toString() + " " + percentage + "%");
     }
 
     @Override

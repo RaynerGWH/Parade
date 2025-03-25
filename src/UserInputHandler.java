@@ -1,26 +1,26 @@
 import java.util.Scanner;
-import game.*;
+// import game.*;
 
-public class UserInputHandler implements Runnable {
-    private GameClientEndpoint clientEndpoint;
+// public class UserInputHandler implements Runnable {
+//     private GameClientEndpoint clientEndpoint;
 
-    public UserInputHandler(GameClientEndpoint clientEndpoint) {
-        this.clientEndpoint = clientEndpoint;
-    }
+//     public UserInputHandler(GameClientEndpoint clientEndpoint) {
+//         this.clientEndpoint = clientEndpoint;
+//     }
 
-    @Override
-    public void run() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            String userInput = scanner.nextLine();
-            if ("exit".equalsIgnoreCase(userInput)) {
-                break;
-            } else {
-                clientEndpoint.handleIdx(userInput);
-            }
-        }
-        scanner.close();
-    }
-}
+//     @Override
+//     public void run() {
+//         Scanner scanner = new Scanner(System.in);
+//         while (true) {
+//             String userInput = scanner.nextLine();
+//             if ("exit".equalsIgnoreCase(userInput)) {
+//                 break;
+//             } else {
+//                 clientEndpoint.handleIdx(userInput);
+//             }
+//         }
+//         scanner.close();
+//     }
+// }
 
 

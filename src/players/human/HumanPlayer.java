@@ -6,19 +6,15 @@ import players.AbstractPlayer;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import jakarta.websocket.*;
-
 public class HumanPlayer extends AbstractPlayer {
-    private transient Scanner scanner;
+    private Scanner scanner;
     private String name;
-    private transient Session session;
 
-    public HumanPlayer(ArrayList<Card> hand, String name, Scanner scanner, Session session) {
+    public HumanPlayer(ArrayList<Card> hand, String name, Scanner scanner) {
         super(hand);
         this.name = name;
         // Use the passed-in scanner rather than creating a new one
         this.scanner = scanner;
-        this.session = session;
     }
 
     @Override
@@ -81,13 +77,13 @@ public class HumanPlayer extends AbstractPlayer {
         }
     }
 
-    public Session getSession() {
-        return session;
-    }
+    // public Session getSession() {
+    //     return session;
+    // }
 
-    public void setSession(Session newSession) {
-        this.session = newSession;
-    }
+    // public void setSession(Session newSession) {
+    //     this.session = newSession;
+    // }
 
     //erm
     public void setScanner(Scanner newScanner) {

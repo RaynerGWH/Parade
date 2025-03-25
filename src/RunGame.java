@@ -8,10 +8,8 @@ import java.util.concurrent.CountDownLatch;
 
 import account.Account;
 import account.AccountFileManager;
-import game.GameClientEndpoint;
 import game.GameManager;
-import game.GameServerEndpoint;
-import ui.*;
+
 
 import jakarta.websocket.*;
 
@@ -19,9 +17,6 @@ public class RunGame {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         GameManager gameMgr = new GameManager(sc);
-        UserInterface ui;
-        GameServerEndpoint gse = null;
-        GameClientEndpoint gce;
         Map<Session,Account> sessions = new HashMap<Session, Account>();
         CountDownLatch latch = new CountDownLatch(1);
 
@@ -46,35 +41,10 @@ public class RunGame {
 
             if (command.equals("S")) {
                 //Add my own account into the game
-                ui = new SinglePlayerUI();
-                sessions.put(null,a);
-                gameMgr.start(numBots, ui, gse);
+                gameMgr.singleplayerHandler();
 
             } else if (command.equals("M")) {
-                System.out.println("Please enter \"H\" to host, or \"J\" to join");
-                command = sc.nextLine();
-                if (command.equals("H")) {
-
-                    //how do i get my current session?
-                    gse = new GameServerEndpoint();
-                    ui = new MultiplayerUI(gse);
-                    gameMgr.start(0, ui, gse);
-                    
-                } else if (command.equals("J")) {
-                    while (true) {
-                        try {
-                            URI uri = new URI("ws://localhost:8080/game");
-                            gce = new GameClientEndpoint(uri);
-                            Thread inputThread = new Thread(new UserInputHandler(gce));
-                            inputThread.start();
-                            latch.await();                             
-                        } catch (URISyntaxException e) {
-                            System.out.println("Invalid URI Entered.");
-                        } catch (InterruptedException e) {
-                            System.out.println("Connection interrupted");
-                        }
-                    }
-                }
+                gameMgr.multiplayerHandler();
             }
         } else {
             System.out.println("Command not recognized.");

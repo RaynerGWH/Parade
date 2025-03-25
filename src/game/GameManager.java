@@ -7,40 +7,28 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-import org.glassfish.tyrus.server.*;
-import jakarta.websocket.*;
+// import org.glassfish.tyrus.server.*;
+// import jakarta.websocket.*;
 
 import players.Player;
 import players.PlayerManager;
 import account.*;
-import ui.*;
 
 public class GameManager {
-    private Server websocketServer;
+    // private Server websocketServer;
     Scanner sc;
     PlayerManager playerMgr = new PlayerManager();
-    UserInterface ui;
     int numBots;
-    GameServerEndpoint gse;
-    private Map<Session, Account> sessions;
+    // private Map<Session, Account> sessions;
 
     public GameManager(Scanner sc) {
         this.sc = sc;
     }
 
-    public void start(int numBots, UserInterface ui, GameServerEndpoint gse) {
-        this.ui = ui;
+    public void start(int numBots) {
         this.numBots = numBots;
-        this.gse = gse;
-        this.sessions = GameServerEndpoint.getSessionPlayers();
 
-        if (ui instanceof SinglePlayerUI) {
-            singleplayerHandler();
-        } else {
-            multiplayerHandler();
-        }
-
-        Game g = new Game(playerMgr.getPlayers(), ui, gse, sc);
+        Game g = new Game(playerMgr.getPlayers(), sc);
         TreeMap<Integer, ArrayList<Player>> scores = g.startGame();
         printRankings(scores);
 
@@ -48,37 +36,40 @@ public class GameManager {
     }
 
     public void singleplayerHandler() {
-        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers());
+        playerMgr.initializeHumanPlayers(1);
         botHandler(1);
     }
 
     public void multiplayerHandler() {
-        humanHandler();
-        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers());
-System.out.println(sessions.size());
-        if (sessions.size() < 8) {
-            numBots = botHandler(sessions.size());
+        int numHumans = humanHandler();
+        playerMgr.initializeHumanPlayers(numHumans);
+        // if (sessions.size() < 8) {
+        //     numBots = botHandler(sessions.size());
+        // }
+        if (numHumans < 8) {
+            numBots = botHandler(numHumans);
         }
+
     }
 
-    public void startWebSocketServer() {
-        Map<String, Object> properties = Collections.emptyMap();
-        // Start the WebSocket server on localhost:8080
-        websocketServer = new Server("localhost", 8080, "/", properties, GameServerEndpoint.class);
-        try {
-            websocketServer.start();
-            System.out.println("WebSocket server is running...");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    // public void startWebSocketServer() {
+    //     Map<String, Object> properties = Collections.emptyMap();
+    //     // Start the WebSocket server on localhost:8080
+    //     websocketServer = new Server("localhost", 8080, "/", properties, GameServerEndpoint.class);
+    //     try {
+    //         websocketServer.start();
+    //         System.out.println("WebSocket server is running...");
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
-    public void stopWebSocketServer() {
-        if (websocketServer != null) {
-            websocketServer.stop();
-            System.out.println("WebSocket server stopped.");
-        }
-    }
+    // public void stopWebSocketServer() {
+    //     if (websocketServer != null) {
+    //         websocketServer.stop();
+    //         System.out.println("WebSocket server stopped.");
+    //     }
+    // }
 
     public int botHandler(int numPlayers) {
         int numBots = 0;
@@ -99,17 +90,23 @@ System.out.println(sessions.size());
         }
     }
 
-    public void humanHandler() {
-        // We start the server only if there are other human players(besides yourself)
+    // public void humanHandler() {
+    //     // We start the server only if there are other human players(besides yourself)
 
-        // TODO: ADD CHECKING FUNCCTION TO PREVENT STARTING WITHOUT OTHER PLAYERS
+    //     // TODO: ADD CHECKING FUNCCTION TO PREVENT STARTING WITHOUT OTHER PLAYERS
 
-        startWebSocketServer();
-        System.out.println("Waiting for players... Type \"START\" to start the game");
-        String command = sc.nextLine();
-        while (!command.equals("START")) {
-            System.out.println("Invalid command.");
-        }
+    //     startWebSocketServer();
+    //     System.out.println("Waiting for players... Type \"START\" to start the game");
+    //     String command = sc.nextLine();
+    //     while (!command.equals("START")) {
+    //         System.out.println("Invalid command.");
+    //     }
+    // }
+
+    public int humanHandler() {
+        //TODO: HANDLE NUMBER OF HUMAN INPUT HERE
+        System.out.print("Enter number of human players");
+        return Integer.parseInt(sc.nextLine());
     }
 
     public static void printRankings(TreeMap<Integer, ArrayList<Player>> scores) {
