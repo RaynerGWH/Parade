@@ -76,8 +76,6 @@ public class RunGame {
         }
     }
 
-
-
     public static void scrollRulebook(String filePath) {
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));

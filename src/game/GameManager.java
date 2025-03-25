@@ -69,7 +69,7 @@ public class GameManager {
     public void startWebSocketServer() {
         Map<String, Object> properties = Collections.emptyMap();
         // Start the WebSocket server on localhost:8080
-        websocketServer = new Server("localhost", 8080, "/game", properties, GameServerEndpoint.class);
+        websocketServer = new Server("localhost", 8080, "/", properties, GameServerEndpoint.class);
         try {
             websocketServer.start();
             System.out.println("WebSocket server is running...");
