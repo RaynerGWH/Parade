@@ -19,7 +19,7 @@ public class RunGame {
         Scanner sc = new Scanner(System.in);
         GameManager gameMgr = new GameManager(sc);
         UserInterface ui;
-        GameServerEndpoint gse;
+        GameServerEndpoint gse = null;
         GameClientEndpoint gce;
         Map<Session,Account> sessions = new HashMap<Session, Account>();
 
@@ -46,8 +46,7 @@ public class RunGame {
                 AccountFileManager acctMgr = new AccountFileManager(sc);
                 Account a = acctMgr.initialize();
                 sessions.put(null,a);
-                
-                gameMgr.start(sessions, numBots, ui);
+                gameMgr.start(sessions, numBots, ui, gse);
 
             } else if (command.equals("M")) {
                 System.out.println("Please enter \"H\" to host, or \"J\" to join");
@@ -55,13 +54,14 @@ public class RunGame {
                 if (command.equals("H")) {
                     gse = new GameServerEndpoint();
                     ui = new MultiplayerUI(gse);
-                    gameMgr.start(sessions, 0, ui);
+                    gameMgr.start(sessions, 0, ui, gse);
                     
                 } else if (command.equals("J")) {
                     while (true) {
                         try {
-                            System.out.println("Enter URI: ");
-                            URI uri = new URI(sc.nextLine());
+                            //System.out.print("Enter URI: ");
+                            //URI uri = new URI(sc.nextLine());
+                            URI uri = new URI("ws://localhost:8080/game");
                             gce = new GameClientEndpoint(uri);
                             return;
 

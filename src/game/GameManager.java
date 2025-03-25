@@ -28,15 +28,17 @@ public class GameManager {
     private Map<Session, Account> sessions;
     UserInterface ui;
     int numBots;
+    GameServerEndpoint gse;
 
     public GameManager(Scanner sc) {
         this.sc = sc;
     }
 
-    public void start(Map<Session, Account> sessions, int numBots, UserInterface ui) {
+    public void start(Map<Session, Account> sessions, int numBots, UserInterface ui, GameServerEndpoint gse) {
         this.ui = ui;
         this.sessions = sessions;
         this.numBots = numBots;
+        this.gse = gse;
 
         if (ui instanceof SinglePlayerUI) {
             singleplayerHandler();
@@ -44,7 +46,10 @@ public class GameManager {
             multiplayerHandler();
         }
 
-        Game g = new Game();
+        Game g = new Game(playerMgr.getPlayers(), ui, gse, sc);
+        TreeMap<Integer, ArrayList<Player>> scores = g.startGame();
+        printRankings(scores);
+
     }
 
     public void singleplayerHandler() {
@@ -60,9 +65,6 @@ public class GameManager {
             numBots = botHandler(sessions.size());
         }
     }
-    
-    TreeMap<Integer, ArrayList<Player>> scores = g.startGame();
-
 
     public void startWebSocketServer() {
         Map<String, Object> properties = Collections.emptyMap();
@@ -138,4 +140,6 @@ public class GameManager {
             default -> rank + "TH";
         };
     }
+
+
 }
