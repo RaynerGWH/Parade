@@ -2,7 +2,7 @@
 *.class
 
 # Ignore package files
-*.jar
+# *.jar
 
 # Ignore logs and temporary files
 *.log
