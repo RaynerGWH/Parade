@@ -7,6 +7,8 @@ import account.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import jakarta.websocket.*;
+
 
 public class PlayerManager {
     //Managers
@@ -16,22 +18,13 @@ public class PlayerManager {
     private final int HAND_COUNT = 5;
     private Scanner sc = new Scanner(System.in);
     // private Random random = new Random();
-    
-    private ArrayList<Account> accounts;
-    
-    public PlayerManager(ArrayList<Account> accounts) {
-        this.accounts = accounts;
-    }
 
-    public void initializeHumanPlayers() {
-        for (int i = 0; i < accounts.size(); i++) {
-            String username = accounts.get(i).getUsername();
-            if (username.isEmpty()) {
-                username = "Player " + (i + 1);
-            }
+    public void initializeHumanPlayers(Map<Session, Account> sessions) {
+        for (Session s:sessions.keySet()) {
+            Account a = sessions.get(s);
+            String username = a.getUsername();
             ArrayList<Card> hand = initialiseHand();
-
-            players.add(new HumanPlayer(hand, username, sc));
+            players.add(new HumanPlayer(hand, username, sc, s));
         }
     }
 
@@ -50,7 +43,7 @@ public class PlayerManager {
                 try {
                     // if (random.nextInt(20) == 15) {
                     //     //SPAWN YL BOT
-                    //     System.out.println("WARNING: YL HAS FOUND OUT ABOUT THE PARADE GAME. HE WILL NOW BE PLAYING.");
+                    //     System.out.println("WARNING: YL HAS FOUND OUT A  BOUT THE PARADE GAME. HE WILL NOW BE PLAYING.");
                     //     YLComputer YL  = new YLComputer(initialiseHand());
                     //     players.add(YL);
                     //     continue;

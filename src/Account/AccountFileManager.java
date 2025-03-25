@@ -19,8 +19,6 @@ public class AccountFileManager {
     public AccountFileManager(Scanner sc) {
         this.sc = sc;
     }
-    
-    ArrayList<Account> accounts = new ArrayList<Account>();
 
     public Account initialize() {
         try {
@@ -34,7 +32,6 @@ public class AccountFileManager {
             }
 
             save(a);
-            accounts.add(a);
             return a;
 
         } catch (IOException e) {
@@ -156,9 +153,5 @@ System.out.println(content);
         } catch (IOException e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
-    }
-
-    public ArrayList<Account> getAccounts() {
-        return accounts;
     }
 }

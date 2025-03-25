@@ -1,110 +1,82 @@
-import account.*;
-import players.*;
-
-import java.io.*;
-import java.nio.file.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
+import account.Account;
+import account.AccountFileManager;
+import game.GameClientEndpoint;
+import game.GameManager;
+import game.GameServerEndpoint;
+import ui.*;
+
+import jakarta.websocket.*;
+
 public class RunGame {
-    Scanner sc = new Scanner(System.in);
-    AccountFileManager acctMgr = new AccountFileManager(sc);
-
-    ArrayList<Account> accounts = new ArrayList<Account>();
-
-    //IMPORTANT
-    //in the main game, accounts will be accepted via websocket and added to this arraylist.
-    //for testing purposes, my "account" will be hardcoded in.
-
-    PlayerManager playerMgr = new PlayerManager(accounts);
-
-    //TODO: Somehow pass accounts into here.
     public static void main(String[] args) {
-
-        RunGame rg = new RunGame();
-
-        //DELETE ME
-        rg.accounts.add(rg.acctMgr.initialize());
-
+        Scanner sc = new Scanner(System.in);
+        GameManager gameMgr = new GameManager(sc);
+        UserInterface ui;
+        GameServerEndpoint gse;
+        GameClientEndpoint gce;
+        Map<Session,Account> sessions = new HashMap<Session, Account>();
 
         System.out.println(" ____   _    ____      _    ____  _____ \r\n" + //
-                        "|  _ \\ / \\  |  _ \\    / \\  |  _ \\| ____|\r\n" + //
-                        "| |_) / _ \\ | |_) |  / _ \\ | | | |  _|  \r\n" + //
-                        "|  __/ ___ \\|  _ <  / ___ \\| |_| | |___ \r\n" + //
-                        "|_| /_/   \\_\\_| \\_\\/_/   \\_\\____/|_____|");
+                "|  _ \\ / \\  |  _ \\    / \\  |  _ \\| ____|\r\n" + //
+                "| |_) / _ \\ | |_) |  / _ \\ | | | |  _|  \r\n" + //
+                "|  __/ ___ \\|  _ <  / ___ \\| |_| | |___ \r\n" + //
+                "|_| /_/   \\_\\_| \\_\\/_/   \\_\\____/|_____|");
         System.out.println("Welcome to the Parade Card Game!");
-        // single player or multiplayer (fancy console art)
-
-        System.out.println("Would you like to play Single Player or Multi Player");
-        //TODO: add single/multiplayer functionality
 
         System.out.print("Enter 'R' to refer to the rulebook, or 'S' to start the game: ");
-        String command = rg.sc.nextLine().trim().toUpperCase();
+        String command = sc.nextLine().trim().toUpperCase();
         if (command.equals("R")) {
             scrollRulebook("rulebook/rulebook.txt");
 
         } else if (command.equals("S")) {
-            int numPlayers = rg.accounts.size();
-            while (true) {
-                try {
-                    int numBots = 0;
+            int numBots = 0;
+            System.out.println("Would you like to play Single Player(S) or Multi Player(M)");
+            command = sc.nextLine().trim().toUpperCase();
 
-                    if (numPlayers < 8) {
-                        System.out.print("Enter number of Bots: ");
-                        numBots = Integer.parseInt(rg.sc.nextLine());
-                        if (numPlayers + numBots > 8) {
-                            throw new NumberFormatException();
+            if (command.equals("S")) {
+                //Add my own account into the game
+                ui = new SinglePlayerUI();
+                AccountFileManager acctMgr = new AccountFileManager(sc);
+                Account a = acctMgr.initialize();
+                sessions.put(null,a);
+                
+                gameMgr.start(sessions, numBots, ui);
+
+            } else if (command.equals("M")) {
+                System.out.println("Please enter \"H\" to host, or \"J\" to join");
+                command = sc.nextLine();
+                if (command.equals("H")) {
+                    gse = new GameServerEndpoint();
+                    ui = new MultiplayerUI(gse);
+                    gameMgr.start(sessions, 0, ui);
+                    
+                } else if (command.equals("J")) {
+                    while (true) {
+                        try {
+                            System.out.println("Enter URI: ");
+                            URI uri = new URI(sc.nextLine());
+                            gce = new GameClientEndpoint(uri);
+                            return;
+
+                        } catch (URISyntaxException e) {
+                            System.out.println("Invalid URI Entered.");
                         }
                     }
-                    
-                    rg.playerMgr.initializeComputerPlayers(numBots);
-                    rg.playerMgr.initializeHumanPlayers();
-                    rg.playerMgr.setTurnOrder(numBots);
-
-                    Game g = new Game(rg.playerMgr.getPlayers());
-
-                    TreeMap<Integer, ArrayList<Player>> scores = g.startGame();
-
-                    printRankings(scores);
-
-                    //TODO: handle reward logic
-                    return;
-
-                } catch (NumberFormatException e) {
-                    System.out.println("Please enter a valid number!");
-                } finally {
-                    rg.sc.close();
                 }
             }
-
         } else {
             System.out.println("Command not recognized.");
         }
-        rg.sc.close();
     }
 
-    public static void printRankings(TreeMap<Integer, ArrayList<Player>> scores) {
-        System.out.println("\n=== FINAL RANKINGS ===");
-        int rank = 1;
-        for (Map.Entry<Integer, ArrayList<Player>> entry : scores.entrySet()) {
-            ArrayList<Player> players = entry.getValue();
-            for (Player player : players) {
-                System.out.println(getOrdinal(rank) + ": " + player.getName() + " | Score: " + entry.getKey());
-            }
-            rank += players.size(); // Increase rank appropriately
-        }
-    }
 
-    private static String getOrdinal(int rank) {
-        if (rank % 100 >= 11 && rank % 100 <= 13) {
-            return rank + "th";
-        }
-        return switch (rank % 10) {
-            case 1 -> rank + "ST";
-            case 2 -> rank + "ND";
-            case 3 -> rank + "RD";
-            default -> rank + "TH";
-        };
-    }
 
     public static void scrollRulebook(String filePath) {
         try {
@@ -156,3 +128,4 @@ public class RunGame {
         }
     }
 }
+

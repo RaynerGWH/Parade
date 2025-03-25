@@ -3,18 +3,23 @@ package players.human;
 import cards.*;
 import players.AbstractPlayer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class HumanPlayer extends AbstractPlayer {
+import jakarta.websocket.*;
+
+public class HumanPlayer extends AbstractPlayer implements Serializable {
     private Scanner scanner;
     private String name;
+    private Session session;
 
-    public HumanPlayer(ArrayList<Card> hand, String name, Scanner scanner) {
+    public HumanPlayer(ArrayList<Card> hand, String name, Scanner scanner, Session session) {
         super(hand);
         this.name = name;
         // Use the passed-in scanner rather than creating a new one
         this.scanner = scanner;
+        this.session = session;
     }
 
     @Override
@@ -30,7 +35,7 @@ public class HumanPlayer extends AbstractPlayer {
         System.out.println("You played: " + card);
         return card;
     }
-
+    
     @Override
     public Card chooseCardToDiscard() {
         if (hand.isEmpty()) {
@@ -75,6 +80,10 @@ public class HumanPlayer extends AbstractPlayer {
                 System.out.println("Invalid input. Please enter a valid number.");
             }
         }
+    }
+
+    public Session getSession() {
+        return session;
     }
 
 }
