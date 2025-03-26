@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.UUID;
 
 /**
@@ -21,7 +22,6 @@ import java.util.UUID;
  *   1. Locating and reading the account data file
  *   2. Decrypting and parsing account data
  *   3. Saving accounts to file
- * 
  */
 public class AccountFileManager {
 
@@ -33,6 +33,9 @@ public class AccountFileManager {
 
     // A list of accounts in memory (optional usage)
     private final List<Account> accounts;
+    
+    // Scanner for interactive account initialization
+    private Scanner sc;
 
     /**
      * Constructs the AccountFileManager. No direct console I/O is performed here.
@@ -40,6 +43,16 @@ public class AccountFileManager {
      */
     public AccountFileManager() {
         this.accounts = new ArrayList<>();
+    }
+
+    /**
+     * Constructs the AccountFileManager with a Scanner for input.
+     *
+     * @param sc the Scanner used for reading user input.
+     */
+    public AccountFileManager(Scanner sc) {
+        this();
+        this.sc = sc;
     }
 
     /**
@@ -112,38 +125,37 @@ public class AccountFileManager {
         if (data.length < 2) {
             throw new CorruptFileException("Content does not contain enough lines.");
         }
-
+    
         String infoLine = data[1];
         String[] details = infoLine.split("/");
-
+    
         if (details.length != 6) {
             throw new CorruptFileException("Content format is invalid.");
         }
-
+    
         try {
             UUID uuid = UUID.fromString(details[0]);
             String name = details[1];
             int wins = Integer.parseInt(details[2]);
             int losses = Integer.parseInt(details[3]);
             double balance = Double.parseDouble(details[4]);
-
+    
             // Parse flair list
             String flairData = details[5];
-            
             // Remove brackets, quotes, spaces
             flairData = flairData.replaceAll("[\\[\\]\"\\s]", "");
             List<String> unlockedFlairs = new ArrayList<>();
-
+    
             if (!flairData.isEmpty()) {
                 unlockedFlairs.addAll(Arrays.asList(flairData.split(",")));
             }
-
+    
             return new Account(uuid, name, wins, losses, balance, unlockedFlairs);
-        } catch (NumberFormatException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new CorruptFileException("Failed to parse account data.");
         }
     }
-
+    
     /**
      * Saves the given account to the file, encrypting the content before writing.
      *
@@ -181,5 +193,18 @@ public class AccountFileManager {
         if (!accounts.contains(account)) {
             accounts.add(account);
         }
+    }
+
+    /**
+     * Initializes a new account by prompting the user for an account name using the Scanner.
+     *
+     * @return the newly created {@link Account}
+     */
+    public Account initialize() {
+        System.out.print("Enter account name: ");
+        String name = sc.nextLine();
+        Account newAccount = new Account(UUID.randomUUID(), name, 0, 0, 0.0, new ArrayList<>());
+        addAccount(newAccount);
+        return newAccount;
     }
 }
