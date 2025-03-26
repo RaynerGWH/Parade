@@ -4,7 +4,6 @@ import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.Serializable;
-import java.util.Optional;
 
 /**
  * Represents an account with a unique identifier, username, statistics (wins/losses),

@@ -1,32 +1,26 @@
 package game;
 
-import java.util.Scanner;
 import account.*;
 import java.io.*;
 import jakarta.websocket.*;
-import players.human.*;
-import ui.MultiplayerUI;
-import cards.*;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 
 @ClientEndpoint
 public class GameClientEndpoint{
-    private HumanPlayer player;
     private Session session;
-    private ByteArrayOutputStream baos;
-    Scanner sc;
+    private Scanner sc;
+    private CountDownLatch latch;
 
-    public void setScanner(Scanner sc) {
-        this.sc = sc;
-    }
-
-    public GameClientEndpoint(URI endpointURI) {
+    public GameClientEndpoint(URI endpointURI, Scanner sc) {
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            session = container.connectToServer(this, endpointURI);
+            this.session = container.connectToServer(this, endpointURI);
+            this.sc = sc;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,8 +29,6 @@ public class GameClientEndpoint{
     @OnOpen
     public void onOpen(Session session) {
         System.out.println("Connected to server");
-        
-        Scanner sc = new Scanner(System.in);
         AccountFileManager acctMgr = new AccountFileManager(sc);
         Account a = acctMgr.initialize();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -56,64 +48,28 @@ public class GameClientEndpoint{
 
     @OnMessage
     public void onMessage(String message) {
-        System.out.println(message);
-    }
-
-    @OnMessage
-    public void onMessage(Session session, ByteBuffer byteBuffer) {
-        try {
-            // Convert ByteBuffer to byte array
-            byte[] data = new byte[byteBuffer.remaining()];
-            byteBuffer.get(data);
-
-            // Deserialize the object from the byte array
-            try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
-                ObjectInputStream ois = new ObjectInputStream(bais)) {
-                
-                Object obj = ois.readObject();
-
-                if (obj instanceof HumanPlayer) {
-                    HumanPlayer p = (HumanPlayer)obj;
-                    this.player = p;
-                    //flush scanner first
-                    sc.nextLine();
-                    player.setScanner(sc);
-                    
-
-                    try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        ObjectOutputStream oos = new ObjectOutputStream(baos)){
-                            
-                            //Call the player object
-                            Card c = player.chooseCardToPlay();
-
-                            oos.writeObject(c);
-                            oos.flush();
-
-                            byte[] cardBytes = baos.toByteArray();
-                            session.getBasicRemote().sendBinary(ByteBuffer.wrap(cardBytes));
-                            
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    byte[] cardBytes = baos.toByteArray();
-                    session.getBasicRemote().sendBinary(ByteBuffer.wrap(cardBytes));
-                    //Send card back over
-
+        if (message.contains("-----Your turn-----")) {
+            new Thread(() -> {
+                System.out.print("Enter your input: ");
+                String input = sc.nextLine();
+                try {
+                    session.getBasicRemote().sendText(input);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Error processing message: " + e.getMessage());
-            e.printStackTrace();
+            }).start();
+        } else {
+            System.out.println(message);
         }
     }
 
     @OnClose
     public void onClose(Session session) {
         System.out.println("Disconnected from server");
+        latch.countDown();
     }
 
-    public int handleIdx(String input) {
-        return Integer.parseInt(input);
+    public void setLatch(CountDownLatch latch) {
+        this.latch = latch;
     }
 }

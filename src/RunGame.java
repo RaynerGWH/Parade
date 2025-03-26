@@ -61,18 +61,19 @@ public class RunGame {
                     gameMgr.start(0, ui, gse);
                     
                 } else if (command.equals("J")) {
-                    while (true) {
-                        try {
-                            URI uri = new URI("ws://localhost:8080/game");
-                            gce = new GameClientEndpoint(uri);
-                            Thread inputThread = new Thread(new UserInputHandler(gce));
-                            inputThread.start();
-                            latch.await();                             
-                        } catch (URISyntaxException e) {
-                            System.out.println("Invalid URI Entered.");
-                        } catch (InterruptedException e) {
-                            System.out.println("Connection interrupted");
-                        }
+                    try {
+                        URI uri = new URI("ws://localhost:8080/game");
+                        gce = new GameClientEndpoint(uri, sc);
+                        // Create a latch that will only count down when the game session is done.
+                        latch = new CountDownLatch(1);
+                        gce.setLatch(latch);
+                
+                        // Now block the main thread until the latch is counted down.
+                        latch.await();
+                    } catch (URISyntaxException e) {
+                        System.out.println("Invalid URI Entered.");
+                    } catch (InterruptedException e) {
+                        System.out.println("Connection interrupted");
                     }
                 }
             }

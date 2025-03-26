@@ -24,6 +24,7 @@ public class GameManager {
     GameServerEndpoint gse;
     private Map<Session, Account> sessions;
 
+
     public GameManager(Scanner sc) {
         this.sc = sc;
     }
@@ -48,18 +49,39 @@ public class GameManager {
     }
 
     public void singleplayerHandler() {
-        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers());
+        boolean isMulti = false;
+        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers(), isMulti);
         botHandler(1);
     }
 
     public void multiplayerHandler() {
+        boolean isMulti = true;
         humanHandler();
-        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers());
-System.out.println(sessions.size());
+        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers(), isMulti);
+
+        // mapPlayers();
+
         if (sessions.size() < 8) {
             numBots = botHandler(sessions.size());
         }
     }
+
+    // public void mapPlayers() {
+    //     for (Player p:playerMgr.getPlayers()) {
+    //         if (p instanceof HumanPlayer) {
+    //             HumanPlayer hp = (HumanPlayer)p;
+    //             Session s = hp.getSession();
+    //             //sessionPlayers.put(s.getId(), hp);
+    //         }
+    //     }
+    // }
+
+    // public void handleIncomingInput(String sessionId, int input) {
+    //     //HumanPlayer player = sessionPlayers.get(sessionId);
+    //     if (player != null) {
+    //         //gameGateway.receivePlayerInput(sessionId, input);
+    //     }
+    // }
 
     public void startWebSocketServer() {
         Map<String, Object> properties = Collections.emptyMap();

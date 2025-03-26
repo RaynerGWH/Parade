@@ -3,7 +3,6 @@ package game;
 import cards.*;
 import players.*;
 import players.human.HumanPlayer;
-import account.Account;
 import ui.*;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ import java.util.HashMap;
 // import exceptions.InvalidPlayerCountException;
 // import exceptions.NoAvailableNPCNamesException;
 
-public class Game implements Listener {
+public class Game {
     //ASSUMPTION: GAME is only started by the host, except in singleplayer instances.
 
     private Deck deck;
@@ -36,9 +35,6 @@ public class Game implements Listener {
     private UserInterface ui;
     private GameServerEndpoint gse;
     private Scanner scanner;
-
-    //To hold the card played
-    private Card choice = null;
 
     // Add new timer-related fields
     private boolean timedMode = false;
@@ -304,34 +300,35 @@ public class Game implements Listener {
 
         Session s = null;
         boolean gameIsOver = false;
+        Card choice = null;
 
         //print the following only for human players. bots -> dont care
         if (currentPlayer instanceof HumanPlayer) {
             HumanPlayer hp = (HumanPlayer)currentPlayer;
             s = hp.getSession();
-            ui.displayMessage("YOUR TURN", s);
             //Send the player object across to sync the client instance with the server instance
-            gse.sendToCurrentPlayer(currentPlayer,s);
+            // gse.sendToCurrentPlayer(currentPlayer,s);
 
-            ui.displayMessage("\n─────────────────────────────────────", s);
-            ui.displayMessage("THE PARADE: " + parade, hp.getSession());
             ui.displayMessage("─────────────────────────────────────", s);
-            //currentPlayer.chooseCardToPlay();
+            ui.displayMessage("THE PARADE: " + parade, s);
+            ui.displayMessage("─────────────────────────────────────", s);
 
-            while (choice == null) {
-                try {
-                    synchronized(this) {
-                        this.wait();
-                    };
-                    
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    //Default: choice = 0;
-                    this.choice = currentPlayer.playCard(0);
-                }
+            ui.displayMessage(hp.displayHand(), s);
+
+            ui.displayMessage("-----Your turn-----", s);
+
+            try {
+                String playerInput = InputManager.waitForInput();
+                int i = Integer.parseInt(playerInput);
+                choice = currentPlayer.playCard(i);
+
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                //Default: choice = 0;
+                choice = currentPlayer.playCard(0);
             }
         } else {
-            this.choice = currentPlayer.chooseCardToPlay();
+            choice = currentPlayer.chooseCardToPlay();
         }
         
         ui.broadcastMessage(currentPlayer.getName() + " played: " + choice.toString());
@@ -402,12 +399,6 @@ public class Game implements Listener {
 
         ui.broadcastMessage(currentPlayer.getName() + "'s River: " + currRiver.toString());
 
-        //Re send the player object via socket, to update local client's instance
-        gse.sendToCurrentPlayer(currentPlayer, s);
-
-        //Flush the card
-        choice = null;
-
         return gameIsOver;
     }
 
@@ -465,13 +456,5 @@ public class Game implements Listener {
         // Print the progress bar and time
         ui.broadcastMessage("\nTime remaining: " + timeString);
         ui.broadcastMessage(progressBar.toString() + " " + percentage + "%");
-    }
-
-    @Override
-    public void onCardPlayed(Account player, Card card) {
-        synchronized (this) {
-            this.choice = card;
-            notify();
-        }
     }
 }

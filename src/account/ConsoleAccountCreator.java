@@ -2,7 +2,6 @@ package account;
 
 import java.util.Scanner;
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * Handles console-based user interaction for creating new accounts.

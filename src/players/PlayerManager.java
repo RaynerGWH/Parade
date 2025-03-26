@@ -19,14 +19,18 @@ public class PlayerManager {
     private Scanner sc = new Scanner(System.in);
     // private Random random = new Random();
 
-    public void initializeHumanPlayers(Map<Session, Account> sessions) {
-        for (Session s:sessions.keySet()) {
-System.out.println(s.getId());
-            Account a = sessions.get(s);
+    public void initializeHumanPlayers(Map<Session, Account> sessions, boolean isMulti) {
+        for (Map.Entry<Session, Account> entry : sessions.entrySet()) {
+            Session s = entry.getKey();
+            // if (isMulti) {
+            //     inputHandler = new NetworkInputHandler(s);
+            // } else {
+            //     inputHandler = new ConsoleInputHandler();
+            // }
+            Account a = entry.getValue();
             String username = a.getUsername();
-System.out.println(username);
             ArrayList<Card> hand = initialiseHand();
-            players.add(new HumanPlayer(hand, username, sc, s));
+            players.add(new HumanPlayer(hand, username, s));
         }
     }
 

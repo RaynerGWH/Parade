@@ -154,23 +154,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import account.*;
-import cards.*;
 
 @ServerEndpoint("/game")
 public class GameServerEndpoint {
     // Use ConcurrentHashMap for better thread safety
     private static final Map<Session, Account> SESSIONS = new ConcurrentHashMap<>();
-    private static Listener gameListener;
-
-    public static void setListener(Listener listener) {
-        gameListener = listener;
-    }
-
-    private void forwardCardToGame(Account acc, Card card) {
-        if (gameListener != null && acc != null) {
-            gameListener.onCardPlayed(acc, card);
-        }
-    }
 
     @OnOpen
     public void onOpen(Session session) {
@@ -182,6 +170,12 @@ public class GameServerEndpoint {
     @OnMessage
     public void onMessage(Session session, String message) {
         System.out.println("Received text message: " + message);
+        System.out.println("HELLO WORLD");
+
+        if (message.matches("\\d+")) {
+            System.out.println("THIS IS RUNNING");
+            InputManager.offerInput(message);
+        }
     }
 
     @OnMessage
@@ -204,16 +198,6 @@ public class GameServerEndpoint {
                     
                     // Broadcast with explicit error handling
                     broadcast(account.getUsername() + " has joined the game.");
-                } else if (obj instanceof Card) {
-                    Card card = (Card) obj;
-                    Account account = SESSIONS.get(session);
-                    
-                    if (account != null) {
-                        System.out.println("Card received from: " + account.getUsername());
-                        forwardCardToGame(account, card);
-                    } else {
-                        System.out.println("Card received from unknown session");
-                    }
                 } else {
                     System.out.println("Received unknown object type: " + obj.getClass().getName());
                 }
