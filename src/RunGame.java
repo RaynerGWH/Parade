@@ -1,3 +1,8 @@
+import account.Account;
+import account.AccountFileManager;
+import game.GameManager;
+// import jakarta.websocket.*;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -6,18 +11,11 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
-import account.Account;
-import account.AccountFileManager;
-import game.GameManager;
-
-
-import jakarta.websocket.*;
-
 public class RunGame {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         GameManager gameMgr = new GameManager(sc);
-        Map<Session,Account> sessions = new HashMap<Session, Account>();
+        // Map<Session,Account> sessions = new HashMap<Session, Account>();
         CountDownLatch latch = new CountDownLatch(1);
 
         System.out.println(" ____   _    ____      _    ____  _____ \r\n" + //
