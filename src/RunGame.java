@@ -1,8 +1,3 @@
-import account.Account;
-import account.AccountFileManager;
-import game.GameManager;
-// import jakarta.websocket.*;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,21 +6,23 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
-<<<<<<< HEAD
 import account.Account;
 import account.AccountFileManager;
-import game.*;
-
+import game.GameClientEndpoint;
+import game.GameManager;
+import game.GameServerEndpoint;
+import ui.*;
 
 import jakarta.websocket.*;
 
-=======
->>>>>>> 9279c16d5fffb26bf9566d53164f71bc52d719d8
 public class RunGame {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         GameManager gameMgr = new GameManager(sc);
-        // Map<Session,Account> sessions = new HashMap<Session, Account>();
+        UserInterface ui;
+        GameServerEndpoint gse = null;
+        GameClientEndpoint gce;
+        Map<Session,Account> sessions = new HashMap<Session, Account>();
         CountDownLatch latch = new CountDownLatch(1);
 
         System.out.println(" ____   _    ____      _    ____  _____ \r\n" + //
@@ -49,14 +46,14 @@ public class RunGame {
 
             if (command.equals("S")) {
                 //Add my own account into the game
-                gameMgr.singleplayerHandler();
+                ui = new SinglePlayerUI();
+                sessions.put(null,a);
+                gameMgr.start(numBots, ui, gse);
 
             } else if (command.equals("M")) {
                 System.out.println("Please enter \"H\" to host, or \"J\" to join");
                 command = sc.nextLine();
                 if (command.equals("H")) {
-
-                    //how do i get my current session?
                     gse = new GameServerEndpoint();
                     ui = new MultiplayerUI(gse);
                     gameMgr.start(0, ui, gse);

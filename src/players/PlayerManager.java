@@ -3,10 +3,11 @@ package players;
 import players.computer.*;
 import cards.*;
 import players.human.HumanPlayer;
+import account.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+import jakarta.websocket.*;
 
 public class PlayerManager {
     //Managers
@@ -17,24 +18,6 @@ public class PlayerManager {
     private Scanner sc = new Scanner(System.in);
     // private Random random = new Random();
 
-<<<<<<< HEAD
-    // public void initializeHumanPlayers(Map<Session, Account> sessions) {
-    //     for (Session s:sessions.keySet()) {
-    //         Account a = sessions.get(s);
-    //         String username = a.getUsername();
-    //         ArrayList<Card> hand = initialiseHand();
-    //         players.add(new HumanPlayer(hand, username, sc, s));
-    //     }
-    // }
-
-    public void initializeHumanPlayers(int numHumans) {
-        for (int i = 0; i < numHumans; i++) {
-            System.out.print("Enter name: ");
-            String name = sc.nextLine();
-
-            ArrayList<Card> hand = initialiseHand();
-            players.add(new HumanPlayer(hand, name, sc));
-=======
     public void initializeHumanPlayers(Map<Session, Account> sessions, boolean isMulti) {
         for (Map.Entry<Session, Account> entry : sessions.entrySet()) {
             Session s = entry.getKey();
@@ -47,7 +30,6 @@ public class PlayerManager {
             String username = a.getUsername();
             ArrayList<Card> hand = initialiseHand();
             players.add(new HumanPlayer(hand, username, s));
->>>>>>> 3563ebea405ad3de80ae63438803172bfe8604ff
         }
     }
 

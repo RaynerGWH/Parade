@@ -7,29 +7,41 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-// import org.glassfish.tyrus.server.*;
-// import jakarta.websocket.*;
+import org.glassfish.tyrus.server.*;
+import jakarta.websocket.*;
 
 import players.Player;
 import players.PlayerManager;
 import account.*;
+import ui.*;
 
 public class GameManager {
-    // private Server websocketServer;
+    private Server websocketServer;
     Scanner sc;
     PlayerManager playerMgr = new PlayerManager();
+    UserInterface ui;
     int numBots;
-    // private Map<Session, Account> sessions;
+    GameServerEndpoint gse;
+    private Map<Session, Account> sessions;
 
 
     public GameManager(Scanner sc) {
         this.sc = sc;
     }
 
-    public void start(int numBots) {
+    public void start(int numBots, UserInterface ui, GameServerEndpoint gse) {
+        this.ui = ui;
         this.numBots = numBots;
+        this.gse = gse;
+        this.sessions = GameServerEndpoint.getSessionPlayers();
 
-        Game g = new Game(playerMgr.getPlayers(), sc);
+        if (ui instanceof SinglePlayerUI) {
+            singleplayerHandler();
+        } else {
+            multiplayerHandler();
+        }
+
+        Game g = new Game(playerMgr.getPlayers(), ui, gse, sc);
         TreeMap<Integer, ArrayList<Player>> scores = g.startGame();
         printRankings(scores);
 
@@ -52,7 +64,6 @@ public class GameManager {
         if (sessions.size() < 8) {
             numBots = botHandler(sessions.size());
         }
-
     }
 
     public void startWebSocketServer() {
@@ -64,6 +75,13 @@ public class GameManager {
             System.out.println("WebSocket server is running...");
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void stopWebSocketServer() {
+        if (websocketServer != null) {
+            websocketServer.stop();
+            System.out.println("WebSocket server stopped.");
         }
     }
 
@@ -86,10 +104,17 @@ public class GameManager {
         }
     }
 
-    public int humanHandler() {
-        //TODO: HANDLE NUMBER OF HUMAN INPUT HERE
-        System.out.print("Enter number of human players");
-        return Integer.parseInt(sc.nextLine());
+    public void humanHandler() {
+        // We start the server only if there are other human players(besides yourself)
+
+        // TODO: ADD CHECKING FUNCCTION TO PREVENT STARTING WITHOUT OTHER PLAYERS
+
+        startWebSocketServer();
+        System.out.println("Waiting for players... Type \"START\" to start the game");
+        String command = sc.nextLine();
+        while (!command.equals("START")) {
+            System.out.println("Invalid command.");
+        }
     }
 
     public static void printRankings(TreeMap<Integer, ArrayList<Player>> scores) {
@@ -115,6 +140,4 @@ public class GameManager {
             default -> rank + "TH";
         };
     }
-
-
 }

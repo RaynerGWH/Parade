@@ -2,7 +2,6 @@ package game;
 
 import cards.*;
 import players.*;
-import account.Account;
 import players.human.HumanPlayer;
 import ui.*;
 
@@ -14,14 +13,8 @@ import java.util.Iterator;
 import java.util.HashSet;
 import java.util.TreeMap;
 
+import jakarta.websocket.Session;
 import java.util.HashMap;
-// import java.util.Map;
-// import exceptions.DeckEmptyException;
-// import exceptions.DuplicateNameException;
-// import exceptions.InvalidCardSelectionException;
-// import exceptions.InvalidHumanPlayerCountException;
-// import exceptions.InvalidPlayerCountException;
-// import exceptions.NoAvailableNPCNamesException;
 
 public class Game {
     //ASSUMPTION: GAME is only started by the host, except in singleplayer instances.
@@ -31,6 +24,8 @@ public class Game {
     private ArrayList<Card> parade;
     private List<Player> combinedPlayers;
     private final int INITIAL_PARADE_LENGTH = 6;
+    private UserInterface ui;
+    private GameServerEndpoint gse;
     private Scanner scanner;
 
     // Add new timer-related fields
@@ -40,9 +35,11 @@ public class Game {
     private HashMap<Player, Integer> timeBonus = new HashMap<>();
     
 
-    public Game(ArrayList<Player> players, Scanner scanner) {
+    public Game(ArrayList<Player> players, UserInterface ui, GameServerEndpoint gse, Scanner scanner) {
         this.deck = new Deck();
         this.combinedPlayers = players;
+        this.ui = ui;
+        this.gse = gse;
         this.scanner = scanner;
     }
 
@@ -292,6 +289,7 @@ public class Game {
     }
 
     public boolean turn(Player currentPlayer, ArrayList<Card> parade, Deck deck) {
+        Session s = null;
         boolean gameIsOver = false;
         Card choice = null;
 

@@ -1,21 +1,5 @@
 package account;
 
-
-
-
-
-import java.io.*;
-
-
-import java.nio.file.Files;
-
-
-import java.util.*;
-
-
-
-
-
 import exceptions.CorruptFileException;
 
 import java.io.File;
@@ -40,15 +24,26 @@ import java.util.UUID;
  *   3. Saving accounts to file
  */
 public class AccountFileManager {
+
+    // The name of the file to store account data
     private static final String FILE_PATH = "Save.PG1";
+
+    // The expected header of the stored file
     private static final String HEADER = "ID/NAME/WIN/LOSS/BALANCE-[FLAIR]\n";
+
+    // A list of accounts in memory (optional usage)
     private final List<Account> accounts;
-    private static final String USERNAME_REGEX = "^[A-Za-z0-9]+$";
+    
+    // Scanner for interactive account initialization
     private Scanner sc;
 
-    // public AccountFileManager(Scanner sc) {
-    //     this.sc = sc;
-    // }
+    /**
+     * Constructs the AccountFileManager. No direct console I/O is performed here.
+     * This class only handles file operations.
+     */
+    public AccountFileManager() {
+        this.accounts = new ArrayList<>();
+    }
 
     /**
      * Constructs the AccountFileManager with a Scanner for input.
@@ -72,21 +67,51 @@ public class AccountFileManager {
         if (pg1File == null) {
             return Optional.empty();
         }
+
+        // Decrypt and parse
+        Account account = processExistingFile(pg1File);
+        return Optional.of(account);
     }
 
-    // public Account initialize() {
+    /**
+     * Locates the file containing account data, if it exists, in the current directory.
+     *
+     * @return the {@link File} representing the account data, or {@code null} if not found
+     */
+    private File findPg1File() {
+        File dir = new File(".");
+        File[] files = dir.listFiles((d, name) -> name.equals(FILE_PATH));
+        return (files != null && files.length > 0) ? files[0] : null;
+    }
 
-    // /**
-    //  * Validates the header of the decrypted file content.
-    //  *
-    //  * @param content the decrypted file content
-    //  * @throws CorruptFileException if the content does not start with the required header
-    //  */
-    // private void validateHeader(String content) throws CorruptFileException {
-    //     if (!content.startsWith(HEADER)) {
-    //         throw new CorruptFileException("Header is missing or incorrect.");
-    //     }
-    // }
+    /**
+     * Reads and decrypts the content from the specified file, then parses it into an {@link Account}.
+     *
+     * @param file the {@link File} containing the encrypted account data
+     * @return the {@link Account} parsed from the file
+     * @throws IOException          if an I/O error occurs
+     * @throws CorruptFileException if the file format or header is invalid
+     */
+    private Account processExistingFile(File file) throws IOException, CorruptFileException {
+        byte[] encryptedData = Files.readAllBytes(file.toPath());
+        byte[] decryptedData = CryptoUtils.xorCipher(encryptedData);
+        String content = new String(decryptedData);
+
+        validateHeader(content);
+        return parseContent(content);
+    }
+
+    /**
+     * Validates the header of the decrypted file content.
+     *
+     * @param content the decrypted file content
+     * @throws CorruptFileException if the content does not start with the required header
+     */
+    private void validateHeader(String content) throws CorruptFileException {
+        if (!content.startsWith(HEADER)) {
+            throw new CorruptFileException("Header is missing or incorrect.");
+        }
+    }
 
     /**
      * Parses the content of the account data into an {@link Account} object.
@@ -129,8 +154,6 @@ public class AccountFileManager {
         } catch (IllegalArgumentException e) {
             throw new CorruptFileException("Failed to parse account data.");
         }
-
-
     }
     
     /**
@@ -140,18 +163,26 @@ public class AccountFileManager {
      * @throws IOException if writing to the file fails
      */
     public void save(Account account) throws IOException {
+        Path path = Paths.get(FILE_PATH);
+        String content = HEADER + account.toString();
+        byte[] encryptedInfo = CryptoUtils.xorCipher(content.getBytes());
 
-
-        try {
-            Path path = Paths.get(FILE_PATH);
-            String toWrite = HEADER + account.toString();
-            byte[] encryptedInfo = CryptoUtils.xorCipher(toWrite.getBytes());
-            Files.write(path, encryptedInfo);
-        } catch (IOException e) {
-            System.err.println("Error writing to file: " + e.getMessage());
+        Files.write(path, encryptedInfo);
+        // Optionally, maintain a reference in memory
+        if (!accounts.contains(account)) {
+            accounts.add(account);
         }
     }
 
+    /**
+     * Returns an immutable snapshot of the accounts managed by this file manager.
+     *
+     * @return a copy of the list of accounts
+     */
+    public List<Account> getAccounts() {
+        // Return a copy to preserve encapsulation
+        return new ArrayList<>(accounts);
+    }
 
     /**
      * Adds an account to the internal list if not already present.

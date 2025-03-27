@@ -2,12 +2,14 @@ package players.human;
 
 import cards.*;
 import players.AbstractPlayer;
-import java.
 
 import java.util.ArrayList;
 
+import jakarta.websocket.*;
+
 public class HumanPlayer extends AbstractPlayer {
     private String name;
+    private transient Session session;
 
     public HumanPlayer(ArrayList<Card> hand, String name, Session session) {
         super(hand);
