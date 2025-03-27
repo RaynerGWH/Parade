@@ -2,91 +2,66 @@ package players.human;
 
 import cards.*;
 import players.AbstractPlayer;
+import java.
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class HumanPlayer extends AbstractPlayer {
-    private Scanner scanner;
     private String name;
 
-    public HumanPlayer(ArrayList<Card> hand, String name, Scanner scanner) {
+    public HumanPlayer(ArrayList<Card> hand, String name, Session session) {
         super(hand);
         this.name = name;
-        // Use the passed-in scanner rather than creating a new one
-        this.scanner = scanner;
+        this.session = session;
     }
 
+    //Not used by the multiplayer game
     @Override
     public Card chooseCardToPlay() {
-        if (hand.isEmpty()) {
-            System.out.println("You have no cards to play.");
-            return null;
-        }
-
-        displayHand();
-        int index = promptForCardIndex("play");
-        Card card = playCard(index);
-        System.out.println("You played: " + card);
-        return card;
+        handleCardSelection("play");
+        return null;
     }
     
+    //Not used by multiplayer game
     @Override
     public Card chooseCardToDiscard() {
+        handleCardSelection("discard");
+        return null;
+    }
+
+    private void handleCardSelection(String action) {
         if (hand.isEmpty()) {
-            System.out.println("You have no cards to discard.");
-            return null;
+            System.out.println("You have no cards to " + action + ".");
+            return;
         }
 
-        displayHand();
-        int index = promptForCardIndex("discard");
-        Card card = playCard(index);
-        System.out.println("You discarded: " + card);
-        return card;
+        // displayHand();
+        promptForCardIndex(action);
+    }
+
+    public String displayHand() {
+        String res = "Your hand:";
+        for (int i = 0; i < hand.size(); i++) {
+            res += i + ": " + hand.get(i);
+        }
+
+        return res;
+    }
+
+    private void promptForCardIndex(String action) {
+        String prompt = name + ", enter the index of the card you want to " + action + ": ";
+        System.out.println(prompt);
     }
 
     public String getName() {
         return name;
     }
 
-    // Displays the current hand of the player.
-    private void displayHand() {
-        System.out.println("Your hand:");
-        for (int i = 0; i < hand.size(); i++) {
-            System.out.println(i + ": " + hand.get(i));
-        }
+    public Session getSession() {
+        return session;
     }
 
-    // This method asks the player for which card he wants to Play/Discard and
-    // ensures that it is a valid index.
-    private int promptForCardIndex(String action) {
-        int index = -1;
-        while (true) {
-            System.out.print(name + ", enter the index of the card you want to " + action + ": ");
-            String input = scanner.nextLine().trim();
-            try {
-                index = Integer.parseInt(input);
-                if (index >= 0 && index < hand.size()) {
-                    return index;
-                } else {
-                    System.out.println("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + ".");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
-            }
-        }
-    }
-
-    // public Session getSession() {
-    //     return session;
-    // }
-
-    // public void setSession(Session newSession) {
-    //     this.session = newSession;
-    // }
-
-    //erm
-    public void setScanner(Scanner newScanner) {
-        this.scanner = newScanner;
+    public void setSession(Session newSession) {
+        this.session = newSession;
     }
 }

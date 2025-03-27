@@ -8,7 +8,7 @@ import java.util.concurrent.CountDownLatch;
 
 import account.Account;
 import account.AccountFileManager;
-import game.GameManager;
+import game.*;
 
 
 import jakarta.websocket.*;
@@ -44,7 +44,31 @@ public class RunGame {
                 gameMgr.singleplayerHandler();
 
             } else if (command.equals("M")) {
-                gameMgr.multiplayerHandler();
+                System.out.println("Please enter \"H\" to host, or \"J\" to join");
+                command = sc.nextLine();
+                if (command.equals("H")) {
+
+                    //how do i get my current session?
+                    gse = new GameServerEndpoint();
+                    ui = new MultiplayerUI(gse);
+                    gameMgr.start(0, ui, gse);
+                    
+                } else if (command.equals("J")) {
+                    try {
+                        URI uri = new URI("ws://localhost:8080/game");
+                        gce = new GameClientEndpoint(uri, sc);
+                        // Create a latch that will only count down when the game session is done.
+                        latch = new CountDownLatch(1);
+                        gce.setLatch(latch);
+                
+                        // Now block the main thread until the latch is counted down.
+                        latch.await();
+                    } catch (URISyntaxException e) {
+                        System.out.println("Invalid URI Entered.");
+                    } catch (InterruptedException e) {
+                        System.out.println("Connection interrupted");
+                    }
+                }
             }
         } else {
             System.out.println("Command not recognized.");

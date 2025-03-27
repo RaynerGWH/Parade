@@ -3,6 +3,8 @@ package game;
 import cards.*;
 import players.*;
 import account.Account;
+import players.human.HumanPlayer;
+import ui.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ import java.util.HashMap;
 // import exceptions.InvalidPlayerCountException;
 // import exceptions.NoAvailableNPCNamesException;
 
-public class Game implements Listener {
+public class Game {
     //ASSUMPTION: GAME is only started by the host, except in singleplayer instances.
 
     private Deck deck;
@@ -30,9 +32,6 @@ public class Game implements Listener {
     private List<Player> combinedPlayers;
     private final int INITIAL_PARADE_LENGTH = 6;
     private Scanner scanner;
-
-    //To hold the card played
-    private Card choice = null;
 
     // Add new timer-related fields
     private boolean timedMode = false;
@@ -294,32 +293,36 @@ public class Game implements Listener {
 
     public boolean turn(Player currentPlayer, ArrayList<Card> parade, Deck deck) {
         boolean gameIsOver = false;
+        Card choice = null;
 
         //print the following only for human players. bots -> dont care
-        // if (currentPlayer instanceof HumanPlayer) {
-        //     HumanPlayer hp = (HumanPlayer)currentPlayer;
-        //     System.out.println("YOUR TURN");
+        if (currentPlayer instanceof HumanPlayer) {
+            HumanPlayer hp = (HumanPlayer)currentPlayer;
+            s = hp.getSession();
+            //Send the player object across to sync the client instance with the server instance
+            // gse.sendToCurrentPlayer(currentPlayer,s);
 
-        System.out.println("\n─────────────────────────────────────");
-        System.out.println("THE PARADE: " + parade);
-        System.out.println("─────────────────────────────────────");
-        currentPlayer.chooseCardToPlay();
+            ui.displayMessage("─────────────────────────────────────", s);
+            ui.displayMessage("THE PARADE: " + parade, s);
+            ui.displayMessage("─────────────────────────────────────", s);
 
-        //     while (choice == null) {
-        //         try {
-        //             synchronized(this) {
-        //                 this.wait();
-        //             };
-                    
-        //         } catch (InterruptedException e) {
-        //             Thread.currentThread().interrupt();
-        //             //Default: choice = 0;
-        //             this.choice = currentPlayer.playCard(0);
-        //         }
-        //     }
-        // } else {
-        //     this.choice = currentPlayer.chooseCardToPlay();
-        // }
+            ui.displayMessage(hp.displayHand(), s);
+
+            ui.displayMessage("-----Your turn-----", s);
+
+            try {
+                String playerInput = InputManager.waitForInput();
+                int i = Integer.parseInt(playerInput);
+                choice = currentPlayer.playCard(i);
+
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                //Default: choice = 0;
+                choice = currentPlayer.playCard(0);
+            }
+        } else {
+            choice = currentPlayer.chooseCardToPlay();
+        }
         
         
         System.out.print(currentPlayer.getName() + " played: " + choice.toString());
@@ -390,11 +393,6 @@ public class Game implements Listener {
 
         System.out.print(currentPlayer.getName() + "'s River: " + currRiver.toString());
 
-        //Re send the player object via socket, to update local client's instance
-
-        //Flush the card
-        choice = null;
-
         return gameIsOver;
     }
 
@@ -452,13 +450,5 @@ public class Game implements Listener {
         // Print the progress bar and time
         System.out.print("\nTime remaining: " + timeString);
         System.out.print(progressBar.toString() + " " + percentage + "%");
-    }
-
-    @Override
-    public void onCardPlayed(Account player, Card card) {
-        synchronized (this) {
-            this.choice = card;
-            notify();
-        }
     }
 }

@@ -21,6 +21,7 @@ public class GameManager {
     int numBots;
     // private Map<Session, Account> sessions;
 
+
     public GameManager(Scanner sc) {
         this.sc = sc;
     }
@@ -36,40 +37,35 @@ public class GameManager {
     }
 
     public void singleplayerHandler() {
-        playerMgr.initializeHumanPlayers(1);
+        boolean isMulti = false;
+        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers(), isMulti);
         botHandler(1);
     }
 
     public void multiplayerHandler() {
-        int numHumans = humanHandler();
-        playerMgr.initializeHumanPlayers(numHumans);
-        // if (sessions.size() < 8) {
-        //     numBots = botHandler(sessions.size());
-        // }
-        if (numHumans < 8) {
-            numBots = botHandler(numHumans);
+        boolean isMulti = true;
+        humanHandler();
+        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers(), isMulti);
+
+        // mapPlayers();
+
+        if (sessions.size() < 8) {
+            numBots = botHandler(sessions.size());
         }
 
     }
 
-    // public void startWebSocketServer() {
-    //     Map<String, Object> properties = Collections.emptyMap();
-    //     // Start the WebSocket server on localhost:8080
-    //     websocketServer = new Server("localhost", 8080, "/", properties, GameServerEndpoint.class);
-    //     try {
-    //         websocketServer.start();
-    //         System.out.println("WebSocket server is running...");
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-    // public void stopWebSocketServer() {
-    //     if (websocketServer != null) {
-    //         websocketServer.stop();
-    //         System.out.println("WebSocket server stopped.");
-    //     }
-    // }
+    public void startWebSocketServer() {
+        Map<String, Object> properties = Collections.emptyMap();
+        // Start the WebSocket server on localhost:8080
+        websocketServer = new Server("localhost", 8080, "/", properties, GameServerEndpoint.class);
+        try {
+            websocketServer.start();
+            System.out.println("WebSocket server is running...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public int botHandler(int numPlayers) {
         int numBots = 0;
@@ -89,19 +85,6 @@ public class GameManager {
             }
         }
     }
-
-    // public void humanHandler() {
-    //     // We start the server only if there are other human players(besides yourself)
-
-    //     // TODO: ADD CHECKING FUNCCTION TO PREVENT STARTING WITHOUT OTHER PLAYERS
-
-    //     startWebSocketServer();
-    //     System.out.println("Waiting for players... Type \"START\" to start the game");
-    //     String command = sc.nextLine();
-    //     while (!command.equals("START")) {
-    //         System.out.println("Invalid command.");
-    //     }
-    // }
 
     public int humanHandler() {
         //TODO: HANDLE NUMBER OF HUMAN INPUT HERE
