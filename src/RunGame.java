@@ -10,6 +10,8 @@ import java.util.concurrent.CountDownLatch;
 
 import account.Account;
 import account.AccountFileManager;
+import account.Flair;
+import account.FlairShop;
 import game.GameClientEndpoint;
 import game.GameManager;
 import game.GameServerEndpoint;
@@ -26,6 +28,8 @@ import ui.UserInterface;
  * 3) Clear method and variable names.
  * 4) Minimal catch blocks & clear error messages.
  * 5) Sufficient commentary explaining logic.
+ *
+ * Now updated to include a FlairShop option in the menu.
  */
 public class RunGame {
 
@@ -40,6 +44,9 @@ public class RunGame {
 
     /** Our main GameManager from snippet 1. */
     private final GameManager gameMgr;
+
+    /** The FlairShop to allow users to purchase flairs. */
+    private final FlairShop flairShop;
 
     /**
      * Entry point of the program.
@@ -67,6 +74,9 @@ public class RunGame {
 
         // Our snippet-1 style GameManager that takes the main scanner.
         this.gameMgr = new GameManager(this.mainScanner);
+
+        // Instantiate the FlairShop.
+        this.flairShop = new FlairShop();
     }
 
     /**
@@ -80,12 +90,13 @@ public class RunGame {
             System.out.println("Would you like to play Single Player or Multi Player?");
 
             while (true) {
-                System.out.print("Enter 'R' to refer to the rulebook, or 'S' to start the game: ");
+                System.out.print("Enter 'R' to refer to the rulebook, 'S' to start the game, or 'SHOP' to open the flair shop: ");
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
                 if (command.equals("R")) {
                     // Show the rulebook using the same scanner.
                     scrollRulebook(mainScanner, "src/rulebook/rulebook.txt");
+
                 } else if (command.equals("S")) {
                     // Start the game: single or multi?
                     System.out.println("Would you like to play Single Player (S) or Multi Player (M)?");
@@ -101,6 +112,12 @@ public class RunGame {
                     } else {
                         System.out.println("Unrecognized choice. Please enter S or M.");
                     }
+
+                } else if (command.equals("SHOP")) {
+                    // Show the shop menu (for demonstration, we pick the first account)
+                    Account currentAccount = accounts.get(0);
+                    openFlairShopMenu(currentAccount);
+
                 } else {
                     System.out.println("Command not recognized.");
                 }
@@ -114,8 +131,65 @@ public class RunGame {
     }
 
     /**
+     * Displays the FlairShop menu, showing available flairs and letting the user purchase them.
+     * @param account the account that wants to browse/purchase flairs
+     */
+    private void openFlairShopMenu(Account account) {
+        while (true) {
+            System.out.println("\n=== Flair Shop ===");
+            // Display current account stats
+            System.out.println("Current Balance: " + account.getBalance());
+            System.out.println("Wins: " + account.getWins());
+
+            List<Flair> availableFlairs = flairShop.getAvailableFlairs();
+            System.out.println("\nAvailable Flairs:");
+            for (int i = 0; i < availableFlairs.size(); i++) {
+                Flair flair = availableFlairs.get(i);
+                boolean alreadyOwned = account.hasFlair(flair.getFlairName());
+                System.out.printf("%d) %s - Cost: %.2f, Required Wins: %d %s%n",
+                    i + 1,
+                    flair.getFlairName(),
+                    flair.getCost(),
+                    flair.getRequiredWins(),
+                    alreadyOwned ? "[OWNED]" : ""
+                );
+            }
+
+            System.out.println("\nEnter the number of the flair to purchase it, or 'Q' to quit shop.");
+            String input = mainScanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("Q")) {
+                System.out.println("Exiting shop menu.");
+                break;
+            }
+
+            try {
+                int choice = Integer.parseInt(input);
+                if (choice < 1 || choice > availableFlairs.size()) {
+                    System.out.println("Invalid choice. Please try again.");
+                    continue;
+                }
+
+                Flair chosenFlair = availableFlairs.get(choice - 1);
+
+                if (account.hasFlair(chosenFlair.getFlairName())) {
+                    System.out.println("You already own this flair.");
+                } else {
+                    boolean purchased = flairShop.purchaseFlair(chosenFlair.getFlairName(), account);
+                    if (purchased) {
+                        System.out.println("Purchase successful! You now own '" + chosenFlair.getFlairName() + "'.");
+                    } else {
+                        System.out.println("Purchase failed. You may not meet the requirements or have enough balance.");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number or Q.");
+            }
+        }
+    }
+
+    /**
      * Launches single-player mode using the snippet-1 approach (GameManager.start).
-     * If you wanted to add bots or more accounts, you can prompt the user here.
      */
     private void startSinglePlayer() {
         UserInterface ui = new SinglePlayerUI();
