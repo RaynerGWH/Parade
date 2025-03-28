@@ -196,15 +196,34 @@ public class AccountFileManager {
     }
 
     /**
-     * Initializes a new account by prompting the user for an account name using the Scanner.
+     * Initializes the account.
+     * <p>
+     * If a saved account file exists and can be loaded successfully,
+     * the method loads and returns that account. Otherwise, it prompts
+     * the user to create a new account.
      *
-     * @return the newly created {@link Account}
+     * @return the loaded or newly created {@link Account}
      */
     public Account initialize() {
-        System.out.print("Enter account name: ");
-        String name = sc.nextLine();
-        Account newAccount = new Account(UUID.randomUUID(), name, 0, 0, 0.0, new ArrayList<>());
-        addAccount(newAccount);
-        return newAccount;
+        try {
+            Optional<Account> accountOpt = loadAccount();
+            if (accountOpt.isPresent()) {
+                System.out.println("Account loaded successfully: " + accountOpt.get().getUsername());
+                return accountOpt.get();
+            } else {
+                System.out.print("No saved account found. Enter account name to create a new account: ");
+                String name = sc.nextLine();
+                Account newAccount = new Account(UUID.randomUUID(), name, 0, 0, 0.0, new ArrayList<>());
+                addAccount(newAccount);
+                return newAccount;
+            }
+        } catch (IOException | CorruptFileException ex) {
+            System.out.println("Error loading account (" + ex.getMessage() + "). Creating a new account.");
+            System.out.print("Enter account name: ");
+            String name = sc.nextLine();
+            Account newAccount = new Account(UUID.randomUUID(), name, 0, 0, 0.0, new ArrayList<>());
+            addAccount(newAccount);
+            return newAccount;
+        }
     }
 }

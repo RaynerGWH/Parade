@@ -3,7 +3,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
 import account.Account;
@@ -11,103 +13,265 @@ import account.AccountFileManager;
 import game.GameClientEndpoint;
 import game.GameManager;
 import game.GameServerEndpoint;
-import ui.*;
+import jakarta.websocket.Session;
+import players.PlayerManager;
+import ui.MultiplayerUI;
+import ui.SinglePlayerUI;
+import ui.UserInterface;
 
-import jakarta.websocket.*;
-
+/**
+ * Revised RunGame class applying clean code principles:
+ * 1) Single Scanner usage for user input to avoid NoSuchElementException.
+ * 2) Avoid closing the scanner inside scrollRulebook.
+ * 3) Clear method and variable names.
+ * 4) Minimal catch blocks & clear error messages.
+ * 5) Sufficient commentary explaining logic.
+ */
 public class RunGame {
+
+    /** Single Scanner instance for the entire program's console input. */
+    private final Scanner mainScanner;
+
+    /** Example storage of accounts if single-player or local usage. */
+    private final ArrayList<Account> accounts;
+
+    /** A PlayerManager with no-arg constructor for potential expansions. */
+    private final PlayerManager playerMgr;
+
+    /** Our main GameManager from snippet 1. */
+    private final GameManager gameMgr;
+
+    /**
+     * Entry point of the program.
+     * @param args command-line arguments (unused).
+     */
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        GameManager gameMgr = new GameManager(sc);
-        UserInterface ui;
-        GameServerEndpoint gse = null;
-        GameClientEndpoint gce;
-        Map<Session,Account> sessions = new HashMap<Session, Account>();
-        CountDownLatch latch = new CountDownLatch(1);
+        RunGame rg = new RunGame();
+        rg.run();
+    }
 
-        System.out.println(" ____   _    ____      _    ____  _____ \r\n" + //
-                "|  _ \\ / \\  |  _ \\    / \\  |  _ \\| ____|\r\n" + //
-                "| |_) / _ \\ | |_) |  / _ \\ | | | |  _|  \r\n" + //
-                "|  __/ ___ \\|  _ <  / ___ \\| |_| | |___ \r\n" + //
-                "|_| /_/   \\_\\_| \\_\\/_/   \\_\\____/|_____|");
-        System.out.println("Welcome to the Parade Card Game!");
+    /**
+     * Constructor: initializes the main Scanner, accounts, managers, etc.
+     */
+    public RunGame() {
+        // Single Scanner for the entire lifecycle.
+        this.mainScanner = new Scanner(System.in);
 
-        System.out.print("Enter 'R' to refer to the rulebook, or 'S' to start the game: ");
-        String command = sc.nextLine().trim().toUpperCase();
-        if (command.equals("R")) {
-            scrollRulebook("rulebook/rulebook.txt");
+        // Initialize local accounts & read from user if desired.
+        this.accounts = new ArrayList<>();
+        AccountFileManager acctMgr = new AccountFileManager(this.mainScanner);
+        this.accounts.add(acctMgr.initialize());
 
-        } else if (command.equals("S")) {
-            int numBots = 0;
-            System.out.println("Would you like to play Single Player(S) or Multi Player(M)");
-            command = sc.nextLine().trim().toUpperCase();
-            AccountFileManager acctMgr = new AccountFileManager(sc);
-            Account a = acctMgr.initialize();
+        // No-arg constructor for PlayerManager.
+        this.playerMgr = new PlayerManager();
 
-            if (command.equals("S")) {
-                //Add my own account into the game
-                ui = new SinglePlayerUI();
-                sessions.put(null,a);
-                gameMgr.start(numBots, ui, gse);
+        // Our snippet-1 style GameManager that takes the main scanner.
+        this.gameMgr = new GameManager(this.mainScanner);
+    }
 
-            } else if (command.equals("M")) {
-                System.out.println("Please enter \"H\" to host, or \"J\" to join");
-                command = sc.nextLine();
-                if (command.equals("H")) {
-                    gse = new GameServerEndpoint();
-                    ui = new MultiplayerUI(gse);
-                    gameMgr.start(0, ui, gse);
-                    
-                } else if (command.equals("J")) {
-                    try {
-                        URI uri = new URI("ws://localhost:8080/game");
-                        gce = new GameClientEndpoint(uri, sc);
-                        // Create a latch that will only count down when the game session is done.
-                        latch = new CountDownLatch(1);
-                        gce.setLatch(latch);
-                
-                        // Now block the main thread until the latch is counted down.
-                        latch.await();
-                    } catch (URISyntaxException e) {
-                        System.out.println("Invalid URI Entered.");
-                    } catch (InterruptedException e) {
-                        System.out.println("Connection interrupted");
+    /**
+     * Primary run loop that offers the user the choice to read the rulebook or start the game.
+     */
+    private void run() {
+        try {
+            // Optional fancy animation on startup.
+            printParadeAnimation();
+
+            System.out.println("Would you like to play Single Player or Multi Player?");
+
+            while (true) {
+                System.out.print("Enter 'R' to refer to the rulebook, or 'S' to start the game: ");
+                String command = mainScanner.nextLine().trim().toUpperCase();
+
+                if (command.equals("R")) {
+                    // Show the rulebook using the same scanner.
+                    scrollRulebook(mainScanner, "src/rulebook/rulebook.txt");
+                } else if (command.equals("S")) {
+                    // Start the game: single or multi?
+                    System.out.println("Would you like to play Single Player (S) or Multi Player (M)?");
+                    String mode = mainScanner.nextLine().trim().toUpperCase();
+
+                    if (mode.equals("S")) {
+                        startSinglePlayer();
+                        return; // after single-player, exit the run() method.
+
+                    } else if (mode.equals("M")) {
+                        startMultiPlayer();
+                        return; // after multi-player, exit run().
+                    } else {
+                        System.out.println("Unrecognized choice. Please enter S or M.");
                     }
+                } else {
+                    System.out.println("Command not recognized.");
                 }
             }
-        } else {
-            System.out.println("Command not recognized.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // We can close the scanner once we are truly done with the program.
+            mainScanner.close();
         }
     }
 
-    public static void scrollRulebook(String filePath) {
+    /**
+     * Launches single-player mode using the snippet-1 approach (GameManager.start).
+     * If you wanted to add bots or more accounts, you can prompt the user here.
+     */
+    private void startSinglePlayer() {
+        UserInterface ui = new SinglePlayerUI();
+
+        System.out.print("Enter number of bots (if any): ");
+        int numBots = 0;
+        try {
+            numBots = Integer.parseInt(mainScanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number, defaulting to 0.");
+            numBots = 0;
+        }
+
+        // snippet-1 usage: no direct calls to PlayerManager, pass null for server endpoint.
+        gameMgr.start(numBots, ui, null);
+    }
+
+    /**
+     * Launches multi-player mode, hosting (H) or joining (J).
+     * If hosting, we create a GameServerEndpoint; if joining, we create a GameClientEndpoint.
+     */
+    private void startMultiPlayer() {
+        System.out.println("Please enter \"H\" to host, or \"J\" to join");
+        String subCmd = mainScanner.nextLine().trim().toUpperCase();
+
+        if (subCmd.equals("H")) {
+            // Host
+            GameServerEndpoint gse = new GameServerEndpoint();
+            UserInterface ui = new MultiplayerUI(gse);
+            gameMgr.start(0, ui, gse);
+
+        } else if (subCmd.equals("J")) {
+            // Join
+            try {
+                URI uri = new URI("ws://localhost:8080/game");
+                GameClientEndpoint gce = new GameClientEndpoint(uri, mainScanner);
+                CountDownLatch latch = new CountDownLatch(1);
+                gce.setLatch(latch);
+                latch.await();
+            } catch (URISyntaxException e) {
+                System.out.println("Invalid URI Entered.");
+            } catch (InterruptedException e) {
+                System.out.println("Connection interrupted.");
+            }
+        } else {
+            System.out.println("Unrecognized command for hosting or joining.");
+        }
+    }
+
+    /**
+     * Prints the fancy 'PARADE' animation seen in snippet 1/2.
+     * @throws InterruptedException if the thread is interrupted during sleep.
+     */
+    private void printParadeAnimation() throws InterruptedException {
+        String[] paradeLetterP = {
+            "██████╗ ",
+            "██╔══██╗",
+            "██████╔╝",
+            "██╔═══╝ ",
+            "██║     ",
+            "╚═╝     "};
+
+        String[] paradeLetterA1 = {
+            " █████╗ ",
+            "██╔══██╗",
+            "███████║",
+            "██╔══██║",
+            "██║  ██║",
+            "╚═╝  ╚═╝"};
+
+        String[] paradeLetterR = {
+            "██████╗ ",
+            "██╔══██╗",
+            "██████╔╝",
+            "██╔══██╗",
+            "██║  ██║",
+            "╚═╝  ╚═╝"};
+
+        String[] paradeLetterA2 = paradeLetterA1; // reuse A
+        String[] paradeLetterD = {
+            "██████╗ ",
+            "██╔══██╗",
+            "██║  ██║",
+            "██║  ██║",
+            "██████╔╝",
+            "╚═════╝ "};
+
+        String[] paradeLetterE = {
+            "███████╗",
+            "██╔════╝",
+            "█████╗  ",
+            "██╔══╝  ",
+            "███████╗",
+            "╚══════╝"};
+
+        String[][] letters = {
+            paradeLetterP, paradeLetterA1, paradeLetterR, paradeLetterA2, paradeLetterD, paradeLetterE
+        };
+
+        int timer = 70;
+        for (int row = 0; row < 6; row++) {
+            for (String[] letter : letters) {
+                System.out.print(letter[row]);
+                Thread.sleep(timer);
+            }
+            System.out.println();
+            timer /= 1.2; // speed up each row
+        }
+    }
+
+    /**
+     * Scrolls through the rulebook file, using the same Scanner as the main program.
+     * We do NOT close the scanner here, so that main program remains interactive afterwards.
+     *
+     * @param sc The shared Scanner from RunGame.
+     * @param filePath Path to the rulebook file.
+     */
+    public static void scrollRulebook(Scanner sc, String filePath) {
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
-            Scanner scanner = new Scanner(System.in);
             int linesPerPage = 15;
             int totalPages = (int) Math.ceil((double) lines.size() / linesPerPage);
             int currentPage = 0;
-            String input;
 
             while (true) {
-                // Display the current page
                 int start = currentPage * linesPerPage;
                 int end = Math.min(start + linesPerPage, lines.size());
+
                 System.out.println("\nPage " + (currentPage + 1) + " of " + totalPages + ":");
                 for (int i = start; i < end; i++) {
                     System.out.println(lines.get(i));
                 }
 
-                // Prompt user for input
-                System.out.print("\nEnter (N)ext, (P)revious, or (Q)uit: ");
-                input = scanner.nextLine().trim().toUpperCase();
+                if (currentPage == 0) {
+                    System.out.print("\nEnter (N)ext or (Q)uit: ");
+                } else {
+                    System.out.print("\nEnter (N)ext, (P)revious, or (Q)uit: ");
+                }
 
+                if (!sc.hasNextLine()) {
+                    System.out.println("No more input available.");
+                    return;
+                }
+
+                String input = sc.nextLine().trim().toUpperCase();
                 switch (input) {
                     case "N":
                         if (currentPage < totalPages - 1) {
                             currentPage++;
                         } else {
                             System.out.println("This is the last page.");
+                            boolean userQuit = navigateEndOfRulebook(sc, totalPages, currentPage);
+                            if (userQuit) {
+                                // user pressed Q in sub-nav => exit entire rulebook
+                                return;
+                            }
                         }
                         break;
                     case "P":
@@ -119,15 +283,48 @@ public class RunGame {
                         break;
                     case "Q":
                         System.out.println("Exiting rulebook.");
-                        scanner.close();
                         return;
                     default:
                         System.out.println("Invalid input. Please try again.");
                 }
             }
+
         } catch (IOException e) {
             System.out.println("Error reading rulebook file: " + e.getMessage());
         }
     }
-}
 
+    /**
+     * Handles user navigation after they reach the last page.
+     * @return true if user selected Q (quit entirely), false otherwise.
+     */
+    private static boolean navigateEndOfRulebook(Scanner sc, int totalPages, int currentPage) {
+        while (true) {
+            System.out.print("Enter (P)revious, (F)irst, or (Q)uit: ");
+
+            if (!sc.hasNextLine()) {
+                System.out.println("No more input.");
+                return false;
+            }
+
+            String subInput = sc.nextLine().trim().toUpperCase();
+            switch (subInput) {
+                case "P":
+                    if (currentPage > 0) {
+                        currentPage--;
+                    }
+                    return false; // means keep going in scrollRulebook
+                case "F":
+                    currentPage = 0;
+                    return false;
+                case "Q":
+                    System.out.println("Exiting rulebook.");
+                    return true;  // user chose to quit => exit entire method
+                default:
+                    System.out.println("Invalid input.");
+                    // remain in loop until valid choice
+                    break;
+            }
+        }
+    }
+}
