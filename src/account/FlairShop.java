@@ -1,14 +1,18 @@
 package account;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Represents a "shop" from which players can buy flairs. This class stores a list of
  * available {@link Flair} objects. An account can purchase a flair if:
- * 
- *   1. The account's wins are >= the flair's required wins</li>
- *   2. The account's balance is >= flair's cost</li>
+ *
+ *   1. The account's wins are >= the flair's required wins
+ *   2. The account's balance is >= flair's cost
+ *
+ * Additionally, once a flair is successfully purchased, this class
+ * will update the Save.PG1 file via AccountFileManager.
  */
 public class FlairShop {
     /**
@@ -17,23 +21,32 @@ public class FlairShop {
     private final List<Flair> availableFlairs;
 
     /**
-     * Constructs a FlairShop and populates it with some sample flairs.
+     * A reference to the AccountFileManager, so we can save changes to Save.PG1.
      */
-    public FlairShop() {
+    private final AccountFileManager fileManager;
+
+    /**
+     * Constructs a FlairShop using the given AccountFileManager
+     * and populates it with some sample flairs.
+     *
+     * @param fileManager the file manager used to save account updates
+     */
+    public FlairShop(AccountFileManager fileManager) {
+        this.fileManager = fileManager;
         this.availableFlairs = new ArrayList<>();
-        // Flairs (name, description, minWins, cost)
+
+        // Sample flairs (name, description, minWins, cost)
         availableFlairs.add(new Flair("grass toucher", "grass is horrified at your presence", 0, 0.0));
         availableFlairs.add(new Flair("i luv cat", "meow meow", 5, 100.0));
         availableFlairs.add(new Flair("i luv dawg", "roof roof", 5, 100.0));
         availableFlairs.add(new Flair("mr halfway there", "25 more wins to a pointless title", 25, 250.0));
         availableFlairs.add(new Flair("pointless title", "pls get a life :3", 50, 500.0));
         availableFlairs.add(new Flair("egg", "maybe there's an easter egg...", 100, 9999.0));
-
     }
 
     /**
      * Returns the list of flairs currently available in the shop.
-     * @return an unmodifiable view or a copy of the list of flairs
+     * @return a copy of the list of flairs
      */
     public List<Flair> getAvailableFlairs() {
         // Return a copy to preserve internal data
@@ -41,7 +54,8 @@ public class FlairShop {
     }
 
     /**
-     * Attempts to purchase a flair (by name) for the specified account.
+     * Attempts to purchase a flair (by name) for the specified account, then
+     * saves the updated account data to Save.PG1 if successful.
      *
      * @param flairName the name of the flair to purchase
      * @param account   the account attempting the purchase
@@ -71,8 +85,17 @@ public class FlairShop {
         if (flairToBuy.canBePurchasedBy(account)) {
             // Deduct cost from account
             account.deductBalance(flairToBuy.getCost());
+
             // Unlock flair
             account.unlockFlair(flairToBuy.getFlairName());
+
+            // Immediately save to file so the user’s Save.PG1 is updated
+            try {
+                fileManager.save(account);
+            } catch (IOException e) {
+                System.err.println("Failed to save updated account data: " + e.getMessage());
+            }
+
             return true;
         }
 

@@ -140,16 +140,28 @@ public class AccountFileManager {
             int losses = Integer.parseInt(details[3]);
             double balance = Double.parseDouble(details[4]);
     
-            // Parse flair list
+            // The line in your file that has the account data
             String flairData = details[5];
-            // Remove brackets, quotes, spaces
-            flairData = flairData.replaceAll("[\\[\\]\"\\s]", "");
+
+            // Remove only brackets and quotes, but NOT spaces
+            flairData = flairData.replaceAll("[\\[\\]\"]", "");
+
+            // Prepare a list for unlocked flairs
             List<String> unlockedFlairs = new ArrayList<>();
-    
-            if (!flairData.isEmpty()) {
-                unlockedFlairs.addAll(Arrays.asList(flairData.split(",")));
+
+            // If there's anything left, split on commas
+            if (!flairData.trim().isEmpty()) {
+                // Split on commas
+                String[] tokens = flairData.split(",");
+                for (String token : tokens) {
+                    // Trim leading/trailing spaces
+                    String flairName = token.trim();
+                    if (!flairName.isEmpty()) {
+                        unlockedFlairs.add(flairName);
+                    }
+                }
             }
-    
+
             return new Account(uuid, name, wins, losses, balance, unlockedFlairs);
         } catch (IllegalArgumentException e) {
             throw new CorruptFileException("Failed to parse account data.");

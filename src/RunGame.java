@@ -29,7 +29,8 @@ import ui.UserInterface;
  * 4) Minimal catch blocks & clear error messages.
  * 5) Sufficient commentary explaining logic.
  *
- * Now updated to include a FlairShop option in the menu.
+ * Now updated to include a FlairShop option in the menu,
+ * and to save purchases to Save.PG1 via AccountFileManager.
  */
 public class RunGame {
 
@@ -48,6 +49,9 @@ public class RunGame {
     /** The FlairShop to allow users to purchase flairs. */
     private final FlairShop flairShop;
 
+    /** The AccountFileManager used to load/save data to Save.PG1. */
+    private final AccountFileManager fileMgr;
+
     /**
      * Entry point of the program.
      * @param args command-line arguments (unused).
@@ -64,10 +68,13 @@ public class RunGame {
         // Single Scanner for the entire lifecycle.
         this.mainScanner = new Scanner(System.in);
 
-        // Initialize local accounts & read from user if desired.
+        // Create an AccountFileManager, load (or create) the main Account.
+        this.fileMgr = new AccountFileManager(this.mainScanner);
+        Account currentAccount = fileMgr.initialize();
+
+        // Put that Account into our local list.
         this.accounts = new ArrayList<>();
-        AccountFileManager acctMgr = new AccountFileManager(this.mainScanner);
-        this.accounts.add(acctMgr.initialize());
+        this.accounts.add(currentAccount);
 
         // No-arg constructor for PlayerManager.
         this.playerMgr = new PlayerManager();
@@ -75,8 +82,8 @@ public class RunGame {
         // Our snippet-1 style GameManager that takes the main scanner.
         this.gameMgr = new GameManager(this.mainScanner);
 
-        // Instantiate the FlairShop.
-        this.flairShop = new FlairShop();
+        // Instantiate the FlairShop with the file manager, so successful purchases save to Save.PG1.
+        this.flairShop = new FlairShop(this.fileMgr);
     }
 
     /**
@@ -136,7 +143,7 @@ public class RunGame {
      */
     private void openFlairShopMenu(Account account) {
         while (true) {
-            System.out.println("\n=== Flair Shop ===");
+            System.out.println("\n===== Flair Shop =====");
             // Display current account stats
             System.out.println("Current Balance: " + account.getBalance());
             System.out.println("Wins: " + account.getWins());
