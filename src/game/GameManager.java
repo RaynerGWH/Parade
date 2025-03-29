@@ -110,7 +110,6 @@ public class GameManager {
                 int minimumNumberOfBots = 2 - numPlayers;
                 System.out.println("Please enter a valid number! Number of total players must be between "
                                    + minimumNumberOfBots + " and " + maximumNumberOfBots);
-                System.out.println("Please enter a valid number! Number of total players must be < 9 and > 1.");
             }
         }
     }
