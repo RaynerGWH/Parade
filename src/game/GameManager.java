@@ -104,6 +104,12 @@ public class GameManager {
                 return numBots;
 
             } catch (NumberFormatException e) {
+                // Max number of bots able to be added : 8 - numplayers
+                // Min number of bots to be added : 2 - numplayers
+                int maximumNumberOfBots = 8 - numPlayers;
+                int minimumNumberOfBots = 2 - numPlayers;
+                System.out.println("Please enter a valid number! Number of total players must be between "
+                                   + minimumNumberOfBots + " and " + maximumNumberOfBots);
                 System.out.println("Please enter a valid number! Number of total players must be < 9 and > 1.");
             }
         }
