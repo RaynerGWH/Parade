@@ -3,7 +3,7 @@
 *Presenting the popular card game, Parade, to your computer console!*
 
 ![App Screenshot](images/parade_banner.png)
-Parade is a strategic card game where players try avoiding taking cards from it to finish with the loweest score.  Our implementation focuses on game logic and straightforward console interaction using Nielson's 7 Heuristics based on the official rules.
+Parade is a strategic card game where players try avoiding taking cards from it to finish with the loweest score.  Our implementation focuses on game logic and straightforward console interaction using Nielson's Usability Heuristics for Design, based on the official rules.
 
 ---
 
