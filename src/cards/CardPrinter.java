@@ -9,7 +9,6 @@ public class CardPrinter {
     public static void printCardRow(List<Card> cards, boolean isParade) {
         try {
             if (cards == null || cards.isEmpty()) {
-                System.out.println("No cards to print.");
                 return;
             }
     

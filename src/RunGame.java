@@ -1,3 +1,10 @@
+import account.Account;
+import account.AccountFileManager;
+import account.Flair;
+import account.FlairShop;
+import game.GameClientEndpoint;
+import game.GameManager;
+import game.GameServerEndpoint;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -7,14 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
-
-import account.Account;
-import account.AccountFileManager;
-import account.Flair;
-import account.FlairShop;
-import game.GameClientEndpoint;
-import game.GameManager;
-import game.GameServerEndpoint;
 import ui.MultiplayerUI;
 import ui.SinglePlayerUI;
 import ui.UserInterface;
@@ -92,8 +91,6 @@ public class RunGame {
             // Optional fancy animation on startup.
             printParadeAnimation();
 
-            System.out.println("Would you like to play Single Player or Multi Player?");
-
             while (true) {
                 System.out.print("Enter 'R' to refer to the rulebook, 'S' to start the game, or 'SHOP' to open the flair shop: ");
                 String command = mainScanner.nextLine().trim().toUpperCase();
@@ -104,7 +101,7 @@ public class RunGame {
 
                 } else if (command.equals("S")) {
                     // Start the game: single or multi?
-                    System.out.println("Would you like to play Single Player (S) or Multi Player (M)?");
+                    System.out.print("Enter 'S' for Singleplayer or 'M' for Multiplayer: ");
                     String mode = mainScanner.nextLine().trim().toUpperCase();
 
                     if (mode.equals("S")) {
@@ -115,7 +112,7 @@ public class RunGame {
                         startMultiPlayer();
                         return; // after multi-player, exit run().
                     } else {
-                        System.out.println("Unrecognized choice. Please enter S or M.");
+                        System.out.println("Please only enter 'S' or 'M'.");
                     }
 
                 } else if (command.equals("SHOP")) {
@@ -216,7 +213,7 @@ public class RunGame {
      * If hosting, we create a GameServerEndpoint; if joining, we create a GameClientEndpoint.
      */
     private void startMultiPlayer() {
-        System.out.println("Please enter \"H\" to host, or \"J\" to join");
+        System.out.print("Please enter 'H' to host, or 'J\'' to join");
         String subCmd = mainScanner.nextLine().trim().toUpperCase();
 
         if (subCmd.equals("H")) {

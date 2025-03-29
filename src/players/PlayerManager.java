@@ -54,7 +54,7 @@ public class PlayerManager {
                     //     continue;
                     // }
 
-                    System.out.println("Enter difficulty of bot " + i + "(Level 1 OR 2)");
+                    System.out.print("Enter difficulty of bot " + i + " (Level 1 or 2): ");
                     String difficulty = sc.nextLine();
                     int diffLvl = Integer.parseInt(difficulty);
                     Player bot = checkDiff(diffLvl);
@@ -85,7 +85,7 @@ public class PlayerManager {
         } else {
             Collections.shuffle(players);
         }
-        System.out.println(players.get(0).getName() + "will start first");
+        System.out.println(players.get(0).getName() + " will start first");
     }
 
     public ArrayList<Player> getPlayers() {
@@ -182,49 +182,50 @@ private static Player resolveTie(List<Player> candidates, Scanner scanner) {
     private static void printDiceFace(int roll) {
         switch (roll) {
             case 1:
-                System.out.println("-----");
-                System.out.println("|   |");
-                System.out.println("| * |");
-                System.out.println("|   |");
-                System.out.println("-----");
+                System.out.println("╭─────────╮");
+                System.out.println("│         │");
+                System.out.println("│    ●    │");
+                System.out.println("│         │");
+                System.out.println("╰─────────╯");
                 break;
+
             case 2:
-                System.out.println("-----");
-                System.out.println("|*  |");
-                System.out.println("|   |");
-                System.out.println("|  *|");
-                System.out.println("-----");
+                System.out.println("╭─────────╮");
+                System.out.println("│  ●      │");
+                System.out.println("│         │");
+                System.out.println("│      ●  │");
+                System.out.println("╰─────────╯");
                 break;
             case 3:
-                System.out.println("-----");
-                System.out.println("|*  |");
-                System.out.println("| * |");
-                System.out.println("|  *|");
-                System.out.println("-----");
+                System.out.println("╭─────────╮");
+                System.out.println("│  ●      │");
+                System.out.println("│    ●    │");
+                System.out.println("│      ●  │");
+                System.out.println("╰─────────╯");
                 break;
             case 4:
-                System.out.println("-----");
-                System.out.println("|* *|");
-                System.out.println("|   |");
-                System.out.println("|* *|");
-                System.out.println("-----");
+                System.out.println("╭─────────╮");
+                System.out.println("│  ●   ●  │");
+                System.out.println("│         │");
+                System.out.println("│  ●   ●  │");
+                System.out.println("╰─────────╯");
                 break;
             case 5:
-                System.out.println("-----");
-                System.out.println("|* *|");
-                System.out.println("| * |");
-                System.out.println("|* *|");
-                System.out.println("-----");
+                System.out.println("╭─────────╮");
+                System.out.println("│  ●   ●  │");
+                System.out.println("│    ●    │");
+                System.out.println("│  ●   ●  │");
+                System.out.println("╰─────────╯");
                 break;
             case 6:
-                System.out.println("-----");
-                System.out.println("|* *|");
-                System.out.println("|* *|");
-                System.out.println("|* *|");
-                System.out.println("-----");
+                System.out.println("╭─────────╮");
+                System.out.println("│  ●   ●  │");
+                System.out.println("│  ●   ●  │");
+                System.out.println("│  ●   ●  │");
+                System.out.println("╰─────────╯");
                 break;
             default:
-                System.out.println("Invalid roll");
+                System.out.println("Invalid roll.");
         }
     }
 }

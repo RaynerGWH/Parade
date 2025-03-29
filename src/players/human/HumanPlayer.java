@@ -40,7 +40,7 @@ public class HumanPlayer extends AbstractPlayer {
         }
     }
     
-    //Singleplayer handler
+    // Singleplayer handler
     @Override
     public Card chooseCardToDiscard() {
         handleCardSelection("discard");
@@ -82,8 +82,8 @@ public class HumanPlayer extends AbstractPlayer {
     }
 
     private void promptForCardIndex(String action) {
-        String prompt = name + ", enter the index of the card you want to " + action + "(0 - 4):";
-        System.out.println(prompt);
+        String prompt = name + ", enter the position of the card you want to " + action + " (0 - 4): ";
+        System.out.print(prompt);
     }
 
     public String getName() {

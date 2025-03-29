@@ -48,26 +48,33 @@ public class Game {
         // Game mode selection with validation
         boolean validGameMode = false;
         while (!validGameMode) {
-            System.out.println("\nSelect Game Mode:");
-            System.out.println("1. Classic Mode");
-            System.out.println("2. Timed Mode");
-            System.out.println("Enter your choice (1-2): ");
+            System.out.println("Game Modes available:");
+            System.out.println("    1. Classic");
+            System.out.println("    2. Timed");
+            System.out.print("Enter '1' or '2': ");
             String gameModeChoice = scanner.nextLine().trim();
             
             if (gameModeChoice.equals("2")) {
                 validGameMode = true;
                 timedMode = true;
-                System.out.println("\nSelect time limit:");
-                System.out.println("1. 1-minute blitz");
-                System.out.println("2. 5-minute challenge");
-                System.out.println("3. 10-minute game");
+                System.out.print( "\n████████╗██╗███╗   ███╗███████╗██████╗    ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" + //
+                                    "╚══██╔══╝██║████╗ ████║██╔════╝██╔══██╗   ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" + //
+                                    "   ██║   ██║██╔████╔██║█████╗  ██║  ██║   ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" + //
+                                    "   ██║   ██║██║╚██╔╝██║██╔══╝  ██║  ██║   ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" + //
+                                    "   ██║   ██║██║ ╚═╝ ██║███████╗██████╔╝   ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" + //
+                                    "   ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝    ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\n");
+                System.out.print("════════════════════════════════════════════════════════════════════════════");
+                System.out.println("\nCategories:");
+                System.out.println("    1. 1-minute blitz");
+                System.out.println("    2. 5-minute challenge");
+                System.out.println("    3. 10-minute game");
                 
                 int timeChoice = 0;
                 boolean validChoice = false;
                 
                 while (!validChoice) {
                     try {
-                        System.out.print("Enter your choice (1-3): ");
+                        System.out.print("Enter category (1-3): ");
                         timeChoice = Integer.parseInt(scanner.nextLine().trim());
                         if (timeChoice >= 1 && timeChoice <= 3) {
                             validChoice = true;
@@ -299,10 +306,10 @@ public class Game {
             HumanPlayer hp = (HumanPlayer)currentPlayer;
             s = hp.getSession();
 
-            ui.displayMessage("─────────────────────────────────────", s);
+            ui.displayMessage("══════════════════════════════════════════════════════════════", s);
             ui.displayMessage("THE PARADE:", s);
             CardPrinter.printCardRow(parade, true);
-            ui.displayMessage("─────────────────────────────────────", s);
+            ui.displayMessage("══════════════════════════════════════════════════════════════", s);
 
             hp.displayHand();
 
@@ -333,7 +340,8 @@ public class Game {
         }
         
         
-        ui.broadcastMessage(currentPlayer.getName() + " played: " + choice.toString() + "\n");
+        ui.broadcastMessage(currentPlayer.getName() + " played:");
+        CardPrinter.printCardRow(Collections.singletonList(choice), false);
 
         int choiceValue = choice.getValue();
         Color choiceColor = choice.getColor();
@@ -367,11 +375,13 @@ public class Game {
 
         // Display which cards were taken
         if (!takenCards.isEmpty()) {
-            ui.broadcastMessage(currentPlayer.getName() + " takes the following cards from the parade: " + takenCards);
+            ui.broadcastMessage(currentPlayer.getName() + " takes the following cards from the parade:");
+            CardPrinter.printCardRow(takenCards, true);
+            System.out.println();
         } else {
             ui.broadcastMessage(currentPlayer.getName() + " takes no cards from the parade!");
+            System.out.println();
         }
-        ui.broadcastMessage("\n");
 
         // game ends if the deck is empty OR the current river has one of each color
         if (currRiver.size() != 0) {
@@ -399,7 +409,14 @@ public class Game {
             currentPlayer.drawCard(toDraw);
         }
 
-        ui.broadcastMessage(currentPlayer.getName() + "'s River: " + currRiver.toString());
+        ui.broadcastMessage(currentPlayer.getName() + "'s River: ");
+
+        // We check if the river is null or empty
+        if (currRiver == null || currRiver.isEmpty()) {
+            System.out.println("No cards in River.");
+        } else {
+            CardPrinter.printCardRow(currRiver, true);
+        }
 
         return gameIsOver;
     }

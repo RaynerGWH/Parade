@@ -28,8 +28,8 @@ public class BeginnerComputerPlayer extends AbstractPlayer {
             // Completely random selection
             int index = random.nextInt(hand.size());
             Card card = playCard(index);
-            System.out.println(name + " (Beginner) plays: " + card);
-            CardPrinter.printCardRow(Collections.singletonList(card), false);
+            // System.out.println(name + " (Beginner) plays: ");
+            // CardPrinter.printCardRow(Collections.singletonList(card), false);
             return card;
         } catch (InterruptedException e) {
             System.out.println("Thread was interrupted");
