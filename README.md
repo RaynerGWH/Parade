@@ -1,55 +1,58 @@
 # 🎭 Parade Card Game (G2T5)
 
-*Parading the wonder and playfulness of nerdy CS minds, presenting a console strategy game where probability meets planning, and prepared players prevail—one parade at a time!*
+*Presenting the popular card game, Parade, to your computer console!*
 
 ![App Screenshot](images/parade_banner.png)
-Programming in Java, our project provides the popular card game "Parade" in a polished virtual console playground!
-
-Parade play prioritizes predicting when to push forward, when to pause, and when to pay penalties. Perfecting not just pretty patterns, we pondered over precise card game logic, point calculations, and polished console UIs while producing this project.  
+Parade is a strategic card game where players try avoiding taking cards from it to finish with the loweest score.  Our implementation focuses on game logic and straightforward console interaction using Nielson's Usability Heuristics for Design, based on the official rules.
 
 ---
 
-## 👥 Parade Participants
+## 👥 Parade Creators
 
-1. GOH WOON HONG RAYNER
-2. KHOO KAR XING
-3. TAM KAI ZE
-4. WINDY HENG HUI YI
-5. CHAI YI KHUEN
-6. ERNEST NG CHEN YI
+1.  CHAI YI KHUEN
+2.  ERNEST NG CHEN YI
+3.  GOH WOON HONG RAYNER
+4.  KHOO KAR XING
+5.  TAM KAI ZE
+6.  WINDY HENG HUI YI
 
 ---
 
 ## 📜 Parade Principles
 
-Perplexed about Parade? Panic not! Peek at this [PDF](https://cdn.1j1ju.com/medias/8f/7e/8f-parade-rulebook.pdf) for proper play principles.
-Perhaps puzzling at first, practice will pave the path to becoming a parade prodigy! 🎪✨  
+The complete game mechanics are detailed in the [official rulebook](https://cdn.1j1ju.com/medias/8f/7e/8f-parade-rulebook.pdf). 🎪✨  
 
 ---
 
 ## ▶️ Playing Parade
 
+Prerequisites: 
+💡 You need a Java Development Kit (JDK) installed to compile and run the game.
+
 1. Compile the Java Code:
+
+Open your terminal or command prompt in the project directory and run the below compile script:
 
 ```bash
 compile.bat
 ```
 2. Run the Game:
 
+In the same terminal window, run the start script:
+
 ```bash
 run.bat
 ```
 
 Source code
-💡 Note: All source code is tucked safely inside `src`
+💡 Note: All source codes (`.java` files) are located in `src`.
 
 ---
 
 ### 🔁 Sequence Diagram
-Providing a practical peek into Parade’s processing, a prepared sequence diagram portrays how primary backend parts perform to propel the parade perfectly.
+For those interested in the program's flow, the sequence diagram shows how different parts of the code interact during gameplay. It helps visualize the process from playing a card to calculating scores.
 
 ---
 
 ### 🧱 UML Diagram
-To Present a polished perspective on Parade’s programming—portraying primary classes, proper relationships, primary patterns, and precise inheritance pathways, we prepared a UML Diagram.
-
+We prepared a UML diagram to illustrate the relationships of the classes and how they are organized.
