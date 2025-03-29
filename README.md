@@ -37,7 +37,7 @@ Open your terminal or command prompt in the project directory and run the below 
 compile.bat
 ```
 2. Run the Game:
-3. 
+
 In the same terminal window, run the start script:
 
 ```bash
