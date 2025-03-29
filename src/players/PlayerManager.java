@@ -29,7 +29,7 @@ public class PlayerManager {
             Account a = entry.getValue();
             String username = a.getUsername();
             ArrayList<Card> hand = initialiseHand();
-            players.add(new HumanPlayer(hand, username, s));
+            players.add(new HumanPlayer(hand, username, s, sc));
         }
     }
 

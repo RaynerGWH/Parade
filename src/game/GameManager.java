@@ -1,11 +1,11 @@
 package game;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.HashMap;
 
 import org.glassfish.tyrus.server.*;
 import jakarta.websocket.*;
@@ -20,20 +20,24 @@ public class GameManager {
     Scanner sc;
     PlayerManager playerMgr = new PlayerManager();
     UserInterface ui;
-    int numBots;
     GameServerEndpoint gse;
     private Map<Session, Account> sessions;
+    int numBots;
 
 
     public GameManager(Scanner sc) {
         this.sc = sc;
     }
 
-    public void start(int numBots, UserInterface ui, GameServerEndpoint gse) {
+    public void start(UserInterface ui, GameServerEndpoint gse) {
         this.ui = ui;
-        this.numBots = numBots;
         this.gse = gse;
-        this.sessions = GameServerEndpoint.getSessionPlayers();
+
+        if (gse != null) {
+            this.sessions = GameServerEndpoint.getSessionPlayers();
+        } else {
+            this.sessions = new HashMap<Session, Account>();
+        }
 
         if (ui instanceof SinglePlayerUI) {
             singleplayerHandler();
@@ -50,7 +54,10 @@ public class GameManager {
 
     public void singleplayerHandler() {
         boolean isMulti = false;
-        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers(), isMulti);
+        AccountFileManager acctMgr = new AccountFileManager();
+        Account userAcct = acctMgr.initialize();
+        sessions.put(null, userAcct);
+        playerMgr.initializeHumanPlayers(sessions, isMulti);
         botHandler(1);
     }
 
@@ -58,8 +65,6 @@ public class GameManager {
         boolean isMulti = true;
         humanHandler();
         playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers(), isMulti);
-
-        // mapPlayers();
 
         if (sessions.size() < 8) {
             numBots = botHandler(sessions.size());
@@ -106,7 +111,6 @@ public class GameManager {
 
     public void humanHandler() {
         // We start the server only if there are other human players(besides yourself)
-
         // TODO: ADD CHECKING FUNCCTION TO PREVENT STARTING WITHOUT OTHER PLAYERS
 
         startWebSocketServer();

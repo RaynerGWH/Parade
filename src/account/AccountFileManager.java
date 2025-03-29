@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -27,6 +26,9 @@ public class AccountFileManager {
 
     // The name of the file to store account data
     private static final String FILE_PATH = "Save.PG1";
+
+    //A form of error handling: prevents users from entering funny stuff in their name
+    private static final String NAME_REGEX = "^[A-Za-z0-9]+$";
 
     // The expected header of the stored file
     private static final String HEADER = "ID/NAME/WIN/LOSS/BALANCE-[FLAIR]\n";
@@ -217,25 +219,36 @@ public class AccountFileManager {
      * @return the loaded or newly created {@link Account}
      */
     public Account initialize() {
-        try {
-            Optional<Account> accountOpt = loadAccount();
-            if (accountOpt.isPresent()) {
-                System.out.println("Account loaded successfully: " + accountOpt.get().getUsername());
-                return accountOpt.get();
-            } else {
-                System.out.print("No saved account found. Enter account name to create a new account: ");
-                String name = sc.nextLine();
-                Account newAccount = new Account(UUID.randomUUID(), name, 0, 0, 0.0, new ArrayList<>());
-                addAccount(newAccount);
-                return newAccount;
+        while (true) {
+            try {
+                Optional<Account> accountOpt = loadAccount();
+                if (accountOpt.isPresent()) {
+                    System.out.println("Account loaded successfully: " + accountOpt.get().getUsername());
+                    return accountOpt.get();
+                } else {
+                    System.out.print("No saved account found. Enter account name to create a new account: ");
+                    String name = sc.nextLine();
+                    //Name verification
+                    if (name.matches(NAME_REGEX)) {
+                        Account newAccount = new Account(UUID.randomUUID(), name, 0, 0, 0.0, new ArrayList<>());
+                        save(newAccount);
+                        addAccount(newAccount);
+                        return newAccount;
+                    } else {
+                        throw new IOException();
+                    }
+                }
+            } catch (CorruptFileException e) {
+                // System.out.println("Error loading account (" + ex.getMessage() + "). Creating a new account.");
+                // System.out.print("Enter account name: ");
+                // String name = sc.nextLine();
+                // Account newAccount = new Account(UUID.randomUUID(), name, 0, 0, 0.0, new ArrayList<>());
+                // addAccount(newAccount);
+                // return newAccount;
+                System.out.println("Error loading account: File may be corrupted. Please delete Save.PG1 file and try again.");
+            } catch (IOException e) {
+                System.out.println("Invalid input. Account can only ");
             }
-        } catch (IOException | CorruptFileException ex) {
-            System.out.println("Error loading account (" + ex.getMessage() + "). Creating a new account.");
-            System.out.print("Enter account name: ");
-            String name = sc.nextLine();
-            Account newAccount = new Account(UUID.randomUUID(), name, 0, 0, 0.0, new ArrayList<>());
-            addAccount(newAccount);
-            return newAccount;
         }
     }
 }

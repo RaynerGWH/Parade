@@ -4,31 +4,60 @@ import cards.*;
 import players.AbstractPlayer;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import jakarta.websocket.*;
 
 public class HumanPlayer extends AbstractPlayer {
     private String name;
     private transient Session session;
+    private Scanner sc;
 
-    public HumanPlayer(ArrayList<Card> hand, String name, Session session) {
+    public HumanPlayer(ArrayList<Card> hand, String name, Session session, Scanner sc) {
         super(hand);
         this.name = name;
         this.session = session;
+        this.sc = sc;
     }
 
-    //Not used by the multiplayer game
+    //Singleplayer handler
     @Override
     public Card chooseCardToPlay() {
         handleCardSelection("play");
-        return null;
+        int index = -1;
+        while (true) {
+            String input = sc.nextLine();
+            try {
+                index = Integer.parseInt(input);
+                if (index >= 0 && index < hand.size()) {
+                    return playCard(index);
+                } else {
+                    System.out.println("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + ".");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+            }
+        }
     }
     
-    //Not used by multiplayer game
+    //Singleplayer handler
     @Override
     public Card chooseCardToDiscard() {
         handleCardSelection("discard");
-        return null;
+        int index = -1;
+        while (true) {
+            String input = sc.nextLine();
+            try {
+                index = Integer.parseInt(input);
+                if (index >= 0 && index < hand.size()) {
+                    return playCard(index);
+                } else {
+                    System.out.println("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + ".");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+            }
+        }
     }
 
     private void handleCardSelection(String action) {
@@ -36,8 +65,7 @@ public class HumanPlayer extends AbstractPlayer {
             System.out.println("You have no cards to " + action + ".");
             return;
         }
-
-        // displayHand();
+        
         promptForCardIndex(action);
     }
 

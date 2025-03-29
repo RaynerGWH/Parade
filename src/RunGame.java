@@ -15,8 +15,6 @@ import account.FlairShop;
 import game.GameClientEndpoint;
 import game.GameManager;
 import game.GameServerEndpoint;
-import jakarta.websocket.Session;
-import players.PlayerManager;
 import ui.MultiplayerUI;
 import ui.SinglePlayerUI;
 import ui.UserInterface;
@@ -41,7 +39,7 @@ public class RunGame {
     private final ArrayList<Account> accounts;
 
     /** A PlayerManager with no-arg constructor for potential expansions. */
-    private final PlayerManager playerMgr;
+    // private final PlayerManager playerMgr;
 
     /** Our main GameManager from snippet 1. */
     private final GameManager gameMgr;
@@ -77,7 +75,7 @@ public class RunGame {
         this.accounts.add(currentAccount);
 
         // No-arg constructor for PlayerManager.
-        this.playerMgr = new PlayerManager();
+        // this.playerMgr = new PlayerManager();
 
         // Our snippet-1 style GameManager that takes the main scanner.
         this.gameMgr = new GameManager(this.mainScanner);
@@ -201,17 +199,16 @@ public class RunGame {
     private void startSinglePlayer() {
         UserInterface ui = new SinglePlayerUI();
 
-        System.out.print("Enter number of bots (if any): ");
-        int numBots = 0;
-        try {
-            numBots = Integer.parseInt(mainScanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid number, defaulting to 0.");
-            numBots = 0;
-        }
+        // System.out.print("Enter number of bots (if any): ");
+        // int numBots = 0;
+        // try {
+        //     numBots = Integer.parseInt(mainScanner.nextLine());
+        // } catch (NumberFormatException e) {
+        //     System.out.println("Invalid number, defaulting to 0.");
+        //     numBots = 0;
+        // }
 
-        // snippet-1 usage: no direct calls to PlayerManager, pass null for server endpoint.
-        gameMgr.start(numBots, ui, null);
+        gameMgr.start(ui, null);
     }
 
     /**
@@ -226,7 +223,7 @@ public class RunGame {
             // Host
             GameServerEndpoint gse = new GameServerEndpoint();
             UserInterface ui = new MultiplayerUI(gse);
-            gameMgr.start(0, ui, gse);
+            gameMgr.start(ui, gse);
 
         } else if (subCmd.equals("J")) {
             // Join

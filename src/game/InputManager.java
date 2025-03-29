@@ -2,6 +2,7 @@ package game;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class InputManager {
     private static final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
@@ -11,7 +12,7 @@ public class InputManager {
     }
 
     public static String waitForInput() throws InterruptedException {
-        return inputQueue.take();
+        return inputQueue.poll(30, TimeUnit.SECONDS);
     }
 }
 

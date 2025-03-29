@@ -1,1 +1,1 @@
-java -cp "lib/jakarta.websocket-api.2.2.0.jar:lib/jakarta.websocket-client-api-2.2.0.jar:lib/tyrus-container-grizzly-server-2.2.0.jar:lib/tyrus-container-grizzly-client-2.2.0.jar:lib/tyrus-server-2.2.0.jar:lib/tyrus-standalone-client-2.2.0.jar:classes" RunGame
+java -cp "lib/jakarta.websocket-api.2.2.0.jar;lib/jakarta.websocket-client-api-2.2.0.jar;lib/tyrus-container-grizzly-server-2.2.0.jar;lib/tyrus-container-grizzly-client-2.2.0.jar;lib/tyrus-server-2.2.0.jar;lib/tyrus-standalone-client-2.2.0.jar;classes" RunGame
