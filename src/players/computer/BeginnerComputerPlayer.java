@@ -1,12 +1,10 @@
 package players.computer;
 
-import players.*;
 import cards.*;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
-import java.lang.Thread;
-import java.lang.InterruptedException;
+import players.*;
 
 public class BeginnerComputerPlayer extends AbstractPlayer {
     private Random random;
@@ -31,6 +29,7 @@ public class BeginnerComputerPlayer extends AbstractPlayer {
             int index = random.nextInt(hand.size());
             Card card = playCard(index);
             System.out.println(name + " (Beginner) plays: " + card);
+            CardPrinter.printCardRow(Collections.singletonList(card), false);
             return card;
         } catch (InterruptedException e) {
             System.out.println("Thread was interrupted");
@@ -49,6 +48,7 @@ public class BeginnerComputerPlayer extends AbstractPlayer {
         int randomCardIndex = random.nextInt(hand.size());
         Card card = playCard(randomCardIndex);
         System.out.println(name + " (Beginner) discards: " + card);
+        CardPrinter.printCardRow(Collections.singletonList(card), false);
         return card;
     }
 

@@ -99,7 +99,12 @@ public class Game {
                 timeBonus = new HashMap<>();
             } else if (gameModeChoice.equals("1")) {
                 validGameMode = true;
-                System.out.print("\nClassic Mode selected!\n");
+                System.out.print( "\n █████╗ ██╗      █████╗  ██████╗ ██████╗██╗ █████╗     ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" + //
+                                    "██╔══██╗██║     ██╔══██╗██╔════╝██╔════╝██║██╔══██╗    ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" + //
+                                    "██║  ╚═╝██║     ███████║╚█████╗ ╚█████╗ ██║██║  ╚═╝    ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" + //
+                                    "██║  ██╗██║     ██╔══██║ ╚═══██╗ ╚═══██╗██║██║  ██╗    ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" + //
+                                    "╚█████╔╝███████╗██║  ██║██████╔╝██████╔╝██║╚█████╔╝    ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" + //
+                                    " ╚════╝ ╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝ ╚════╝     ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\n");
                 timedMode = false;
             } else {
                 System.out.println("\nInvalid choice. Please select 1 for Classic Mode or 2 for Timed Mode.");
@@ -295,10 +300,11 @@ public class Game {
             s = hp.getSession();
 
             ui.displayMessage("─────────────────────────────────────", s);
-            ui.displayMessage("THE PARADE: " + parade, s);
+            ui.displayMessage("THE PARADE:", s);
+            CardPrinter.printCardRow(parade, true);
             ui.displayMessage("─────────────────────────────────────", s);
 
-            ui.displayMessage(hp.displayHand(), s);
+            hp.displayHand();
 
             ui.displayMessage("-----Your turn-----", s);
 

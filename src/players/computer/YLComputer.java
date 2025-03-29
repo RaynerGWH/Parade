@@ -60,6 +60,7 @@ public class YLComputer extends AbstractPlayer {
         int index = hand.size() - 1;
         Card card = playCard(index);
         System.out.println(NAME + " (Intermediate) discards: " + card);
+        CardPrinter.printCardRow(card, false);
         return card;
     }
 

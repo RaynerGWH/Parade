@@ -85,7 +85,7 @@ public class PlayerManager {
         } else {
             Collections.shuffle(players);
         }
-        System.out.println(players.get(0).getName() + "Will start first");
+        System.out.println(players.get(0).getName() + "will start first");
     }
 
     public ArrayList<Player> getPlayers() {

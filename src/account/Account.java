@@ -1,9 +1,9 @@
 package account;
 
-import java.util.UUID;
-import java.util.List;
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents an account with a unique identifier, username, statistics (wins/losses),
