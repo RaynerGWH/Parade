@@ -43,7 +43,7 @@ public class ScoreCalculator {
             
             int currScore = 0;
 
-            for (Card c:river) {
+            for (Card c : river) {
                 //for every car
                 Color currColor = c.getColor();
                 if (majColors.contains(currColor)) {

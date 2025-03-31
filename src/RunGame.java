@@ -225,7 +225,7 @@ public class RunGame {
         } else if (subCmd.equals("J")) {
             // Join
             try {
-                URI uri = new URI("ws://localhost:8080/game");
+                URI uri = new URI("ws://172.20.10.3:8080/game");
                 GameClientEndpoint gce = new GameClientEndpoint(uri, mainScanner);
                 CountDownLatch latch = new CountDownLatch(1);
                 gce.setLatch(latch);

@@ -2,6 +2,8 @@ package game;
 
 import cards.*;
 import players.*;
+import players.computer.BeginnerComputerPlayer;
+import players.computer.IntermediateComputerPlayer;
 import players.human.HumanPlayer;
 import ui.*;
 
@@ -17,7 +19,8 @@ import jakarta.websocket.Session;
 import java.util.HashMap;
 
 public class Game {
-    //ASSUMPTION: GAME is only started by the host, except in singleplayer instances.
+    // ASSUMPTION: GAME is only started by the host, except in singleplayer
+    // instances.
 
     private Deck deck;
     private boolean gameIsOver = false;
@@ -33,7 +36,6 @@ public class Game {
     private long gameStartTime;
     private long timeLimit; // in milliseconds
     private HashMap<Player, Integer> timeBonus = new HashMap<>();
-    
 
     public Game(ArrayList<Player> players, UserInterface ui, GameServerEndpoint gse, Scanner scanner) {
         this.deck = new Deck();
@@ -53,25 +55,25 @@ public class Game {
             System.out.println("    2. Timed");
             System.out.print("Enter '1' or '2': ");
             String gameModeChoice = scanner.nextLine().trim();
-            
+
             if (gameModeChoice.equals("2")) {
                 validGameMode = true;
                 timedMode = true;
-                System.out.print( "\n████████╗██╗███╗   ███╗███████╗██████╗    ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" + //
-                                    "╚══██╔══╝██║████╗ ████║██╔════╝██╔══██╗   ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" + //
-                                    "   ██║   ██║██╔████╔██║█████╗  ██║  ██║   ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" + //
-                                    "   ██║   ██║██║╚██╔╝██║██╔══╝  ██║  ██║   ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" + //
-                                    "   ██║   ██║██║ ╚═╝ ██║███████╗██████╔╝   ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" + //
-                                    "   ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝    ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\n");
+                System.out.print("\n████████╗██╗███╗   ███╗███████╗██████╗    ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" + //
+                        "╚══██╔══╝██║████╗ ████║██╔════╝██╔══██╗   ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" + //
+                        "   ██║   ██║██╔████╔██║█████╗  ██║  ██║   ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" + //
+                        "   ██║   ██║██║╚██╔╝██║██╔══╝  ██║  ██║   ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" + //
+                        "   ██║   ██║██║ ╚═╝ ██║███████╗██████╔╝   ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" + //
+                        "   ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝    ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\n");
                 System.out.print("════════════════════════════════════════════════════════════════════════════");
                 System.out.println("\nCategories:");
                 System.out.println("    1. 1-minute blitz");
                 System.out.println("    2. 5-minute challenge");
                 System.out.println("    3. 10-minute game");
-                
+
                 int timeChoice = 0;
                 boolean validChoice = false;
-                
+
                 while (!validChoice) {
                     try {
                         System.out.print("Enter category (1-3): ");
@@ -85,14 +87,14 @@ public class Game {
                         System.out.println("Please enter a valid number.");
                     }
                 }
-                
+
                 // Set time limit based on choice
                 switch (timeChoice) {
                     case 1:
                         timeLimit = 60 * 1000; // 1 minute in milliseconds
                         System.out.print("\n1-minute blitz selected!\n");
                         break;
-                    case 2: 
+                    case 2:
                         timeLimit = 5 * 60 * 1000; // 5 minutes in milliseconds
                         System.out.print("\n5-minute challenge selected!\n");
                         break;
@@ -101,17 +103,23 @@ public class Game {
                         System.out.print("\n10-minute game selected!\n");
                         break;
                 }
-                
+
                 // Don't initialize with placeholders, wait for actual players
                 timeBonus = new HashMap<>();
             } else if (gameModeChoice.equals("1")) {
                 validGameMode = true;
-                System.out.print( "\n █████╗ ██╗      █████╗  ██████╗ ██████╗██╗ █████╗     ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" + //
-                                    "██╔══██╗██║     ██╔══██╗██╔════╝██╔════╝██║██╔══██╗    ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" + //
-                                    "██║  ╚═╝██║     ███████║╚█████╗ ╚█████╗ ██║██║  ╚═╝    ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" + //
-                                    "██║  ██╗██║     ██╔══██║ ╚═══██╗ ╚═══██╗██║██║  ██╗    ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" + //
-                                    "╚█████╔╝███████╗██║  ██║██████╔╝██████╔╝██║╚█████╔╝    ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" + //
-                                    " ╚════╝ ╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝ ╚════╝     ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\n");
+                System.out.print(
+                        "\n █████╗ ██╗      █████╗  ██████╗ ██████╗██╗ █████╗     ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n"
+                                + //
+                                "██╔══██╗██║     ██╔══██╗██╔════╝██╔════╝██║██╔══██╗    ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n"
+                                + //
+                                "██║  ╚═╝██║     ███████║╚█████╗ ╚█████╗ ██║██║  ╚═╝    ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n"
+                                + //
+                                "██║  ██╗██║     ██╔══██║ ╚═══██╗ ╚═══██╗██║██║  ██╗    ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n"
+                                + //
+                                "╚█████╔╝███████╗██║  ██║██████╔╝██████╔╝██║╚█████╔╝    ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n"
+                                + //
+                                " ╚════╝ ╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝ ╚════╝     ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\n");
                 timedMode = false;
             } else {
                 System.out.println("\nInvalid choice. Please select 1 for Classic Mode or 2 for Timed Mode.");
@@ -133,10 +141,10 @@ public class Game {
             for (Player player : combinedPlayers) {
                 timeBonus.put(player, 0);
             }
-            
+
             // Start the timer
             gameStartTime = System.currentTimeMillis();
-            
+
             // Display time limit
             ui.broadcastMessage("\n--- TIMED MODE ACTIVE ---\n");
             ui.broadcastMessage("Time limit: " + (timeLimit / 60000) + " minutes\n");
@@ -152,40 +160,41 @@ public class Game {
         // Turn function
         while (!gameIsOver) {
             // for (int i = 0; i < combinedPlayers.size(); i++) {
-            //     System.out.print(combinedPlayers.get(i).getName());
+            // System.out.print(combinedPlayers.get(i).getName());
             // }
 
             Player currentPlayer = combinedPlayers.get(currentPlayerIndex);
-            
+
             // Check if time has run out in timed mode
             if (timedMode && System.currentTimeMillis() - gameStartTime >= timeLimit) {
                 ui.broadcastMessage("\n--- TIME'S UP! ---\n");
                 gameIsOver = true;
                 break;
             }
-            
+
             // Track time for this player's move
             long turnStartTime = System.currentTimeMillis();
-            
+
             gameIsOver = turn(currentPlayer, parade, deck);
-            
+
             // Calculate time bonus if in timed mode
             if (timedMode) {
                 long turnDuration = System.currentTimeMillis() - turnStartTime;
                 int bonus = calculateTimeBonus(turnDuration);
                 int currentBonus = timeBonus.get(currentPlayer);
                 timeBonus.put(currentPlayer, currentBonus + bonus);
-                
+
                 if (bonus > 0) {
-                    ui.broadcastMessage("\n" + currentPlayer.getName() + " gets " + bonus + " time bonus points for a quick move!");
+                    ui.broadcastMessage(
+                            "\n" + currentPlayer.getName() + " gets " + bonus + " time bonus points for a quick move!");
                 }
-                
+
                 // Show progress bar with remaining time
                 long elapsedTime = System.currentTimeMillis() - gameStartTime;
                 ui.broadcastMessage(displayTimeProgressBar(elapsedTime));
                 ui.broadcastMessage("\n"); // Add extra spacing
             }
-            
+
             // Shift to next players' turn.
             currentPlayerIndex = (currentPlayerIndex + 1) % combinedPlayers.size();
         }
@@ -196,11 +205,15 @@ public class Game {
 
         deck.clearDeck();
 
-        // Bring out the FINAL TURN print, then call a separate function afterwards for per round
+        // Bring out the FINAL TURN print, then call a separate function afterwards for
+        // per round
         for (int i = 0; i < combinedPlayers.size() - 1; i++) {
-            ui.broadcastMessage("-------------------------------------------------------------------------------------------------------------------------");
-            ui.broadcastMessage("--------------------------------------------FINAL TURN: NO ONE CAN DRAW CARDS--------------------------------------------");
-            ui.broadcastMessage("-------------------------------------------------------------------------------------------------------------------------");
+            ui.broadcastMessage(
+                    "-------------------------------------------------------------------------------------------------------------------------");
+            ui.broadcastMessage(
+                    "--------------------------------------------FINAL TURN: NO ONE CAN DRAW CARDS--------------------------------------------");
+            ui.broadcastMessage(
+                    "-------------------------------------------------------------------------------------------------------------------------");
 
             // everyone EXCEPT the current player index at the last turn will move. no
             // drawing will be done here.
@@ -217,11 +230,41 @@ public class Game {
         ui.broadcastMessage(
                 "-----------------------------------------------------------------------------------------------------------------------------------------\n");
         for (Player p : combinedPlayers) {
-                Card discarded = p.chooseCardToDiscard();
-                ui.broadcastMessage(String.format("Player %s discards %s%n", p.getName(), discarded.toString()));
 
-                p.chooseCardToDiscard();
-                ui.broadcastMessage(String.format("Player %s discards %s%n", p.getName(), discarded.toString()));
+            Card firstDiscardedCard = null;
+            Card secondDiscardedCard = null;
+
+            if (p instanceof HumanPlayer) {
+                HumanPlayer hp = (HumanPlayer)(p);
+                hp.displayHand();
+
+                firstDiscardedCard = hp.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(hp, firstDiscardedCard, "Discard");
+
+                hp.displayHand();
+
+                secondDiscardedCard = hp.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(hp, secondDiscardedCard, "Discard");
+
+                hp.displayHand();
+
+            } else if (p instanceof BeginnerComputerPlayer) {
+                BeginnerComputerPlayer bcp = (BeginnerComputerPlayer)(p);
+                firstDiscardedCard = bcp.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(bcp, firstDiscardedCard, "Discard");
+
+                secondDiscardedCard = bcp.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(bcp, secondDiscardedCard, "Discard");
+
+            } else if (p instanceof IntermediateComputerPlayer) {
+                IntermediateComputerPlayer icp = (IntermediateComputerPlayer)(p);
+                firstDiscardedCard = icp.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(icp, firstDiscardedCard, "Discard");
+
+                secondDiscardedCard = icp.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(icp, secondDiscardedCard, "Discard");
+            }
+                
 
             // we add the rest of their hand into their river.
             ArrayList<Card> currentRiver = p.getRiver();
@@ -232,7 +275,7 @@ public class Game {
 
             // print the river for each player, and their name
             Collections.sort(currentRiver, new CardComparator());
-            ui.broadcastMessage("\n");  // Add spacing before showing river
+            ui.broadcastMessage("\n"); // Add spacing before showing river
             ui.broadcastMessage(String.format("River for %s: " + currentRiver.toString(), p.getName()));
             ui.broadcastMessage("\n");
         }
@@ -240,7 +283,7 @@ public class Game {
         // we calculate the score for each player
         ScoreCalculator scorer = new ScoreCalculator(combinedPlayers);
         TreeMap<Integer, ArrayList<Player>> scoreMap = scorer.getScoreMap();
-        
+
         // Add GAME OVER banner
         ui.broadcastMessage("\n");
         ui.broadcastMessage(" _____                        _____                 ");
@@ -251,20 +294,20 @@ public class Game {
         ui.broadcastMessage(" \\____/\\__,_|_| |_| |_|\\___|  \\___/  \\_/ \\___|_|    ");
         ui.broadcastMessage("                                                     ");
         ui.broadcastMessage("\n");
-        
+
         // Apply time bonuses if in timed mode
         if (timedMode) {
             ui.broadcastMessage("\n--- TIME BONUS POINTS ---");
-            
+
             // Apply log2 bonus for all players
             for (Player player : combinedPlayers) {
                 int bonus = timeBonus.get(player);
                 if (bonus > 0) {
                     // Calculate log2 deduction (rounded down to nearest integer)
-                    int logDeduction = (int) (Math.log(bonus) / Math.log(2));  // log2(x) = ln(x)/ln(2)
-                    ui.broadcastMessage(player.getName() + " earned " + bonus + " bonus points, resulting in a " + 
-                                     logDeduction + " point deduction!");
-                    
+                    int logDeduction = (int) (Math.log(bonus) / Math.log(2)); // log2(x) = ln(x)/ln(2)
+                    ui.broadcastMessage(player.getName() + " earned " + bonus + " bonus points, resulting in a " +
+                            logDeduction + " point deduction!");
+
                     // Find the player in the scoreMap and adjust their score
                     for (Integer score : scoreMap.keySet()) {
                         ArrayList<Player> playersWithScore = scoreMap.get(score);
@@ -273,10 +316,10 @@ public class Game {
                             if (playersWithScore.isEmpty()) {
                                 scoreMap.remove(score);
                             }
-                            
+
                             // Apply log2 bonus (negative score is better in Parade)
                             int newScore = score - logDeduction;
-                            
+
                             // Add player to the new score
                             if (!scoreMap.containsKey(newScore)) {
                                 scoreMap.put(newScore, new ArrayList<>());
@@ -287,11 +330,11 @@ public class Game {
                     }
                 }
             }
-            
+
             // Add a line break after all bonuses are displayed
             ui.broadcastMessage("\n");
         }
-        
+
         // Return the scoreMap so RunGame.java can use it
         return scoreMap;
     }
@@ -301,15 +344,12 @@ public class Game {
         boolean gameIsOver = false;
         Card choice = null;
 
-        //print the following only for human players. bots -> dont care
+        // print the following only for human players. bots -> dont care
         if (currentPlayer instanceof HumanPlayer) {
-            HumanPlayer hp = (HumanPlayer)currentPlayer;
+            HumanPlayer hp = (HumanPlayer) currentPlayer;
             s = hp.getSession();
 
-            ui.displayMessage("══════════════════════════════════════════════════════════════", s);
-            ui.displayMessage("THE PARADE:", s);
-            CardPrinter.printCardRow(parade, true);
-            ui.displayMessage("══════════════════════════════════════════════════════════════", s);
+            displayParade(parade, s);
 
             hp.displayHand();
 
@@ -321,31 +361,29 @@ public class Game {
                     int i = Integer.parseInt(playerInput);
                     choice = currentPlayer.playCard(i);
                     if (choice == null) {
-                        //timed out
+                        // timed out
                         choice = currentPlayer.playCard(0);
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    //Default: choice = 0;
+                    // Default: choice = 0;
                     choice = currentPlayer.playCard(0);
                 }
             } else {
-                //use the overloaded method to handle singleplayer input
-                //(Does not have thread blocking, etc).
+                // use the overloaded method to handle singleplayer input
+                // (Does not have thread blocking, etc).
                 choice = currentPlayer.chooseCardToPlay();
             }
 
         } else {
             choice = currentPlayer.chooseCardToPlay();
         }
-        
-        
-        ui.broadcastMessage(currentPlayer.getName() + " played:");
-        CardPrinter.printCardRow(Collections.singletonList(choice), false);
+
+        displayCardPlayedOrDiscarded(currentPlayer, choice, "Play");
 
         int choiceValue = choice.getValue();
         Color choiceColor = choice.getColor();
-        
+
         // Add the current card to the parade.
         parade.add(0, choice);
 
@@ -401,7 +439,7 @@ public class Game {
                 gameIsOver = true;
             }
         }
-        
+
         Card toDraw = deck.drawCard();
         if (toDraw == null) {
             gameIsOver = true;
@@ -409,14 +447,16 @@ public class Game {
             currentPlayer.drawCard(toDraw);
         }
 
-        ui.broadcastMessage(currentPlayer.getName() + "'s River: ");
+        displayCurrentPlayerRiver(currentPlayer);
 
-        // We check if the river is null or empty
-        if (currRiver == null || currRiver.isEmpty()) {
-            System.out.println("No cards in River.");
-        } else {
-            CardPrinter.printCardRow(currRiver, true);
-        }
+        // ui.broadcastMessage(currentPlayer.getName() + "'s River: ");
+
+        // // We check if the river is null or empty
+        // if (currRiver == null || currRiver.isEmpty()) {
+        // System.out.println("No cards in River.");
+        // } else {
+        // CardPrinter.printCardRow(currRiver, true);
+        // }
 
         return gameIsOver;
     }
@@ -425,17 +465,23 @@ public class Game {
     private int calculateTimeBonus(long turnDuration) {
         // For a 1-minute game, quick moves should be rewarded more
         if (timeLimit <= 60 * 1000) { // 1-minute game
-            if (turnDuration < 3000) return 3; // 3 points for moves under 3 seconds
-            if (turnDuration < 6000) return 2; // 2 points for moves under 6 seconds
-            if (turnDuration < 10000) return 1; // 1 point for moves under 10 seconds
+            if (turnDuration < 3000)
+                return 3; // 3 points for moves under 3 seconds
+            if (turnDuration < 6000)
+                return 2; // 2 points for moves under 6 seconds
+            if (turnDuration < 10000)
+                return 1; // 1 point for moves under 10 seconds
         } else { // For longer games
-            if (turnDuration < 5000) return 3; // 3 points for moves under 5 seconds
-            if (turnDuration < 10000) return 2; // 2 points for moves under 10 seconds
-            if (turnDuration < 15000) return 1; // 1 point for moves under 15 seconds
+            if (turnDuration < 5000)
+                return 3; // 3 points for moves under 5 seconds
+            if (turnDuration < 10000)
+                return 2; // 2 points for moves under 10 seconds
+            if (turnDuration < 15000)
+                return 1; // 1 point for moves under 15 seconds
         }
         return 0;
     }
-    
+
     // Format milliseconds to mm:ss format
     private String formatTime(long milliseconds) {
         long seconds = milliseconds / 1000;
@@ -449,7 +495,7 @@ public class Game {
         int barLength = 30; // Length of the progress bar
         double progress = Math.min(1.0, (double) elapsedTime / timeLimit); // Cap at 1.0 (100%)
         int filledBars = (int) (progress * barLength);
-        
+
         // Create the progress bar string
         StringBuilder progressBar = new StringBuilder("[");
         for (int i = 0; i < barLength; i++) {
@@ -457,22 +503,64 @@ public class Game {
                 progressBar.append("█");
             }
             // } else if (i == filledBars && progress < 1.0) { // Only show > if not at 100%
-            //     progressBar.append(">");
-            // } 
+            // progressBar.append(">");
+            // }
             else {
                 progressBar.append(" ");
             }
         }
         progressBar.append("]");
-        
+
         // Calculate remaining time
         long remainingTime = Math.max(0, timeLimit - elapsedTime);
         String timeString = formatTime(remainingTime);
-        
+
         // Calculate percentage (capped at 100)
         int percentage = Math.min(100, (int) (progress * 100));
-        
+
         // Print the progress bar and time
         return String.format("\nTime remaining: %s%n%s%d%%", timeString, progressBar.toString(), percentage);
     }
+
+    private void displayCurrentPlayerRiver(Player currentPlayer) {
+
+        ArrayList<Card> currentPlayerRiver = currentPlayer.getRiver();
+
+        Collections.sort(currentPlayerRiver, new CardComparator());
+
+        String currentPlayerName = currentPlayer.getName();
+
+        boolean emptyRiver = (currentPlayerRiver == null || currentPlayerRiver.size() == 0);
+
+        ui.broadcastMessage(currentPlayer.getName() + "'s River: ");
+
+        if (emptyRiver) {
+            ui.broadcastMessage(String.format("%s's River is Empty!", currentPlayerName));
+        } else {
+            CardPrinter.printCardRow(currentPlayerRiver, false);
+        }
+
+    }
+
+    private void displayParade(List<Card> parade, Session s) {
+        ui.displayMessage("══════════════════════════════════════════════════════════════", s);
+        ui.displayMessage("THE PARADE:", s);
+        CardPrinter.printCardRow(parade, true);
+        ui.displayMessage("══════════════════════════════════════════════════════════════", s);
+    }
+
+    private void displayCardPlayedOrDiscarded(Player currentPlayer, Card choice, String playOrDiscard) {
+
+        if (playOrDiscard.equals("Play")) {
+            ui.broadcastMessage(currentPlayer.getName() + " played:");
+
+            CardPrinter.printCardRow(Collections.singletonList(choice), false);
+
+        } else {
+            ui.broadcastMessage(currentPlayer.getName() + " discarded:");
+
+            CardPrinter.printCardRow(Collections.singletonList(choice), false);
+        }
+    }
+
 }
