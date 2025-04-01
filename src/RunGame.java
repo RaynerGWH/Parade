@@ -138,12 +138,7 @@ public class RunGame {
      */
     private void openFlairShopMenu(Account account) {
         while (true) {
-            System.out.println("         ^         \r\n" +
-                               "        / \        \r\n" +
-                               "                   \r\n" +
-                               "                   \r\n" +
-                               "                   \r\n" +
-                               "   ╭────────────╮  \r\n" +
+            System.out.println("   ╭────────────╮  \r\n" +
                                "   │ Flair Shop │  \r\n" +
                                "   ╰──╦──────╦──╯  \r\n" +
                                "      ║      ║     \r\n" +
@@ -236,7 +231,7 @@ public class RunGame {
         } else if (subCmd.equals("J")) {
             // Join
             try {
-                URI uri = new URI("ws://localhost:8080/game");
+                URI uri = new URI("ws://172.20.10.3:8080/game");
                 GameClientEndpoint gce = new GameClientEndpoint(uri, mainScanner);
                 CountDownLatch latch = new CountDownLatch(1);
                 gce.setLatch(latch);
