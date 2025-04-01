@@ -1,5 +1,7 @@
 package game;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -64,7 +66,8 @@ public class GameManager {
     public void multiplayerHandler() {
         boolean isMulti = true;
         humanHandler();
-        playerMgr.initializeHumanPlayers(GameServerEndpoint.getSessionPlayers(), isMulti);
+        sessions = GameServerEndpoint.getSessionPlayers();
+        playerMgr.initializeHumanPlayers(sessions, isMulti);
 
         if (sessions.size() < 8) {
             numBots = botHandler(sessions.size());
@@ -73,13 +76,25 @@ public class GameManager {
 
     public void startWebSocketServer() {
         Map<String, Object> properties = Collections.emptyMap();
-        // Start the WebSocket server on localhost:8080
-        websocketServer = new Server("172.20.10.3", 8080, "/", properties, GameServerEndpoint.class);
+        // get the current host's public ip
+        String hostIp = null;
+        try {
+            hostIp = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            hostIp = "127.0.0.1"; // Fallback to localhost
+        }
+
+        websocketServer = new Server(hostIp, 8080, "/", properties, GameServerEndpoint.class);
         try {
             websocketServer.start();
             System.out.println("WebSocket server is running...");
+            System.out.println("==============================");
+            System.out.println("Your Host IP: " + hostIp + ":8080");
+            System.out.println("==============================");
+            System.out.println("Give this to your friends to get them to join!");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Unable to start server. Please restart the game and try again.");
+            return;
         }
     }
 
@@ -117,12 +132,15 @@ public class GameManager {
     public void humanHandler() {
         // We start the server only if there are other human players(besides yourself)
         // TODO: ADD CHECKING FUNCCTION TO PREVENT STARTING WITHOUT OTHER PLAYERS
-
         startWebSocketServer();
         System.out.println("Waiting for players... Type \"START\" to start the game");
         String command = sc.nextLine();
-        while (!command.equals("START")) {
-            System.out.println("Invalid command.");
+        while (true) {
+            if (command.toUpperCase().trim().equals("START")) {
+                return;
+            }
+            System.out.println("Invalid command. Type \"START\" to begin.");
+            command = sc.nextLine();
         }
     }
 

@@ -15,21 +15,17 @@ public class GameClientEndpoint{
     private Session session;
     private Scanner sc;
     private CountDownLatch latch;
+    private AccountFileManager acctMgr = new AccountFileManager();
 
-    public GameClientEndpoint(URI endpointURI, Scanner sc) {
-        try {
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            this.session = container.connectToServer(this, endpointURI);
-            this.sc = sc;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public GameClientEndpoint(URI endpointURI, Scanner sc) throws DeploymentException, IOException {
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        this.session = container.connectToServer(this, endpointURI);
+        this.sc = sc;
     }
 
     @OnOpen
     public void onOpen(Session session) {
         System.out.println("Connected to server");
-        AccountFileManager acctMgr = new AccountFileManager(sc);
         Account a = acctMgr.initialize();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos)){
@@ -60,6 +56,32 @@ public class GameClientEndpoint{
             }).start();
         } else {
             System.out.println(message);
+        }
+    }
+
+    @OnMessage
+    public void onMessage(Session session, ByteBuffer byteBuffer) {
+        try {
+            // Convert ByteBuffer to byte array
+            byte[] data = new byte[byteBuffer.remaining()];
+            byteBuffer.get(data);
+
+            // Deserialize the object from the byte array
+            try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
+                 ObjectInputStream ois = new ObjectInputStream(bais)) {
+                
+                Object obj = ois.readObject();
+
+                if (obj instanceof Account) {
+                    Account account = (Account) obj;
+                    acctMgr.save(account);
+                } else {
+                    System.out.println("Received unknown object type: " + obj.getClass().getName());
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error processing message: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

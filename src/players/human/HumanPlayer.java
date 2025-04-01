@@ -69,17 +69,15 @@ public class HumanPlayer extends AbstractPlayer {
         promptForCardIndex(action);
     }
 
-    public void displayHand() {
-
-        // We check if the hand is null or empty
-        if (hand == null || hand.isEmpty()) {
-            System.out.println("Your hand: Empty");
-        } else {
-            System.out.println("Your hand:");
-            CardPrinter.printCardRow(hand, false);
-        }
-
-    }
+    // public void displayHand() {
+    //     // We check if the hand is null or empty
+    //     if (hand == null || hand.isEmpty()) {
+    //         System.out.println("Your hand: Empty");
+    //     } else {
+    //         System.out.println("Your hand:");
+    //         CardPrinter.printCardRow(hand, false);
+    //     }
+    // }
 
     private void promptForCardIndex(String action) {
         String prompt = name + ", enter the position of the card you want to " + action + " (0 - 4): ";

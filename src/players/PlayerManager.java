@@ -21,11 +21,6 @@ public class PlayerManager {
     public void initializeHumanPlayers(Map<Session, Account> sessions, boolean isMulti) {
         for (Map.Entry<Session, Account> entry : sessions.entrySet()) {
             Session s = entry.getKey();
-            // if (isMulti) {
-            //     inputHandler = new NetworkInputHandler(s);
-            // } else {
-            //     inputHandler = new ConsoleInputHandler();
-            // }
             Account a = entry.getValue();
             String username = a.getUsername();
             ArrayList<Card> hand = initialiseHand();

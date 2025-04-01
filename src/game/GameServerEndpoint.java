@@ -12,7 +12,6 @@ import account.*;
 
 @ServerEndpoint("/game")
 public class GameServerEndpoint {
-    // Use ConcurrentHashMap for better thread safety
     private static final Map<Session, Account> SESSIONS = new ConcurrentHashMap<>();
 
     @OnOpen

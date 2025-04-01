@@ -32,4 +32,4 @@ pom.xml.releaseBackup
 # Misc
 .DS_Store  # macOS
 Thumbs.db  # Windows
-.PG1 # custom save files
+*.PG1 # custom save files

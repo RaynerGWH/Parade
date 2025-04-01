@@ -6,21 +6,24 @@ public class CardPrinter {
     private static final String RESET = "\u001B[0m";
     private static final String LOGO = "❀";
 
-    public static void printCardRow(List<Card> cards, boolean isParade) {
+    public static String printCardRow(List<Card> cards, boolean isParade) {
         try {
             if (cards == null || cards.isEmpty()) {
-                return;
+                return null;
             }
     
             int rowLimit = 12;
             int cardCount = 0;
     
-        // Determine how many rows to use
-        int numRows = isParade ? 5 : 6;
-        StringBuilder[] lines = new StringBuilder[numRows];
-        for (int i = 0; i < numRows; i++) {
-            lines[i] = new StringBuilder();
-        }
+            // Determine how many rows to use
+            int numRows = isParade ? 5 : 6;
+            StringBuilder[] lines = new StringBuilder[numRows];
+            for (int i = 0; i < numRows; i++) {
+                lines[i] = new StringBuilder();
+            }
+
+            StringBuilder output = new StringBuilder();
+
     
             for (int i = 0; i < cards.size(); i++) {
                 Card card = cards.get(i);
@@ -47,15 +50,17 @@ public class CardPrinter {
                 // Wrap around after 12 cards (terminal visual limit)
                 if (cardCount == rowLimit || i == cards.size() - 1) {
                     for (StringBuilder line : lines) {
-                        System.out.println(line.toString());
-                        line.setLength(0); // reset each line
+                        output.append(line.toString()).append("\n");
                     }
-                    cardCount = 0;
+                    cardCount = 0; // Reset counter for next batch
                 }
             }
+            return output.toString();
+            
         } catch (Exception e) {
             System.out.println("⚠️ CardPrinter.printCardRow crashed: " + e.getMessage());
             e.printStackTrace();
+            return null;
         }
     }
     

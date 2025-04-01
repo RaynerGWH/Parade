@@ -5,6 +5,8 @@ import account.FlairShop;
 import game.GameClientEndpoint;
 import game.GameManager;
 import game.GameServerEndpoint;
+import jakarta.websocket.DeploymentException;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -230,16 +232,27 @@ public class RunGame {
 
         } else if (subCmd.equals("J")) {
             // Join
-            try {
-                URI uri = new URI("ws://172.20.10.3:8080/game");
-                GameClientEndpoint gce = new GameClientEndpoint(uri, mainScanner);
-                CountDownLatch latch = new CountDownLatch(1);
-                gce.setLatch(latch);
-                latch.await();
-            } catch (URISyntaxException e) {
-                System.out.println("Invalid URI Entered.");
-            } catch (InterruptedException e) {
-                System.out.println("Connection interrupted.");
+            while (true) {
+                try {
+                    String uriString = "ws://";
+                    System.out.print("Enter a valid IP Address: ");
+                    uriString += mainScanner.nextLine();
+                    uriString += "/game";
+System.out.println(uriString);
+                    URI uri = new URI(uriString);
+                    GameClientEndpoint gce = new GameClientEndpoint(uri, mainScanner);
+                    CountDownLatch latch = new CountDownLatch(1);
+                    gce.setLatch(latch);
+                    latch.await();
+                } catch (URISyntaxException e) {
+                    System.out.println("Invalid IP address entered.");
+                } catch (InterruptedException e) {
+                    System.out.println("Connection interrupted.");
+                } catch (DeploymentException e) {
+                    System.out.println("An error has occured. Check the IP address that you entered.");
+                } catch (Exception e) {
+                    System.out.println("An error has occured. Please restart the game.");
+                }
             }
         } else {
             System.out.println("Unrecognized command for hosting or joining.");

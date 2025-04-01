@@ -2,8 +2,6 @@ package game;
 
 import cards.*;
 import players.*;
-import players.computer.BeginnerComputerPlayer;
-import players.computer.IntermediateComputerPlayer;
 import players.human.HumanPlayer;
 import ui.*;
 
@@ -236,33 +234,24 @@ public class Game {
 
             if (p instanceof HumanPlayer) {
                 HumanPlayer hp = (HumanPlayer)(p);
-                hp.displayHand();
+                displayHand(hp);
 
                 firstDiscardedCard = hp.chooseCardToDiscard();
                 displayCardPlayedOrDiscarded(hp, firstDiscardedCard, "Discard");
 
-                hp.displayHand();
+                displayHand(hp);
 
                 secondDiscardedCard = hp.chooseCardToDiscard();
                 displayCardPlayedOrDiscarded(hp, secondDiscardedCard, "Discard");
 
-                hp.displayHand();
+                displayHand(hp);
 
-            } else if (p instanceof BeginnerComputerPlayer) {
-                BeginnerComputerPlayer bcp = (BeginnerComputerPlayer)(p);
-                firstDiscardedCard = bcp.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(bcp, firstDiscardedCard, "Discard");
+            } else {
+                firstDiscardedCard = p.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(p, firstDiscardedCard, "Discard");
 
-                secondDiscardedCard = bcp.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(bcp, secondDiscardedCard, "Discard");
-
-            } else if (p instanceof IntermediateComputerPlayer) {
-                IntermediateComputerPlayer icp = (IntermediateComputerPlayer)(p);
-                firstDiscardedCard = icp.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(icp, firstDiscardedCard, "Discard");
-
-                secondDiscardedCard = icp.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(icp, secondDiscardedCard, "Discard");
+                secondDiscardedCard = p.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(p, secondDiscardedCard, "Discard");
             }
                 
 
@@ -351,7 +340,7 @@ public class Game {
 
             displayParade(parade, s);
 
-            hp.displayHand();
+            displayHand(hp);
 
             ui.displayMessage("-----Your turn-----", s);
 
@@ -414,11 +403,9 @@ public class Game {
         // Display which cards were taken
         if (!takenCards.isEmpty()) {
             ui.broadcastMessage(currentPlayer.getName() + " takes the following cards from the parade:");
-            CardPrinter.printCardRow(takenCards, true);
-            System.out.println();
+            ui.broadcastMessage(CardPrinter.printCardRow(takenCards, true));    
         } else {
             ui.broadcastMessage(currentPlayer.getName() + " takes no cards from the parade!");
-            System.out.println();
         }
 
         // game ends if the deck is empty OR the current river has one of each color
@@ -539,13 +526,18 @@ public class Game {
         } else {
             CardPrinter.printCardRow(currentPlayerRiver, false);
         }
+    }
 
+    private void displayHand(HumanPlayer hp) {
+        Session s = hp.getSession();
+        ui.displayMessage("YOUR HAND:", s);
+        ui.displayMessage(CardPrinter.printCardRow(hp.getHand(),false), s);
     }
 
     private void displayParade(List<Card> parade, Session s) {
         ui.displayMessage("══════════════════════════════════════════════════════════════", s);
         ui.displayMessage("THE PARADE:", s);
-        CardPrinter.printCardRow(parade, true);
+        ui.displayMessage(CardPrinter.printCardRow(parade, true), s);
         ui.displayMessage("══════════════════════════════════════════════════════════════", s);
     }
 
@@ -554,13 +546,34 @@ public class Game {
         if (playOrDiscard.equals("Play")) {
             ui.broadcastMessage(currentPlayer.getName() + " played:");
 
-            CardPrinter.printCardRow(Collections.singletonList(choice), false);
+            ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
 
         } else {
             ui.broadcastMessage(currentPlayer.getName() + " discarded:");
 
-            CardPrinter.printCardRow(Collections.singletonList(choice), false);
+            ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
         }
     }
 
+    public static void clearConsole() {
+        // Try standard clearing methods first
+        try {
+            final String os = System.getProperty("os.name");
+            
+            if (os.contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            // Do nothing with the exception
+        }
+        
+        // Always add this as a fallback
+        // System.out.println("\n\n\n\n\n\n\n\n\n\n");
+        System.out.println("=================================================================");
+        System.out.println("                         NEW TURN                                ");
+        System.out.println("=================================================================");
+    }
 }
