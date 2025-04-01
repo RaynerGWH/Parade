@@ -138,10 +138,16 @@ public class RunGame {
      */
     private void openFlairShopMenu(Account account) {
         while (true) {
-            System.out.println("\n===== Flair Shop =====");
+            System.out.println("   ╭────────────╮  \r\n" +
+                               "   │ Flair Shop │  \r\n" +
+                               "   ╰──╦──────╦──╯  \r\n" +
+                               "      ║      ║     \r\n" +
+                               "  ╭───╩──────╩───╮ \r\n" +
+                               "  │░░░░░░░░░░░░░░│ \r\n" +  
+                               "  ╰──────────────╯ \r");
             // Display current account stats
             System.out.println("Current Balance: " + account.getBalance());
-            System.out.println("Wins: " + account.getWins());
+            System.out.println("Wins           : " + account.getWins());
 
             List<Flair> availableFlairs = flairShop.getAvailableFlairs();
             System.out.println("\nAvailable Flairs:");
@@ -245,6 +251,8 @@ public class RunGame {
      * @throws InterruptedException if the thread is interrupted during sleep.
      */
     private void printParadeAnimation() throws InterruptedException {
+        String purpleColor = "\u001B[35m";
+        String resetColor = "\u001B[0m";
         String[] paradeLetterP = {
             "██████╗ ",
             "██╔══██╗",
@@ -293,9 +301,10 @@ public class RunGame {
         int timer = 70;
         for (int row = 0; row < 6; row++) {
             for (String[] letter : letters) {
-                System.out.print(letter[row]);
+                System.out.print(purpleColor + letter[row]);
                 Thread.sleep(timer);
             }
+            System.out.print(resetColor);
             System.out.println();
             timer /= 1.2; // speed up each row
         }
