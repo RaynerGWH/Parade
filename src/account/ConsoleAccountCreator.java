@@ -32,7 +32,7 @@ public class ConsoleAccountCreator {
             String username;
             while (true) {
                 System.out.print("Enter a username (alphanumeric only): ");
-                username = scanner.nextLine().trim();
+                username = scanner.nextLine().trim().toUpperCase();
 
                 if (validateUsername(username)) {
                     break;
