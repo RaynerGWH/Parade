@@ -12,7 +12,9 @@ public class InputManager {
     }
 
     public static String waitForInput() throws InterruptedException {
-        return inputQueue.poll(30, TimeUnit.SECONDS);
+        String input = inputQueue.poll(30, TimeUnit.SECONDS);
+        inputQueue.clear();
+        return input;
     }
 }
 

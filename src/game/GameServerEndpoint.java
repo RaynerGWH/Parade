@@ -23,13 +23,7 @@ public class GameServerEndpoint {
 
     @OnMessage
     public void onMessage(Session session, String message) {
-        System.out.println("Received text message: " + message);
-        System.out.println("HELLO WORLD");
-
-        if (message.matches("\\d+")) {
-            System.out.println("THIS IS RUNNING");
-            InputManager.offerInput(message);
-        }
+        InputManager.offerInput(message);
     }
 
     @OnMessage
@@ -52,6 +46,8 @@ public class GameServerEndpoint {
                     
                     // Broadcast with explicit error handling
                     broadcast(account.getUsername() + " has joined the game.");
+                    System.out.println("Type \"START\" to start the game");
+
                 } else {
                     System.out.println("Received unknown object type: " + obj.getClass().getName());
                 }

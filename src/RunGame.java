@@ -259,7 +259,7 @@ public class RunGame {
      * If hosting, we create a GameServerEndpoint; if joining, we create a GameClientEndpoint.
      */
     private void startMultiPlayer() {
-        System.out.print("Please enter 'H' to host, or 'J\'' to join");
+        System.out.print("Please enter 'H' to host, or 'J' to join: ");
         String subCmd = mainScanner.nextLine().trim().toUpperCase();
 
         if (subCmd.equals("H")) {
@@ -276,7 +276,6 @@ public class RunGame {
                     System.out.print("Enter a valid IP Address: ");
                     uriString += mainScanner.nextLine();
                     uriString += "/game";
-System.out.println(uriString);
                     URI uri = new URI(uriString);
                     GameClientEndpoint gce = new GameClientEndpoint(uri, mainScanner);
                     CountDownLatch latch = new CountDownLatch(1);

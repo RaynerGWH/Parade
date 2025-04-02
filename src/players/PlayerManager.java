@@ -19,10 +19,23 @@ public class PlayerManager {
     // private Random random = new Random();
 
     public void initializeHumanPlayers(Map<Session, Account> sessions, boolean isMulti) {
+        Map<String, Integer> usernames = new HashMap<String, Integer>();
         for (Map.Entry<Session, Account> entry : sessions.entrySet()) {
             Session s = entry.getKey();
             Account a = entry.getValue();
             String username = a.getUsername();
+            
+            if (usernames.containsKey(username)) {
+                int occurances = usernames.get(username);
+                username += "_" + occurances;
+                occurances++;
+                usernames.put(username, occurances);
+
+            } else {
+                usernames.put(username, 1);
+
+            }
+
             ArrayList<Card> hand = initialiseHand();
             players.add(new HumanPlayer(hand, username, s, sc));
         }
@@ -41,14 +54,6 @@ public class PlayerManager {
         for (int i = 1; i <= count; i++) {
             while (true) {
                 try {
-                    // if (random.nextInt(20) == 15) {
-                    //     //SPAWN YL BOT
-                    //     System.out.println("WARNING: YL HAS FOUND OUT A  BOUT THE PARADE GAME. HE WILL NOW BE PLAYING.");
-                    //     YLComputer YL  = new YLComputer(initialiseHand());
-                    //     players.add(YL);
-                    //     continue;
-                    // }
-
                     System.out.print("Enter difficulty of bot " + i + " (Level 1 or 2): ");
                     String difficulty = sc.nextLine();
                     int diffLvl = Integer.parseInt(difficulty);

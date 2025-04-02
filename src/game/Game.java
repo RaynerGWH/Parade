@@ -342,17 +342,20 @@ public class Game {
 
             displayHand(hp);
 
-            ui.displayMessage("-----Your turn-----", s);
+            ui.displayMessage("Your turn! Number of cards:" + hp.getHand().size(), s);
 
             if (ui instanceof MultiplayerUI) {
                 try {
+                    int i = 0;
                     String playerInput = InputManager.waitForInput();
-                    int i = Integer.parseInt(playerInput);
-                    choice = currentPlayer.playCard(i);
-                    if (choice == null) {
+                    if (playerInput == null) {
                         // timed out
-                        choice = currentPlayer.playCard(0);
+                        i = 0;
+                    } else {
+                        i = Integer.parseInt(playerInput);
                     }
+
+                    choice = currentPlayer.playCard(i);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     // Default: choice = 0;

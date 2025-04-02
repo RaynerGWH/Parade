@@ -136,10 +136,17 @@ public class GameManager {
         System.out.println("Waiting for players... Type \"START\" to start the game");
         String command = sc.nextLine();
         while (true) {
-            if (command.toUpperCase().trim().equals("START")) {
+            if (command.toUpperCase().trim().equals("START") && GameServerEndpoint.getNumPlayers() > 0) {
                 return;
             }
-            System.out.println("Invalid command. Type \"START\" to begin.");
+
+            if (GameServerEndpoint.getNumPlayers() <= 0) {
+                System.out.println("Invalid number of players. Make sure that there is more than one!");
+
+            } else {
+                System.out.println("Invalid command. Type \"START\" to begin.");
+                
+            }
             command = sc.nextLine();
         }
     }

@@ -44,12 +44,34 @@ public class GameClientEndpoint{
 
     @OnMessage
     public void onMessage(String message) {
-        if (message.contains("-----Your turn-----")) {
+        if (message.contains("Your turn! Number of cards:")) {
+            //handle number of cards
+            String[] messageArr = message.split(":");
+            int numCards = Integer.parseInt(messageArr[messageArr.length - 1]);
             new Thread(() -> {
-                System.out.print("Enter your input: ");
-                String input = sc.nextLine();
+                String input;
+                int choice = -1;
+                while (true) {
+                    System.out.print("Enter your input: ");
+                    input = sc.nextLine();
+
+                    try {
+                        choice = Integer.parseInt(input);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a number.");
+                        continue;
+                    }
+
+                    int handSize = numCards;
+                    if (choice >= 0 && choice < handSize) {
+                        break;
+                    } else {
+                        System.out.println("Invalid choice. Enter a number between 0 and " + (handSize - 1) + ".");
+                    }
+                }
+
                 try {
-                    session.getBasicRemote().sendText(input);
+                    session.getBasicRemote().sendText(String.valueOf(choice));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -59,6 +81,7 @@ public class GameClientEndpoint{
         }
     }
 
+    
     @OnMessage
     public void onMessage(Session session, ByteBuffer byteBuffer) {
         try {
@@ -84,6 +107,8 @@ public class GameClientEndpoint{
             e.printStackTrace();
         }
     }
+
+    
 
     @OnClose
     public void onClose(Session session) {
