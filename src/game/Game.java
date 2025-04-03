@@ -527,14 +527,14 @@ public class Game {
         if (emptyRiver) {
             ui.broadcastMessage(String.format("%s's River is Empty!", currentPlayerName));
         } else {
-            CardPrinter.printCardRow(currentPlayerRiver, false);
+            ui.broadcastMessage(CardPrinter.printCardRow(currentPlayerRiver, false));
         }
     }
 
     private void displayHand(HumanPlayer hp) {
-        Session s = hp.getSession();
-        ui.displayMessage("YOUR HAND:", s);
-        ui.displayMessage(CardPrinter.printCardRow(hp.getHand(),false), s);
+        Session currentSession = hp.getSession();
+        ui.displayMessage("YOUR HAND:", currentSession);
+        ui.displayMessage(CardPrinter.printCardRow(hp.getHand(),false), currentSession);
     }
 
     private void displayParade(List<Card> parade, Session s) {
