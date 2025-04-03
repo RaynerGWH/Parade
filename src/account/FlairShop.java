@@ -37,6 +37,7 @@ public class FlairShop {
 
         // Sample flairs (name, description, minWins, cost)
         availableFlairs.add(new Flair("grass toucher", "grass is horrified at your presence", 0, 0.0));
+        availableFlairs.add(new Flair("wife beater", "grass is horrified at your presence", 0, 0.0));
         availableFlairs.add(new Flair("i luv cat", "meow meow", 5, 100.0));
         availableFlairs.add(new Flair("i luv dawg", "roof roof", 5, 100.0));
         availableFlairs.add(new Flair("mr halfway there", "25 more wins to a pointless title", 25, 250.0));
@@ -100,5 +101,49 @@ public class FlairShop {
         }
 
         return false;
+    }
+    
+    /**
+     * Allows an account to select which flair to wear.
+     * The method checks if the flair is already owned; if so, it moves that flair to index 0,
+     * marking it as the active (worn) flair. The updated account is then saved to the PG1 file.
+     *
+     * @param flairName the name of the flair to wear
+     * @param account   the account selecting the flair
+     * @return {@code true} if the flair was successfully set as worn, {@code false} otherwise
+     */
+    public boolean selectFlairToWear(String flairName, Account account) {
+        // Check if the account owns the flair
+        if (!account.hasFlair(flairName)) {
+            return false;
+        }
+        List<String> flairs = account.getUnlockedFlairs();
+        // If already worn (flair at index 0), do nothing.
+        if (!flairs.isEmpty() && flairs.get(0).equalsIgnoreCase(flairName)) {
+            return false;
+        }
+        // Find the flair's index in the unlocked flairs list.
+        int index = -1;
+        for (int i = 0; i < flairs.size(); i++) {
+            if (flairs.get(i).equalsIgnoreCase(flairName)) {
+                index = i;
+                break;
+            }
+        }
+        if (index == -1) {
+            return false;
+        }
+        // Remove the flair from its current position and add it to index 0.
+        flairs.remove(index);
+        flairs.add(0, flairName);
+        
+        // Save the updated account so that PG1 reflects the change.
+        try {
+            fileManager.save(account);
+        } catch (IOException e) {
+            System.err.println("Failed to save account data: " + e.getMessage());
+            return false;
+        }
+        return true;
     }
 }

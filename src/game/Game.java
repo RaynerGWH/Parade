@@ -5,6 +5,7 @@ import players.*;
 import players.human.HumanPlayer;
 import ui.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,9 +13,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.HashSet;
 import java.util.TreeMap;
+import java.util.HashMap;
 
 import jakarta.websocket.Session;
-import java.util.HashMap;
+
+// Import the Account and AccountFileManager classes so we can access flair info and load accounts
+import account.Account;
+import account.AccountFileManager;
 
 public class Game {
     // ASSUMPTION: GAME is only started by the host, except in singleplayer
@@ -43,7 +48,44 @@ public class Game {
         this.scanner = scanner;
     }
 
+    /**
+     * Returns a player's display name with flair appended (if available).
+     * For example, if the account's username is "kai ze" and it has an unlocked
+     * flair "grass toucher", then this returns "kai ze [grass toucher]".
+     * 
+     * For HumanPlayer instances, we assume they have a method getAccount() that returns
+     * an Account. For other players, the original name is returned.
+     */
+    private String getDisplayName(Player player) {
+        if (player instanceof HumanPlayer) {
+            HumanPlayer hp = (HumanPlayer) player;
+            Account account = hp.getAccount();
+            if (account != null) {
+                List<String> flairs = account.getUnlockedFlairs();
+                if (flairs != null && !flairs.isEmpty()) {
+                    return account.getUsername() + " [" + flairs.get(0) + "]";
+                } else {
+                    return account.getUsername();
+                }
+            }
+        }
+        return player.getName();
+    }
+    
     public TreeMap<Integer, ArrayList<Player>> startGame() {
+        // *** New code added here to assign accounts to HumanPlayers if not already set ***
+        for (Player p : combinedPlayers) {
+            if (p instanceof HumanPlayer) {
+                HumanPlayer hp = (HumanPlayer) p;
+                if (hp.getAccount() == null) {
+                    // Load (or create) the account using the AccountFileManager.
+                    AccountFileManager accountFileManager = new AccountFileManager(scanner);
+                    Account loadedAccount = accountFileManager.initialize();
+                    hp.setAccount(loadedAccount);
+                }
+            }
+        }
+        // *** End new code ***
 
         // Game mode selection with validation
         boolean validGameMode = false;
@@ -57,11 +99,11 @@ public class Game {
             if (gameModeChoice.equals("2")) {
                 validGameMode = true;
                 timedMode = true;
-                System.out.print("\n████████╗██╗███╗   ███╗███████╗██████╗    ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" + //
-                        "╚══██╔══╝██║████╗ ████║██╔════╝██╔══██╗   ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" + //
-                        "   ██║   ██║██╔████╔██║█████╗  ██║  ██║   ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" + //
-                        "   ██║   ██║██║╚██╔╝██║██╔══╝  ██║  ██║   ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" + //
-                        "   ██║   ██║██║ ╚═╝ ██║███████╗██████╔╝   ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" + //
+                System.out.print("\n████████╗██╗███╗   ███╗███████╗██████╗    ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" + 
+                        "╚══██╔══╝██║████╗ ████║██╔════╝██╔══██╗   ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" + 
+                        "   ██║   ██║██╔████╔██║█████╗  ██║  ██║   ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" + 
+                        "   ██║   ██║██║╚██╔╝██║██╔══╝  ██║  ██║   ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" + 
+                        "   ██║   ██║██║ ╚═╝ ██║███████╗██████╔╝   ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" + 
                         "   ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝    ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\n");
                 System.out.print("════════════════════════════════════════════════════════════════════════════");
                 System.out.println("\nCategories:");
@@ -108,16 +150,11 @@ public class Game {
                 validGameMode = true;
                 System.out.print(
                         "\n █████╗ ██╗      █████╗  ██████╗ ██████╗██╗ █████╗     ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n"
-                                + //
-                                "██╔══██╗██║     ██╔══██╗██╔════╝██╔════╝██║██╔══██╗    ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n"
-                                + //
-                                "██║  ╚═╝██║     ███████║╚█████╗ ╚█████╗ ██║██║  ╚═╝    ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n"
-                                + //
-                                "██║  ██╗██║     ██╔══██║ ╚═══██╗ ╚═══██╗██║██║  ██╗    ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n"
-                                + //
-                                "╚█████╔╝███████╗██║  ██║██████╔╝██████╔╝██║╚█████╔╝    ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n"
-                                + //
-                                " ╚════╝ ╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝ ╚════╝     ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\n");
+                                + "██╔══██╗██║     ██╔══██╗██╔════╝██╔════╝██║██╔══██╗    ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n"
+                                + "██║  ╚═╝██║     ███████║╚█████╗ ╚█████╗ ██║██║  ╚═╝    ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n"
+                                + "██║  ██╗██║     ██╔══██║ ╚═══██╗ ╚═══██╗██║██║  ██╗    ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n"
+                                + "╚█████╔╝███████╗██║  ██║██████╔╝██████╔╝██║╚█████╔╝    ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n"
+                                + " ╚════╝ ╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝ ╚════╝     ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\n");
                 timedMode = false;
             } else {
                 System.out.println("\nInvalid choice. Please select 1 for Classic Mode or 2 for Timed Mode.");
@@ -180,8 +217,7 @@ public class Game {
                 timeBonus.put(currentPlayer, currentBonus + bonus);
 
                 if (bonus > 0) {
-                    ui.broadcastMessage(
-                            "\n" + currentPlayer.getName() + " gets " + bonus + " time bonus points for a quick move!");
+                    ui.broadcastMessage("\n" + getDisplayName(currentPlayer) + " gets " + bonus + " time bonus points for a quick move!");
                 }
 
                 // Show progress bar with remaining time
@@ -203,27 +239,20 @@ public class Game {
         // Bring out the FINAL TURN print, then call a separate function afterwards for
         // per round
         for (int i = 0; i < combinedPlayers.size() - 1; i++) {
-            ui.broadcastMessage(
-                    "-------------------------------------------------------------------------------------------------------------------------");
-            ui.broadcastMessage(
-                    "--------------------------------------------FINAL TURN: NO ONE CAN DRAW CARDS--------------------------------------------");
-            ui.broadcastMessage(
-                    "-------------------------------------------------------------------------------------------------------------------------");
+            ui.broadcastMessage("-------------------------------------------------------------------------------------------------------------------------");
+            ui.broadcastMessage("--------------------------------------------FINAL TURN: NO ONE CAN DRAW CARDS--------------------------------------------");
+            ui.broadcastMessage("-------------------------------------------------------------------------------------------------------------------------");
 
-            // everyone EXCEPT the current player index at the last turn will move. no
-            // drawing will be done here.
+            // everyone EXCEPT the current player index at the last turn will move. no drawing will be done here.
             Player p = combinedPlayers.get((i + currentPlayerIndex) % combinedPlayers.size());
             turn(p, parade, deck);
         }
 
         // here, the game is over. as per the rules, each player will discard 2 cards
         // from their hand
-        ui.broadcastMessage(
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n");
-        ui.broadcastMessage(
-                "---------Choose cards from your hand to discard! The remaining cards in your hand will be added to your river, so choose wisely!---------\n");
-        ui.broadcastMessage(
-                "-----------------------------------------------------------------------------------------------------------------------------------------\n");
+        ui.broadcastMessage("-----------------------------------------------------------------------------------------------------------------------------------------\n");
+        ui.broadcastMessage("---------Choose cards from your hand to discard! The remaining cards in your hand will be added to your river, so choose wisely!---------\n");
+        ui.broadcastMessage("-----------------------------------------------------------------------------------------------------------------------------------------\n");
         for (Player currentPlayer : combinedPlayers) {
 
             Card firstDiscardedCard = null;
@@ -251,7 +280,6 @@ public class Game {
                 displayCardPlayedOrDiscarded(currentPlayer, secondDiscardedCard, "Discard");
             }
                 
-
             // we add the rest of their hand into their river.
             ArrayList<Card> currentPlayerRiver = currentPlayer.getRiver();
             ArrayList<Card> currentPlayerHand = currentPlayer.getHand();
@@ -262,7 +290,7 @@ public class Game {
             // print the river for each player, and their name
             Collections.sort(currentPlayerRiver, new CardComparator());
             ui.broadcastMessage("\n"); // Add spacing before showing river
-            ui.broadcastMessage(currentPlayer.getName() + "'s River: ");
+            ui.broadcastMessage(getDisplayName(currentPlayer) + "'s River: ");
             ui.broadcastMessage(CardPrinter.printCardRow(currentPlayerRiver, false));
             ui.broadcastMessage("\n");
         }
@@ -276,7 +304,7 @@ public class Game {
         ui.broadcastMessage(" _____                        _____                 ");
         ui.broadcastMessage("|  __ \\                      |  _  |                ");
         ui.broadcastMessage("| |  \\/ __ _ _ __ ___   ___  | | | |_   _____ _ __  ");
-        ui.broadcastMessage("| | __ / _` | '_ ` _ \\ / _ \\ | | | \\ \\ / / _ \\ '__| ");
+        ui.broadcastMessage("| | __ / _ | '_  _ \\ / _ \\ | | | \\ \\ / / _ \\ '__| ");
         ui.broadcastMessage("| |_\\ \\ (_| | | | | | |  __/ \\ \\_/ /\\ V /  __/ |    ");
         ui.broadcastMessage(" \\____/\\__,_|_| |_| |_|\\___|  \\___/  \\_/ \\___|_|    ");
         ui.broadcastMessage("                                                     ");
@@ -292,7 +320,7 @@ public class Game {
                 if (bonus > 0) {
                     // Calculate log2 deduction (rounded down to nearest integer)
                     int logDeduction = (int) (Math.log(bonus) / Math.log(2)); // log2(x) = ln(x)/ln(2)
-                    ui.broadcastMessage(player.getName() + " earned " + bonus + " bonus points, resulting in a " +
+                    ui.broadcastMessage(getDisplayName(player) + " earned " + bonus + " bonus points, resulting in a " +
                             logDeduction + " point deduction!");
 
                     // Find the player in the scoreMap and adjust their score
@@ -321,6 +349,73 @@ public class Game {
             // Add a line break after all bonuses are displayed
             ui.broadcastMessage("\n");
         }
+
+        // we calculate the score for each player using new variable names to avoid conflicts
+        ScoreCalculator winScorer = new ScoreCalculator(combinedPlayers);
+        TreeMap<Integer, ArrayList<Player>> winScoreMap = winScorer.getScoreMap();
+
+        // ----- New win reward logic -----
+        // Determine if the game is multiplayer based on the UI type.
+        boolean isMultiplayer = (ui instanceof MultiplayerUI);
+        
+        // Determine the winning score.
+        // (Assuming that a lower score is better; adjust if necessary.)
+        if (!winScoreMap.isEmpty()) {
+            int winningScore = winScoreMap.firstKey();
+            ArrayList<Player> winners = winScoreMap.get(winningScore);
+            
+            if (isMultiplayer) {
+                // Multiplayer: For each winning human player, add 1 win and bonus = 100 * number of players.
+                int bonus = 100 * combinedPlayers.size();
+                for (Player p : winners) {
+                    if (p instanceof HumanPlayer) {
+                        HumanPlayer hp = (HumanPlayer) p;
+                        hp.getAccount().incrementWins();
+                        hp.getAccount().addBalance(bonus);
+                        try {
+                            AccountFileManager afm = new AccountFileManager(scanner);
+                            afm.save(hp.getAccount());
+                        } catch (IOException ex) {
+                            System.err.println("Error saving account: " + ex.getMessage());
+                        }
+                    }
+                }
+            } else {
+                // Singleplayer: Assume exactly two players: one HumanPlayer and one bot.
+                HumanPlayer human = null;
+                Player bot = null;
+                for (Player p : combinedPlayers) {
+                    if (p instanceof HumanPlayer) {
+                        human = (HumanPlayer) p;
+                    } else {
+                        bot = p;
+                    }
+                }
+                // If the human wins, update their account.
+                if (human != null && winners.contains(human)) {
+                    human.getAccount().incrementWins();
+                    int botLevel = 1; // default level 1
+                    // Use a simple check: if the bot's name contains "level 2", then it's level 2.
+                    if (bot != null && bot.getName().toLowerCase().contains("level 2")) {
+                        botLevel = 2;
+                    }
+                    if (botLevel == 1) {
+                        human.getAccount().addBalance(100);
+                    } else if (botLevel == 2) {
+                        human.getAccount().addBalance(200);
+                    }
+                    try {
+                        AccountFileManager afm = new AccountFileManager(scanner);
+                        afm.save(human.getAccount());
+                    } catch (IOException ex) {
+                        System.err.println("Error saving account: " + ex.getMessage());
+                    }
+                }
+            }
+        }
+        // ----- End win reward logic -----
+
+
 
         // Return the scoreMap so RunGame.java can use it
         return scoreMap;
@@ -403,10 +498,10 @@ public class Game {
 
         // Display which cards were taken
         if (!takenCards.isEmpty()) {
-            ui.broadcastMessage(currentPlayer.getName() + " takes the following cards from the parade:");
+            ui.broadcastMessage(getDisplayName(currentPlayer) + " takes the following cards from the parade:");
             ui.broadcastMessage(CardPrinter.printCardRow(takenCards, true));    
         } else {
-            ui.broadcastMessage(currentPlayer.getName() + " takes no cards from the parade!");
+            ui.broadcastMessage(getDisplayName(currentPlayer) + " takes no cards from the parade!");
         }
 
         // game ends if the deck is empty OR the current river has one of each color
@@ -436,15 +531,6 @@ public class Game {
         }
 
         displayCurrentPlayerRiver(currentPlayer);
-
-        // ui.broadcastMessage(currentPlayer.getName() + "'s River: ");
-
-        // // We check if the river is null or empty
-        // if (currRiver == null || currRiver.isEmpty()) {
-        // System.out.println("No cards in River.");
-        // } else {
-        // CardPrinter.printCardRow(currRiver, true);
-        // }
 
         return gameIsOver;
     }
@@ -489,11 +575,7 @@ public class Game {
         for (int i = 0; i < barLength; i++) {
             if (i < filledBars) {
                 progressBar.append("█");
-            }
-            // } else if (i == filledBars && progress < 1.0) { // Only show > if not at 100%
-            // progressBar.append(">");
-            // }
-            else {
+            } else {
                 progressBar.append(" ");
             }
         }
@@ -516,13 +598,11 @@ public class Game {
 
         Collections.sort(currentPlayerRiver, new CardComparator());
 
-        String currentPlayerName = currentPlayer.getName();
+        String currentPlayerName = getDisplayName(currentPlayer);
 
-        boolean emptyRiver = (currentPlayerRiver == null || currentPlayerRiver.size() == 0);
+        ui.broadcastMessage(currentPlayerName + "'s River: ");
 
-        ui.broadcastMessage(currentPlayer.getName() + "'s River: ");
-
-        if (emptyRiver) {
+        if (currentPlayerRiver == null || currentPlayerRiver.isEmpty()) {
             ui.broadcastMessage(String.format("%s's River is Empty!", currentPlayerName));
         } else {
             ui.broadcastMessage(CardPrinter.printCardRow(currentPlayerRiver, false));
@@ -532,7 +612,7 @@ public class Game {
     private void displayHand(HumanPlayer hp) {
         Session currentSession = hp.getSession();
         ui.displayMessage("YOUR HAND:", currentSession);
-        ui.displayMessage(CardPrinter.printCardRow(hp.getHand(),false), currentSession);
+        ui.displayMessage(CardPrinter.printCardRow(hp.getHand(), false), currentSession);
     }
 
     private void displayParade(List<Card> parade, Session s) {
@@ -545,13 +625,11 @@ public class Game {
     private void displayCardPlayedOrDiscarded(Player currentPlayer, Card choice, String playOrDiscard) {
 
         if (playOrDiscard.equals("Play")) {
-            ui.broadcastMessage(currentPlayer.getName() + " played:");
-
+            ui.broadcastMessage(getDisplayName(currentPlayer) + " played:");
             ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
 
         } else {
-            ui.broadcastMessage(currentPlayer.getName() + " discarded:");
-
+            ui.broadcastMessage(getDisplayName(currentPlayer) + " discarded:");
             ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
         }
     }
@@ -572,7 +650,6 @@ public class Game {
         }
         
         // Always add this as a fallback
-        // System.out.println("\n\n\n\n\n\n\n\n\n\n");
         System.out.println("=================================================================");
         System.out.println("                         NEW TURN                                ");
         System.out.println("=================================================================");

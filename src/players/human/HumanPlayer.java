@@ -2,8 +2,10 @@ package players.human;
 
 import cards.*;
 import players.AbstractPlayer;
+import account.Account;  // Import the Account class
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import jakarta.websocket.*;
@@ -12,6 +14,9 @@ public class HumanPlayer extends AbstractPlayer {
     private String name;
     private transient Session session;
     private Scanner sc;
+    
+    // New field to hold the associated Account
+    private Account account;
 
     public HumanPlayer(ArrayList<Card> hand, String name, Session session, Scanner sc) {
         super(hand);
@@ -20,7 +25,17 @@ public class HumanPlayer extends AbstractPlayer {
         this.sc = sc;
     }
 
-    //Singleplayer handler
+    // Getter for the Account object
+    public Account getAccount() {
+        return account;
+    }
+    
+    // Setter for the Account object
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    // Singleplayer handler
     @Override
     public Card chooseCardToPlay() {
         handleCardSelection("play");
@@ -69,18 +84,18 @@ public class HumanPlayer extends AbstractPlayer {
         promptForCardIndex(action);
     }
 
-    // public void displayHand() {
-    //     // We check if the hand is null or empty
-    //     if (hand == null || hand.isEmpty()) {
-    //         System.out.println("Your hand: Empty");
-    //     } else {
-    //         System.out.println("Your hand:");
-    //         CardPrinter.printCardRow(hand, false);
-    //     }
-    // }
-
     private void promptForCardIndex(String action) {
-        String prompt = name + ", enter the position of the card you want to " + action + " (0 - 4): ";
+        String displayName = name;
+        if (account != null) {
+            List<String> flairs = account.getUnlockedFlairs();
+            if (flairs != null && !flairs.isEmpty()) {
+                displayName = account.getUsername() + " [" + flairs.get(0) + "]";
+            } else {
+                displayName = account.getUsername();
+            }
+        }
+        
+        String prompt = displayName + ", enter the position of the card you want to " + action + " (0 - 4): ";
         System.out.print(prompt);
     }
 
