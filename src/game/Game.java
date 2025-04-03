@@ -157,9 +157,6 @@ public class Game {
 
         // Turn function
         while (!gameIsOver) {
-            // for (int i = 0; i < combinedPlayers.size(); i++) {
-            // System.out.print(combinedPlayers.get(i).getName());
-            // }
 
             Player currentPlayer = combinedPlayers.get(currentPlayerIndex);
 
@@ -227,45 +224,46 @@ public class Game {
                 "---------Choose cards from your hand to discard! The remaining cards in your hand will be added to your river, so choose wisely!---------\n");
         ui.broadcastMessage(
                 "-----------------------------------------------------------------------------------------------------------------------------------------\n");
-        for (Player p : combinedPlayers) {
+        for (Player currentPlayer : combinedPlayers) {
 
             Card firstDiscardedCard = null;
             Card secondDiscardedCard = null;
 
-            if (p instanceof HumanPlayer) {
-                HumanPlayer hp = (HumanPlayer)(p);
-                displayHand(hp);
+            if (currentPlayer instanceof HumanPlayer) {
+                HumanPlayer currentHumanPlayer = (HumanPlayer)(currentPlayer);
+                displayHand(currentHumanPlayer);
 
-                firstDiscardedCard = hp.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(hp, firstDiscardedCard, "Discard");
+                firstDiscardedCard = currentHumanPlayer.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(currentHumanPlayer, firstDiscardedCard, "Discard");
 
-                displayHand(hp);
+                displayHand(currentHumanPlayer);
 
-                secondDiscardedCard = hp.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(hp, secondDiscardedCard, "Discard");
+                secondDiscardedCard = currentHumanPlayer.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(currentHumanPlayer, secondDiscardedCard, "Discard");
 
-                displayHand(hp);
+                displayHand(currentHumanPlayer);
 
             } else {
-                firstDiscardedCard = p.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(p, firstDiscardedCard, "Discard");
+                firstDiscardedCard = currentPlayer.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(currentPlayer, firstDiscardedCard, "Discard");
 
-                secondDiscardedCard = p.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(p, secondDiscardedCard, "Discard");
+                secondDiscardedCard = currentPlayer.chooseCardToDiscard();
+                displayCardPlayedOrDiscarded(currentPlayer, secondDiscardedCard, "Discard");
             }
                 
 
             // we add the rest of their hand into their river.
-            ArrayList<Card> currentRiver = p.getRiver();
-            ArrayList<Card> hand = p.getHand();
-            for (Card c : hand) {
-                currentRiver.add(c);
+            ArrayList<Card> currentPlayerRiver = currentPlayer.getRiver();
+            ArrayList<Card> currentPlayerHand = currentPlayer.getHand();
+            for (Card c : currentPlayerHand) {
+                currentPlayerRiver.add(c);
             }
 
             // print the river for each player, and their name
-            Collections.sort(currentRiver, new CardComparator());
+            Collections.sort(currentPlayerRiver, new CardComparator());
             ui.broadcastMessage("\n"); // Add spacing before showing river
-            ui.broadcastMessage(String.format("River for %s: " + currentRiver.toString(), p.getName()));
+            ui.broadcastMessage(currentPlayer.getName() + "'s River: ");
+            ui.broadcastMessage(CardPrinter.printCardRow(currentPlayerRiver, false));
             ui.broadcastMessage("\n");
         }
 
