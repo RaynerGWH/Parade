@@ -5,15 +5,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class InputManager {
-    private static final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<String> INPUT_QUEUE = new LinkedBlockingQueue<>();
 
     public static void offerInput(String input) {
-        inputQueue.offer(input);
+        INPUT_QUEUE.offer(input);
     }
 
     public static String waitForInput() throws InterruptedException {
-        String input = inputQueue.poll(30, TimeUnit.SECONDS);
-        inputQueue.clear();
+        String input = INPUT_QUEUE.poll(30, TimeUnit.SECONDS);
+        INPUT_QUEUE.clear();
         return input;
     }
 }
