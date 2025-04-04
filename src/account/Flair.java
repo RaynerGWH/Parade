@@ -14,22 +14,22 @@ public class Flair {
     /**
      * The name of the flair (e.g. "High Roller", "Veteran").
      */
-    private final String flairName;
+    private final String FLAIRNAME;
 
     /**
      * A short description of what this flair represents.
      */
-    private final String description;
+    private final String DESCRIPTION;
 
     /**
      * The minimum number of wins required to unlock this flair.
      */
-    private final int requiredWins;
+    private final int REQUIREDWINS;
 
     /**
      * The cost to purchase this flair from the account's balance.
      */
-    private final double cost;
+    private final double COST;
 
     /**
      * Constructs a new Flair with the specified characteristics.
@@ -40,10 +40,10 @@ public class Flair {
      * @param cost         the cost in currency to buy this flair
      */
     public Flair(String flairName, String description, int requiredWins, double cost) {
-        this.flairName = flairName;
-        this.description = description;
-        this.requiredWins = requiredWins;
-        this.cost = cost;
+        this.FLAIRNAME = flairName;
+        this.DESCRIPTION = description;
+        this.REQUIREDWINS = requiredWins;
+        this.COST = cost;
     }
 
     /**
@@ -52,7 +52,7 @@ public class Flair {
      * @return the flair name
      */
     public String getFlairName() {
-        return flairName;
+        return FLAIRNAME;
     }
 
     /**
@@ -61,7 +61,7 @@ public class Flair {
      * @return the flair description
      */
     public String getDescription() {
-        return description;
+        return DESCRIPTION;
     }
 
     /**
@@ -70,7 +70,7 @@ public class Flair {
      * @return the required wins
      */
     public int getRequiredWins() {
-        return requiredWins;
+        return REQUIREDWINS;
     }
 
     /**
@@ -79,7 +79,7 @@ public class Flair {
      * @return the cost
      */
     public double getCost() {
-        return cost;
+        return COST;
     }
 
     /**
@@ -91,7 +91,7 @@ public class Flair {
      *         otherwise {@code false}
      */
     public boolean canBePurchasedBy(Account account) {
-        return account.getWins() >= requiredWins && account.getBalance() >= cost;
+        return account.getWins() >= REQUIREDWINS && account.getBalance() >= COST;
     }
 
     /**
@@ -103,7 +103,7 @@ public class Flair {
     public String toString() {
         return String.format(
             "Flair[name=\"%s\", desc=\"%s\", requiredWins=%d, cost=%.2f]",
-            flairName, description, requiredWins, cost
+            FLAIRNAME, DESCRIPTION, REQUIREDWINS, COST
         );
     }
 }

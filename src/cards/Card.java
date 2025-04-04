@@ -5,26 +5,26 @@ import java.io.Serializable;
 public class Card implements Serializable{
 
     // Instance Variables
-    private final Color color;
-    private final int value;
+    private final Color COLOR;
+    private final int VALUE;
     
     // Constructors
     public Card(Color color, int value) {
-        this.color = color;
-        this.value = value;
+        this.COLOR = color;
+        this.VALUE = value;
     }
 
     // Instance Methods
     public Color getColor() {
-        return color;
+        return COLOR;
     }
     
     public int getValue() {
-        return value;
+        return VALUE;
     }
     
     @Override
     public String toString() {
-        return color + "-" + value;
+        return COLOR + "-" + VALUE;
     }
 }
