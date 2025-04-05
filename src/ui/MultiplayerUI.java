@@ -3,6 +3,7 @@ package ui;
 import jakarta.websocket.*;
 
 import game.GameServerEndpoint;
+import account.Account;
 
 public class MultiplayerUI implements UserInterface {
 
@@ -16,6 +17,10 @@ public class MultiplayerUI implements UserInterface {
     public void displayMessage(String message, Session s) {
         // Send message to the current player's WebSocket
         gse.sendToCurrentPlayer(message, s);
+    }
+
+    public void sendAccount(Account account, Session s) {
+        gse.sendToCurrentPlayer(account, s);
     }
 
     @Override

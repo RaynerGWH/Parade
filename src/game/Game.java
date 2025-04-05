@@ -5,7 +5,6 @@ import players.*;
 import players.human.HumanPlayer;
 import ui.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -350,74 +349,6 @@ public class Game {
             ui.broadcastMessage("\n");
         }
 
-        // we calculate the score for each player using new variable names to avoid conflicts
-        ScoreCalculator winScorer = new ScoreCalculator(combinedPlayers);
-        TreeMap<Integer, ArrayList<Player>> winScoreMap = winScorer.getScoreMap();
-
-        // ----- New win reward logic -----
-        // Determine if the game is multiplayer based on the UI type.
-        boolean isMultiplayer = (ui instanceof MultiplayerUI);
-        
-        // Determine the winning score.
-        // (Assuming that a lower score is better; adjust if necessary.)
-        if (!winScoreMap.isEmpty()) {
-            int winningScore = winScoreMap.firstKey();
-            ArrayList<Player> winners = winScoreMap.get(winningScore);
-            
-            if (isMultiplayer) {
-                // Multiplayer: For each winning human player, add 1 win and bonus = 100 * number of players.
-                int bonus = 100 * combinedPlayers.size();
-                for (Player p : winners) {
-                    if (p instanceof HumanPlayer) {
-                        HumanPlayer hp = (HumanPlayer) p;
-                        hp.getAccount().incrementWins();
-                        hp.getAccount().addBalance(bonus);
-                        try {
-                            AccountFileManager afm = new AccountFileManager(scanner);
-                            afm.save(hp.getAccount());
-                        } catch (IOException ex) {
-                            System.err.println("Error saving account: " + ex.getMessage());
-                        }
-                    }
-                }
-            } else {
-                // Singleplayer: Assume exactly two players: one HumanPlayer and one bot.
-                HumanPlayer human = null;
-                Player bot = null;
-                for (Player p : combinedPlayers) {
-                    if (p instanceof HumanPlayer) {
-                        human = (HumanPlayer) p;
-                    } else {
-                        bot = p;
-                    }
-                }
-                // If the human wins, update their account.
-                if (human != null && winners.contains(human)) {
-                    human.getAccount().incrementWins();
-                    int botLevel = 1; // default level 1
-                    // Use a simple check: if the bot's name contains "level 2", then it's level 2.
-                    if (bot != null && bot.getName().toLowerCase().contains("level 2")) {
-                        botLevel = 2;
-                    }
-                    if (botLevel == 1) {
-                        human.getAccount().addBalance(100);
-                    } else if (botLevel == 2) {
-                        human.getAccount().addBalance(200);
-                    }
-                    try {
-                        AccountFileManager afm = new AccountFileManager(scanner);
-                        afm.save(human.getAccount());
-                    } catch (IOException ex) {
-                        System.err.println("Error saving account: " + ex.getMessage());
-                    }
-                }
-            }
-        }
-        // ----- End win reward logic -----
-
-
-
-        // Return the scoreMap so RunGame.java can use it
         return scoreMap;
     }
 

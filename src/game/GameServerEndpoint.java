@@ -117,7 +117,6 @@ public class GameServerEndpoint {
                 if (message instanceof String) {
                     // Send text message
                     session.getBasicRemote().sendText((String) message);
-                    System.out.println("Sent text message to session: " + session.getId());
                 } else {
                     // Send serialized object
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();

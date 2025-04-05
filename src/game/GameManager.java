@@ -1,5 +1,6 @@
 package game;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -14,6 +15,9 @@ import jakarta.websocket.*;
 
 import players.Player;
 import players.PlayerManager;
+import players.computer.BeginnerComputerPlayer;
+import players.computer.IntermediateComputerPlayer;
+import players.human.HumanPlayer;
 import account.*;
 import ui.*;
 
@@ -50,6 +54,7 @@ public class GameManager {
         Game g = new Game(playerMgr.getPlayers(), ui, gse, sc);
         TreeMap<Integer, ArrayList<Player>> scores = g.startGame();
         printRankings(scores);
+        handleRewards(scores);
 
         //Handle rewards distribution here
     }
@@ -173,5 +178,75 @@ public class GameManager {
             case 3 -> rank + "RD";
             default -> rank + "TH";
         };
+    }
+
+    private void handleRewards(TreeMap<Integer, ArrayList<Player>> scores) {
+        boolean isMultiplayer = (ui instanceof MultiplayerUI);
+        
+        // Determine the winning score.
+        if (scores.isEmpty()) {
+            int winningScore = scores.firstKey();
+            ArrayList<Player> winners = scores.get(winningScore);
+            
+            if (isMultiplayer) {
+                MultiplayerUI MUI = (MultiplayerUI)ui;
+                ArrayList<Player> players = playerMgr.getPlayers();
+                // Multiplayer: For each winning human player, add 1 win and bonus = 100 * number of players.
+                int bonus = 100 * playerMgr.getPlayers().size();
+
+                for (Player p : players) {
+                    if (winners.contains(p) && p instanceof HumanPlayer) {
+                        HumanPlayer hp = (HumanPlayer)p;
+                        Account a = hp.getAccount();
+                        hp.getAccount().incrementWins();
+                        hp.getAccount().addBalance(bonus);
+                    }
+
+                    if (p instanceof HumanPlayer) {
+                        HumanPlayer hp = (HumanPlayer) p;
+                        
+                        
+                        // Send account object to client endpoint, to handle the logic. Then, close the connection bnetween client and server.
+                        MUI.sendAccount(hp.getAccount(),hp.getSession());
+                    }
+                }
+
+            } else {
+                try {
+                    ArrayList<BeginnerComputerPlayer> bcpList = new ArrayList<BeginnerComputerPlayer>();
+                    ArrayList<IntermediateComputerPlayer> icpList = new ArrayList<IntermediateComputerPlayer>();
+                    HumanPlayer humanPlayer = null;
+                    AccountFileManager acctMgr = new AccountFileManager();
+                    Account account = null;
+    
+                    for (Player player : playerMgr.getPlayers()) {
+                        if (player instanceof BeginnerComputerPlayer) {
+                            bcpList.add((BeginnerComputerPlayer)player);
+                        } else if (player instanceof IntermediateComputerPlayer) {
+                            icpList.add((IntermediateComputerPlayer)player);
+                        } else {
+                            humanPlayer = (HumanPlayer)player;
+                        }
+    
+                        //did bro win? yes -> handle, no -> ignore
+                        if (humanPlayer != null && winners.contains(humanPlayer)) {
+                            account = humanPlayer.getAccount();
+                            account.incrementWins();
+                            account.addBalance(100 * bcpList.size());
+                            account.addBalance(200 * icpList.size());
+                            acctMgr.save(account);
+
+                        } else {
+                            account = humanPlayer.getAccount();
+                            account.incrementLosses();
+                            acctMgr.save(account);
+                        }
+                    }
+                } catch (IOException e) {
+                    System.err.println("Error processing message: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
