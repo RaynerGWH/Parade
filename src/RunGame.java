@@ -315,7 +315,8 @@ public class RunGame {
             "██║  ██║",
             "╚═╝  ╚═╝"};
 
-        String[] paradeLetterA2 = paradeLetterA1; // reuse A
+        // We reuse the letter A
+        String[] paradeLetterA2 = paradeLetterA1;
         String[] paradeLetterD = {
             "██████╗ ",
             "██╔══██╗",
