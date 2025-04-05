@@ -189,7 +189,6 @@ public class GameManager {
             if (isMultiplayer) {
                 MultiplayerUI MUI = (MultiplayerUI)ui;
                 ArrayList<Player> players = playerMgr.getPlayers();
-System.out.println(players);
                 // Multiplayer: For each winning human player, add 1 win and bonus = 100 * number of players.
                 int bonus = 100 * playerMgr.getPlayers().size();
 

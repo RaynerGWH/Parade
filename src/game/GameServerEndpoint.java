@@ -76,7 +76,6 @@ public class GameServerEndpoint {
 
     // Robust broadcast method with detailed error handling
     public static void broadcast(String message) {
-        System.out.println("Attempting to broadcast: " + message);
         System.out.println("Total active sessions: " + SESSIONS.size());
 
         for (Map.Entry<Session, Account> entry : SESSIONS.entrySet()) {

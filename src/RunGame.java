@@ -234,16 +234,6 @@ public class RunGame {
      */
     private void startSinglePlayer() {
         UserInterface ui = new SinglePlayerUI();
-
-        // System.out.print("Enter number of bots (if any): ");
-        // int numBots = 0;
-        // try {
-        //     numBots = Integer.parseInt(mainScanner.nextLine());
-        // } catch (NumberFormatException e) {
-        //     System.out.println("Invalid number, defaulting to 0.");
-        //     numBots = 0;
-        // }
-
         gameMgr.start(ui, null);
     }
 
