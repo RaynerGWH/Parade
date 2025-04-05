@@ -348,7 +348,7 @@ public class Game {
         // Display the parade
         ui.broadcastMessage("The Parade:");
         ui.broadcastMessage(CardPrinter.printCardRow(parade, true));
-        
+
         // If the current player is human, show their hand privately.
         if (currentPlayer instanceof HumanPlayer) {
             HumanPlayer hp = (HumanPlayer) currentPlayer;
@@ -382,7 +382,7 @@ public class Game {
                     int i = 0;
                     String playerInput = InputManager.waitForInput();
                     if (playerInput == null) {
-                        i = 0;
+                        i = 1;
                     } else {
                         i = Integer.parseInt(playerInput);
                     }
