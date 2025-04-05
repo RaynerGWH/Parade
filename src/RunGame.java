@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
+
+import ui.ClearConsole;
 import ui.MultiplayerUI;
 import ui.SinglePlayerUI;
 import ui.UserInterface;
@@ -91,6 +93,7 @@ public class RunGame {
     private void run() {
         try {
             // Optional fancy animation on startup.
+            ClearConsole.clear();
             printParadeAnimation();
 
             while (true) {
@@ -367,6 +370,10 @@ public class RunGame {
                 int start = currentPage * linesPerPage;
                 int end = Math.min(start + linesPerPage, lines.size());
 
+                // We clear the console
+                ClearConsole.clear();
+
+                // Print the page
                 System.out.println("\nPage " + (currentPage + 1) + " of " + totalPages + ":");
                 for (int i = start; i < end; i++) {
                     System.out.println(lines.get(i));
@@ -405,7 +412,8 @@ public class RunGame {
                         }
                         break;
                     case "Q":
-                        System.out.println("Exiting rulebook.");
+                        ClearConsole.clear();
+                        System.out.println("Exited rulebook.\n");
                         return;
                     default:
                         System.out.println("Invalid input. Please try again.");
