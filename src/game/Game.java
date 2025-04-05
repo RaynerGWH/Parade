@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.HashMap;
+import java.util.Map;
 
 import jakarta.websocket.Session;
 
@@ -260,16 +261,63 @@ public class Game {
 
             if (currentPlayer instanceof HumanPlayer) {
                 HumanPlayer currentHumanPlayer = (HumanPlayer)(currentPlayer);
+                Session playerSession = currentHumanPlayer.getSession();
                 displayHand(currentHumanPlayer);
 
-                firstDiscardedCard = currentHumanPlayer.chooseCardToDiscard();
+                if (ui instanceof MultiplayerUI) {
+                    // Send discard request to client
+                    ui.displayMessage("Your turn to discard! Number of cards:" + currentHumanPlayer.getHand().size(), playerSession);
+                    try {
+                        String playerInput = InputManager.waitForInput();
+                        if (playerInput == null) {
+                            // timed out, default to first card
+                            firstDiscardedCard = currentHumanPlayer.playCard(0);
+                        } else {
+                            int index = Integer.parseInt(playerInput);
+                            firstDiscardedCard = currentHumanPlayer.playCard(index);
+                        }
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        // Default: choice = 0
+                        firstDiscardedCard = currentHumanPlayer.playCard(0);
+                    } catch (NumberFormatException e) {
+                        // Invalid input, default to first card
+                        firstDiscardedCard = currentHumanPlayer.playCard(0);
+                    }
+                } else {
+                    // Singleplayer mode - use direct console input
+                    firstDiscardedCard = currentHumanPlayer.chooseCardToDiscard();
+                }
+
                 displayCardPlayedOrDiscarded(currentHumanPlayer, firstDiscardedCard, "Discard");
-
                 displayHand(currentHumanPlayer);
 
-                secondDiscardedCard = currentHumanPlayer.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(currentHumanPlayer, secondDiscardedCard, "Discard");
+                if (ui instanceof MultiplayerUI) {
+                    // Send second discard request to client
+                    ui.displayMessage("Your turn to discard! Number of cards:" + currentHumanPlayer.getHand().size(), playerSession);
+                    try {
+                        String playerInput = InputManager.waitForInput();
+                        if (playerInput == null) {
+                            // timed out, default to first card
+                            secondDiscardedCard = currentHumanPlayer.playCard(0);
+                        } else {
+                            int index = Integer.parseInt(playerInput);
+                            secondDiscardedCard = currentHumanPlayer.playCard(index);
+                        }
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        // Default: choice = 0
+                        secondDiscardedCard = currentHumanPlayer.playCard(0);
+                    } catch (NumberFormatException e) {
+                        // Invalid input, default to first card
+                        secondDiscardedCard = currentHumanPlayer.playCard(0);
+                    }
+                } else {
+                    // Singleplayer mode - use direct console input
+                    secondDiscardedCard = currentHumanPlayer.chooseCardToDiscard();
+                }
 
+                displayCardPlayedOrDiscarded(currentHumanPlayer, secondDiscardedCard, "Discard");
                 displayHand(currentHumanPlayer);
 
             } else {
@@ -415,8 +463,6 @@ public class Game {
         }
         // ----- End win reward logic -----
 
-
-
         // Return the scoreMap so RunGame.java can use it
         return scoreMap;
     }
@@ -498,10 +544,21 @@ public class Game {
 
         // Display which cards were taken
         if (!takenCards.isEmpty()) {
-            ui.broadcastMessage(getDisplayName(currentPlayer) + " takes the following cards from the parade:");
-            ui.broadcastMessage(CardPrinter.printCardRow(takenCards, true));    
+            String message = getDisplayName(currentPlayer) + " takes the following cards from the parade:";
+            String cardVisual = CardPrinter.printCardRow(takenCards, true);
+            
+            // Broadcast to all players
+            ui.broadcastMessage(message);
+            ui.broadcastMessage(cardVisual);
+            
+            // We don't need to send a duplicate message to the human player who is the current player
+            // since they will already receive it from the broadcast
         } else {
-            ui.broadcastMessage(getDisplayName(currentPlayer) + " takes no cards from the parade!");
+            String message = getDisplayName(currentPlayer) + " takes no cards from the parade!";
+            ui.broadcastMessage(message);
+            
+            // We don't need to send a duplicate message to the human player who is the current player
+            // since they will already receive it from the broadcast
         }
 
         // game ends if the deck is empty OR the current river has one of each color
@@ -531,6 +588,84 @@ public class Game {
         }
 
         displayCurrentPlayerRiver(currentPlayer);
+
+        // Add manual turn advancement for human players
+        if (currentPlayer instanceof HumanPlayer) {
+            HumanPlayer humanPlayer = (HumanPlayer) currentPlayer;
+            
+            // Get the session for this player
+            Session playerSession = humanPlayer.getSession();
+            
+            if (ui instanceof MultiplayerUI) {
+                // For multiplayer: send the prompt to the player's session
+                ui.displayMessage("Hit \"ENTER\" to end turn!", playerSession);
+                
+                try {
+                    // Wait for ENTER key press from this specific player
+                    InputManager.waitForEnterPress();
+                    
+                    // Find the next player
+                    int currentPlayerIndex = combinedPlayers.indexOf(currentPlayer);
+                    int nextPlayerIndex = (currentPlayerIndex + 1) % combinedPlayers.size();
+                    Player nextPlayer = combinedPlayers.get(nextPlayerIndex);
+                    
+                    // Broadcast new turn header for multiplayer with next player's name
+                    broadcastNewTurn(nextPlayer);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            } else {
+                // For singleplayer: use the human player's method that handles console input
+                humanPlayer.waitForEnterToEndTurn();
+                // Clear console after turn is completed
+                clearConsole();
+                
+                // Find the next player
+                int currentPlayerIndex = combinedPlayers.indexOf(currentPlayer);
+                int nextPlayerIndex = (currentPlayerIndex + 1) % combinedPlayers.size();
+                Player nextPlayer = combinedPlayers.get(nextPlayerIndex);
+                
+                // Display next player's turn in singleplayer
+                System.out.println("===============================================================");
+                System.out.println("                      " + getDisplayName(nextPlayer) + "'s TURN                ");
+                System.out.println("===============================================================");
+            }
+        } else {
+            // For bot players, display message to all players that anyone can advance
+            ui.broadcastMessage("Any player can hit ENTER to continue...");
+            
+            if (ui instanceof MultiplayerUI) {
+                try {
+                    // Wait for ENTER key press from any player
+                    InputManager.waitForEnterPress();
+                    
+                    // Find the next player
+                    int currentPlayerIndex = combinedPlayers.indexOf(currentPlayer);
+                    int nextPlayerIndex = (currentPlayerIndex + 1) % combinedPlayers.size();
+                    Player nextPlayer = combinedPlayers.get(nextPlayerIndex);
+                    
+                    // Broadcast new turn header for multiplayer with next player's name
+                    broadcastNewTurn(nextPlayer);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            } else if (scanner != null) {
+                // For singleplayer with bots
+                HumanPlayer.waitForAnyPlayerToAdvance(scanner);
+                // Clear console after turn is completed
+                clearConsole();
+                
+                // Find the next player
+                int currentPlayerIndex = combinedPlayers.indexOf(currentPlayer);
+                int nextPlayerIndex = (currentPlayerIndex + 1) % combinedPlayers.size();
+                Player nextPlayer = combinedPlayers.get(nextPlayerIndex);
+                
+                // Display next player's turn in singleplayer
+                System.out.println("===============================================================");
+                System.out.println("                      " + getDisplayName(nextPlayer) + "'s TURN                ");
+                System.out.println("===============================================================");
+            }
+        }
 
         return gameIsOver;
     }
@@ -623,15 +758,15 @@ public class Game {
     }
 
     private void displayCardPlayedOrDiscarded(Player currentPlayer, Card choice, String playOrDiscard) {
-
-        if (playOrDiscard.equals("Play")) {
-            ui.broadcastMessage(getDisplayName(currentPlayer) + " played:");
-            ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
-
-        } else {
-            ui.broadcastMessage(getDisplayName(currentPlayer) + " discarded:");
-            ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
-        }
+        String message = getDisplayName(currentPlayer) + " " + (playOrDiscard.equals("Play") ? "played" : "discarded") + ":";
+        String cardVisual = CardPrinter.printCardRow(Collections.singletonList(choice), false);
+        
+        // For console and all non-human players, broadcast the message
+        ui.broadcastMessage(message);
+        ui.broadcastMessage(cardVisual);
+        
+        // We don't need to send a duplicate message to the human player who is the current player
+        // since they will already receive it from the broadcast
     }
 
     public static void clearConsole() {
@@ -646,12 +781,23 @@ public class Game {
                 System.out.flush();
             }
         } catch (Exception e) {
-            // Do nothing with the exception
+            // If clearing fails, print multiple newlines as fallback
+            for (int i = 0; i < 50; i++) {
+                System.out.println();
+            }
         }
         
-        // Always add this as a fallback
+        // Always add this as a header for the new turn
         System.out.println("=================================================================");
         System.out.println("                         NEW TURN                                ");
         System.out.println("=================================================================");
+    }
+    
+    // Update method to broadcast the turn header with the next player's name
+    private void broadcastNewTurn(Player nextPlayer) {
+        String playerName = getDisplayName(nextPlayer);
+        ui.broadcastMessage("===============================================================");
+        ui.broadcastMessage("                      " + playerName + "'s TURN                ");
+        ui.broadcastMessage("===============================================================");
     }
 }

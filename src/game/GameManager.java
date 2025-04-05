@@ -151,13 +151,14 @@ public class GameManager {
         }
     }
 
-    public static void printRankings(TreeMap<Integer, ArrayList<Player>> scores) {
-        System.out.println("\n=== FINAL RANKINGS ===");
+    public void printRankings(TreeMap<Integer, ArrayList<Player>> scores) {
+        // Broadcast rankings to all players in multiplayer mode
+        ui.broadcastMessage("\n=== FINAL RANKINGS ===");
         int rank = 1;
         for (Map.Entry<Integer, ArrayList<Player>> entry : scores.entrySet()) {
             ArrayList<Player> players = entry.getValue();
             for (Player player : players) {
-                System.out.println(getOrdinal(rank) + ": " + player.getName() + " | Score: " + entry.getKey());
+                ui.broadcastMessage(getOrdinal(rank) + ": " + player.getName() + " | Score: " + entry.getKey());
             }
             rank += players.size(); // Increase rank appropriately
         }

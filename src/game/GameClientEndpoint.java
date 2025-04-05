@@ -44,7 +44,13 @@ public class GameClientEndpoint{
 
     @OnMessage
     public void onMessage(String message) {
-        if (message.contains("Your turn! Number of cards:")) {
+        // Check if this is a new turn marker and clear the console
+        if (message.contains("TURN") && message.contains("===============")) {
+            System.out.println(message);
+            return;
+        }
+    
+        if (message.contains("Your turn! Number of cards:") || message.contains("Your turn to discard! Number of cards:")) {
             //handle number of cards
             String[] messageArr = message.split(":");
             int numCards = Integer.parseInt(messageArr[messageArr.length - 1]);
@@ -52,7 +58,11 @@ public class GameClientEndpoint{
                 String input;
                 int choice = -1;
                 while (true) {
-                    System.out.print("Enter your input: ");
+                    if (message.contains("discard")) {
+                        System.out.print("Enter the position of the card you want to discard: ");
+                    } else {
+                        System.out.print("Enter your input: ");
+                    }
                     input = sc.nextLine();
 
                     try {
@@ -72,6 +82,40 @@ public class GameClientEndpoint{
 
                 try {
                     session.getBasicRemote().sendText(String.valueOf(choice));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        } else if (message.contains("Hit \"ENTER\" to end turn!")) {
+            // Handle the turn advancement prompt
+            System.out.println(message);
+            new Thread(() -> {
+                System.out.print("Press ENTER to end your turn...");
+                sc.nextLine(); // Wait for ENTER key
+                
+                // Clear the console immediately when the user presses Enter
+                clearConsole();
+                
+                try {
+                    // Send empty string to indicate ENTER key press
+                    session.getBasicRemote().sendText("");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        } else if (message.contains("Any player can hit ENTER to continue...")) {
+            // Handle the bot turn advancement prompt
+            System.out.println(message);
+            new Thread(() -> {
+                System.out.print("Press ENTER to continue...");
+                sc.nextLine(); // Wait for ENTER key
+                
+                // Clear the console immediately when the user presses Enter
+                clearConsole();
+                
+                try {
+                    // Send empty string to indicate ENTER key press
+                    session.getBasicRemote().sendText("");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -118,5 +162,40 @@ public class GameClientEndpoint{
 
     public void setLatch(CountDownLatch latch) {
         this.latch = latch;
+    }
+
+    /**
+     * Clears the console for better readability between turns
+     */
+    private void clearConsole() {
+        try {
+            final String os = System.getProperty("os.name");
+            
+            if (os.contains("Windows")) {
+                // For Windows, try multiple methods
+                try {
+                    // First attempt: using cls command
+                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                } catch (Exception e) {
+                    // Second attempt: using ANSI escape codes (works in newer Windows terminals)
+                    System.out.print("\033[H\033[2J");
+                    System.out.flush();
+                }
+            } else {
+                // For Unix-based systems
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+                
+                // Alternative approach for Unix
+                System.out.print("\033c");
+            }
+        } catch (Exception e) {
+            // If all clearing methods fail, print multiple newlines as fallback
+            for (int i = 0; i < 100; i++) {
+                System.out.println();
+            }
+        }
+        
+        // Don't print the separator here - we'll get it from the server
     }
 }
