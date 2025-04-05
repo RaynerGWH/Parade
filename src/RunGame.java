@@ -92,7 +92,7 @@ public class RunGame {
      */
     private void run() {
         try {
-            // Optional fancy animation on startup.
+            // Fancy animation on startup.
             ClearConsole.clear();
             printParadeAnimation();
             printParadeAnimationLoop();
@@ -100,7 +100,9 @@ public class RunGame {
 
             while (true) {
                 ClearConsole.clear();
-                System.out.print("Enter 'R' to refer to the rulebook, 'S' to start the game, or 'SHOP' to open the flair shop\n> ");
+                System.out.print("Enter 'R' to refer to the rulebook,\n" + 
+                                 "      'S' to start the game, or\n" +
+                                 "      'SHOP' to open the flair shop\n> ");
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
                 if (command.equals("R")) {
@@ -263,7 +265,7 @@ public class RunGame {
             while (true) {
                 try {
                     String uriString = "ws://";
-                    System.out.print("Enter a valid IP Address: ");
+                    System.out.print("Enter a valid IP Address\n> ");
                     uriString += mainScanner.nextLine();
                     uriString += "/game";
                     URI uri = new URI(uriString);
@@ -352,50 +354,98 @@ public class RunGame {
             }
             System.out.print(resetColor);
             System.out.println();
-            timer /= 1.2; // speed up each row
+            timer /= 1.3; // speed up each row
         }
     }
 
     private void printParadeAnimationLoop() throws IOException, InterruptedException {
         String[] colors = {
             "\u001B[31m", // Red
-            "\u001B[32m", // Green
+            "\u001B[91m", // Orange (bright red)
             "\u001B[33m", // Yellow
+            "\u001B[32m", // Green
             "\u001B[34m", // Blue
-            "\u001B[35m", // Purple
-            "\u001B[36m", // Cyan
-            "\u001B[37m"  // White
+            "\u001B[35m"  // Purple
         };
         String resetColor = "\u001B[0m";
     
-        String[] parade = {
-            "██████╗  █████╗ ██████╗  █████╗ ██████╗ ███████╗",
-            "██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝",
-            "██████╔╝███████║██████╔╝███████║██║  ██║█████╗  ",
-            "██╔═══╝ ██╔══██║██╔══██╗██╔══██║██║  ██║██╔══╝  ",
-            "██║     ██║  ██║██║  ██║██║  ██║██████╔╝███████╗",
-            "╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝"
+        String[][] letters = {
+            {
+                "██████╗ ",
+                "██╔══██╗",
+                "██████╔╝",
+                "██╔═══╝ ",
+                "██║     ",
+                "╚═╝     "
+            },
+            {
+                " █████╗ ",
+                "██╔══██╗",
+                "███████║",
+                "██╔══██║",
+                "██║  ██║",
+                "╚═╝  ╚═╝"
+            },
+            {
+                "██████╗ ",
+                "██╔══██╗",
+                "██████╔╝",
+                "██╔══██╗",
+                "██║  ██║",
+                "╚═╝  ╚═╝"
+            },
+            {
+                " █████╗ ",
+                "██╔══██╗",
+                "███████║",
+                "██╔══██║",
+                "██║  ██║",
+                "╚═╝  ╚═╝"
+            },
+            {
+                "██████╗ ",
+                "██╔══██╗",
+                "██║  ██║",
+                "██║  ██║",
+                "██████╔╝",
+                "╚═════╝ "
+            },
+            {
+                "███████╗",
+                "██╔════╝",
+                "█████╗  ",
+                "██╔══╝  ",
+                "███████╗",
+                "╚══════╝"
+            }
         };
     
-        int colorIndex = 0;
+        int colorShift = 0;
+        int numRows = letters[0].length;
     
-        // Disable input blocking (for Unix/macOS)
-        System.out.print("\u001B[?25l"); // hide cursor (optional)
+        System.out.print("\u001B[?25l"); // hide cursor
     
         while (System.in.available() == 0) {
             ClearConsole.clear();
-            String color = colors[colorIndex % colors.length];
-            for (String line : parade) {
-                System.out.println(color + line + resetColor);
+    
+            // Assign each letter a color based on the current shift
+            for (int row = 0; row < numRows; row++) {
+                StringBuilder line = new StringBuilder();
+                for (int i = 0; i < letters.length; i++) {
+                    String color = colors[(i - colorShift + colors.length) % colors.length];
+                    line.append(color).append(letters[i][row]).append(resetColor).append(" ");
+                }
+                System.out.println(line);
             }
     
             System.out.print("\nPress ENTER to start...");
-            Thread.sleep(500); // animation speed
-            colorIndex++;
+            Thread.sleep(500);
+            colorShift = (colorShift + 1) % colors.length;
         }
     
         System.out.print("\u001B[?25h"); // show cursor again
     }
+    
     
 
     /**
