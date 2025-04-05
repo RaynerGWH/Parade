@@ -121,10 +121,12 @@ public class GameManager {
 
     public int botHandler(int numPlayers) {
         int numBots = 0;
+        int maximumNumberOfBots = 8 - numPlayers;
+        int minimumNumberOfBots = 2 - numPlayers;
 
         while (true) {
             try {
-                System.out.print("Enter number of Bots\n> ");
+                System.out.print("Enter number of Bots (" + minimumNumberOfBots + " - " + maximumNumberOfBots + ")\n> ");
                 numBots = Integer.parseInt(sc.nextLine());
                 if (numPlayers + numBots > 8 || numPlayers + numBots < 2) {
                     throw new NumberFormatException();
@@ -135,8 +137,6 @@ public class GameManager {
             } catch (NumberFormatException e) {
                 // Max number of bots able to be added : 8 - numplayers
                 // Min number of bots to be added : 2 - numplayers
-                int maximumNumberOfBots = 8 - numPlayers;
-                int minimumNumberOfBots = 2 - numPlayers;
                 System.out.println("Please enter a valid number! Number of total players must be between "
                                    + minimumNumberOfBots + " and " + maximumNumberOfBots);
             }
