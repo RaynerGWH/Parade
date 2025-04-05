@@ -111,7 +111,7 @@ public class RunGame {
                         int numBots = 0;
         
                         if (numPlayers < 8) {
-                            System.out.print("Enter number of Bots: ");
+                            System.out.print("Enter number of Bots\n> );
                             numBots = Integer.parseInt(rg.sc.nextLine());
                             if (numPlayers + numBots > 8) {
                                 throw new NumberFormatException();

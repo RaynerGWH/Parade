@@ -92,7 +92,7 @@ public class Game {
             System.out.println("Game Modes available:");
             System.out.println("    1. Classic");
             System.out.println("    2. Timed");
-            System.out.print("Enter '1' or '2': ");
+            System.out.print("Enter '1' or '2'\n> ");
             String gameModeChoice = scanner.nextLine().trim();
 
             if (gameModeChoice.equals("2")) {
@@ -115,7 +115,7 @@ public class Game {
 
                 while (!validChoice) {
                     try {
-                        System.out.print("Enter category (1-3): ");
+                        System.out.print("Enter category (1-3)\n> ");
                         timeChoice = Integer.parseInt(scanner.nextLine().trim());
                         if (timeChoice >= 1 && timeChoice <= 3) {
                             validChoice = true;

@@ -89,6 +89,7 @@ public class GameManager {
 
         websocketServer = new Server(hostIp, 8080, "/", properties, GameServerEndpoint.class);
         try {
+            ClearConsole.clear();
             websocketServer.start();
             System.out.println("WebSocket server is running...");
             System.out.println("==============================");
@@ -113,7 +114,7 @@ public class GameManager {
 
         while (true) {
             try {
-                System.out.print("Enter number of Bots: ");
+                System.out.print("Enter number of Bots\n> ");
                 numBots = Integer.parseInt(sc.nextLine());
                 if (numPlayers + numBots > 8 || numPlayers + numBots < 2) {
                     throw new NumberFormatException();
@@ -136,7 +137,7 @@ public class GameManager {
         // We start the server only if there are other human players(besides yourself)
         // TODO: ADD CHECKING FUNCCTION TO PREVENT STARTING WITHOUT OTHER PLAYERS
         startWebSocketServer();
-        System.out.println("Waiting for players... Type \"START\" to start the game");
+        System.out.println("Waiting for players... Type \"START\" to start the game\n> ");
         String command = sc.nextLine();
         while (true) {
             if (command.toUpperCase().trim().equals("START") && GameServerEndpoint.getNumPlayers() > 0) {

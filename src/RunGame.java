@@ -95,9 +95,12 @@ public class RunGame {
             // Optional fancy animation on startup.
             ClearConsole.clear();
             printParadeAnimation();
+            printParadeAnimationLoop();
+            mainScanner.nextLine();
 
             while (true) {
-                System.out.print("Enter 'R' to refer to the rulebook, 'S' to start the game, or 'SHOP' to open the flair shop: ");
+                ClearConsole.clear();
+                System.out.print("Enter 'R' to refer to the rulebook, 'S' to start the game, or 'SHOP' to open the flair shop\n> ");
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
                 if (command.equals("R")) {
@@ -106,7 +109,7 @@ public class RunGame {
 
                 } else if (command.equals("S")) {
                     // Start the game: single or multi?
-                    System.out.print("Enter 'S' for Singleplayer or 'M' for Multiplayer: ");
+                    System.out.print("Enter 'S' for Singleplayer or 'M' for Multiplayer\n> ");
                     String mode = mainScanner.nextLine().trim().toUpperCase();
 
                     if (mode.equals("S")) {
@@ -117,7 +120,7 @@ public class RunGame {
                         startMultiPlayer();
                         return; // after multi-player, exit run().
                     } else {
-                        System.out.println("Please only enter 'S' or 'M'.");
+                        System.out.println("Please only enter 'S' or 'M'.\n> ");
                     }
 
                 } else if (command.equals("SHOP")) {
@@ -136,6 +139,7 @@ public class RunGame {
             mainScanner.close();
         }
     }
+    
 
     /**
      * Displays the FlairShop menu, showing available flairs and letting the user purchase them.
@@ -146,9 +150,9 @@ public class RunGame {
         while (true) {
             
             // Display current account stats
-            System.out.println("Current Balance: " + account.getBalance());
-            System.out.println("Wins           : " + account.getWins());
-            System.out.println("Losses         : " + account.getLosses());
+            System.out.println("Current Balance : " + account.getBalance());
+            System.out.println("Wins            : " + account.getWins());
+            System.out.println("Losses          : " + account.getLosses());
 
             List<Flair> availableFlairs = flairShop.getAvailableFlairs();
             System.out.println("\nAvailable Flairs:");
@@ -173,7 +177,7 @@ public class RunGame {
                 );
             }
 
-            System.out.println("\nEnter the number of the flair to purchase or wear it, or 'Q' to quit shop.");
+            System.out.println("\nEnter the number of the flair to purchase or wear it, or 'Q' to quit shop\n> ");
             String input = mainScanner.nextLine().trim();
 
             if (input.equalsIgnoreCase("Q")) {
@@ -196,7 +200,7 @@ public class RunGame {
                     if (!ownedFlairs.isEmpty() && ownedFlairs.get(0).equalsIgnoreCase(chosenFlair.getFlairName())) {
                         System.out.println("This flair is already being worn.");
                     } else {
-                        System.out.println("You already own this flair. Do you want to wear it? (Y/N)");
+                        System.out.println("You already own this flair. Do you want to wear it? (Y/N)\n> ");
                         String wearInput = mainScanner.nextLine().trim();
                         if (wearInput.equalsIgnoreCase("Y")) {
                             boolean setWorn = flairShop.selectFlairToWear(chosenFlair.getFlairName(), account);
@@ -212,7 +216,7 @@ public class RunGame {
                     boolean purchased = flairShop.purchaseFlair(chosenFlair.getFlairName(), account);
                     if (purchased) {
                         System.out.println("Purchase successful! You now own '" + chosenFlair.getFlairName() + "'.");
-                        System.out.println("Do you want to wear this flair now? (Y/N)");
+                        System.out.println("Do you want to wear this flair now? (Y/N)\n> ");
                         String wearNowInput = mainScanner.nextLine().trim();
                         if (wearNowInput.equalsIgnoreCase("Y")) {
                             boolean setWorn = flairShop.selectFlairToWear(chosenFlair.getFlairName(), account);
@@ -227,7 +231,7 @@ public class RunGame {
                     }
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number or Q.");
+                System.out.println("Invalid input. Please enter a number or Q.\n");
             }
         }
     }
@@ -245,7 +249,7 @@ public class RunGame {
      * If hosting, we create a GameServerEndpoint; if joining, we create a GameClientEndpoint.
      */
     private void startMultiPlayer() {
-        System.out.print("Please enter 'H' to host, or 'J' to join: ");
+        System.out.print("Please enter 'H' to host, or 'J' to join\n> ");
         String subCmd = mainScanner.nextLine().trim().toUpperCase();
 
         if (subCmd.equals("H")) {
@@ -352,6 +356,48 @@ public class RunGame {
         }
     }
 
+    private void printParadeAnimationLoop() throws IOException, InterruptedException {
+        String[] colors = {
+            "\u001B[31m", // Red
+            "\u001B[32m", // Green
+            "\u001B[33m", // Yellow
+            "\u001B[34m", // Blue
+            "\u001B[35m", // Purple
+            "\u001B[36m", // Cyan
+            "\u001B[37m"  // White
+        };
+        String resetColor = "\u001B[0m";
+    
+        String[] parade = {
+            "██████╗  █████╗ ██████╗  █████╗ ██████╗ ███████╗",
+            "██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝",
+            "██████╔╝███████║██████╔╝███████║██║  ██║█████╗  ",
+            "██╔═══╝ ██╔══██║██╔══██╗██╔══██║██║  ██║██╔══╝  ",
+            "██║     ██║  ██║██║  ██║██║  ██║██████╔╝███████╗",
+            "╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝"
+        };
+    
+        int colorIndex = 0;
+    
+        // Disable input blocking (for Unix/macOS)
+        System.out.print("\u001B[?25l"); // hide cursor (optional)
+    
+        while (System.in.available() == 0) {
+            ClearConsole.clear();
+            String color = colors[colorIndex % colors.length];
+            for (String line : parade) {
+                System.out.println(color + line + resetColor);
+            }
+    
+            System.out.print("\nPress ENTER to start...");
+            Thread.sleep(500); // animation speed
+            colorIndex++;
+        }
+    
+        System.out.print("\u001B[?25h"); // show cursor again
+    }
+    
+
     /**
      * Scrolls through the rulebook file, using the same Scanner as the main program.
      * We do NOT close the scanner here, so that main program remains interactive afterwards.
@@ -374,13 +420,15 @@ public class RunGame {
                 ClearConsole.clear();
 
                 // Print the page
-                System.out.println("\nPage " + (currentPage + 1) + " of " + totalPages + ":");
+                System.out.println("Page " + (currentPage + 1) + " of " + totalPages + ":");
                 for (int i = start; i < end; i++) {
                     System.out.println(lines.get(i));
                 }
 
                 if (currentPage == 0) {
                     System.out.print("\nEnter (N)ext or (Q)uit: ");
+                } else if (currentPage == totalPages - 1) {
+                    System.out.print("\nEnter (P)revious, (F)irst, or (Q)uit: ");
                 } else {
                     System.out.print("\nEnter (N)ext, (P)revious, or (Q)uit: ");
                 }
