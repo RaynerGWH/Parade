@@ -108,8 +108,8 @@ public class GameManager {
 
         websocketServer = new Server(hostIp, 8080, "/", properties, GameServerEndpoint.class);
         try {
-            ClearConsole.clear();
             websocketServer.start();
+            ClearConsole.clear();
             System.out.println("WebSocket server is running...");
             System.out.println("==============================");
             System.out.println("Your Host IP: " + hostIp + ":8080");
@@ -155,10 +155,11 @@ public class GameManager {
     public void humanHandler() {
         // We start the server only if there are other human players(besides yourself)
         // TODO: ADD CHECKING FUNCCTION TO PREVENT STARTING WITHOUT OTHER PLAYERS
+        ClearConsole.clear();
         startWebSocketServer();
-        System.out.println("Waiting for players... Type \"START\" to start the game\n> ");
-        String command = sc.nextLine();
         while (true) {
+            System.out.print("Waiting for players... Type \"START\" to start the game\n> ");
+            String command = sc.nextLine();
             if (command.toUpperCase().trim().equals("START") && GameServerEndpoint.getNumPlayers() > 0) {
                 return;
             }
@@ -170,7 +171,6 @@ public class GameManager {
                 System.out.println("Invalid command. Type \"START\" to begin.");
                 
             }
-            command = sc.nextLine();
         }
     }
 
