@@ -95,7 +95,7 @@ public class HumanPlayer extends AbstractPlayer {
             }
         }
         
-        String prompt = displayName + ", enter the position of the card you want to " + action + " (0 - 4): ";
+        String prompt = displayName + ", enter the position of the card you want to " + action + " (0 - 4)\n> ";
         System.out.print(prompt);
     }
 

@@ -21,8 +21,7 @@ import account.Account;
 import account.AccountFileManager;
 
 public class Game {
-    // ASSUMPTION: GAME is only started by the host, except in singleplayer
-    // instances.
+    // ASSUMPTION: GAME is only started by the host, except in singleplayer instances.
 
     private Deck deck;
     private boolean gameIsOver = false;
@@ -33,7 +32,7 @@ public class Game {
     private GameServerEndpoint gse;
     private Scanner scanner;
 
-    // Add new timer-related fields
+    // Timer-related fields for timed mode
     private boolean timedMode = false;
     private long gameStartTime;
     private long timeLimit; // in milliseconds
@@ -49,11 +48,6 @@ public class Game {
 
     /**
      * Returns a player's display name with flair appended (if available).
-     * For example, if the account's username is "kai ze" and it has an unlocked
-     * flair "grass toucher", then this returns "kai ze [grass toucher]".
-     * 
-     * For HumanPlayer instances, we assume they have a method getAccount() that returns
-     * an Account. For other players, the original name is returned.
      */
     private String getDisplayName(Player player) {
         if (player instanceof HumanPlayer) {
@@ -72,20 +66,18 @@ public class Game {
     }
     
     public TreeMap<Integer, ArrayList<Player>> startGame() {
-        // *** New code added here to assign accounts to HumanPlayers if not already set ***
+        // Assign accounts to HumanPlayers if not already set
         for (Player p : combinedPlayers) {
             if (p instanceof HumanPlayer) {
                 HumanPlayer hp = (HumanPlayer) p;
                 if (hp.getAccount() == null) {
-                    // Load (or create) the account using the AccountFileManager.
                     AccountFileManager accountFileManager = new AccountFileManager(scanner);
                     Account loadedAccount = accountFileManager.initialize();
                     hp.setAccount(loadedAccount);
                 }
             }
         }
-        // *** End new code ***
-
+        
         // Game mode selection with validation
         boolean validGameMode = false;
         while (!validGameMode) {
@@ -143,7 +135,6 @@ public class Game {
                         break;
                 }
 
-                // Don't initialize with placeholders, wait for actual players
                 timeBonus = new HashMap<>();
             } else if (gameModeChoice.equals("1")) {
                 validGameMode = true;
@@ -160,26 +151,19 @@ public class Game {
             }
         }
 
-        // Initialise parade
+        // Initialize parade with initial cards
         parade = new ArrayList<Card>();
-
         for (int i = 0; i < INITIAL_PARADE_LENGTH; i++) {
             parade.add(deck.drawCard());
         }
 
         int currentPlayerIndex = 0;
-
-        // Initialize time bonus map with actual players
         if (timedMode) {
             timeBonus.clear();
             for (Player player : combinedPlayers) {
                 timeBonus.put(player, 0);
             }
-
-            // Start the timer
             gameStartTime = System.currentTimeMillis();
-
-            // Display time limit
             ui.broadcastMessage("\n═══ TIMED MODE ACTIVE ═══\n");
             ui.broadcastMessage("Time limit: " + (timeLimit / 60000) + " minutes\n");
             ui.broadcastMessage("Bonus points will be awarded for quick moves!\n");
@@ -191,12 +175,11 @@ public class Game {
             scores.add(0);
         }
 
-        // Turn function
+        // Main turn loop
         while (!gameIsOver) {
-
             Player currentPlayer = combinedPlayers.get(currentPlayerIndex);
 
-            // Check if time has run out in timed mode
+            // Timed mode: check time limit
             if (timedMode && System.currentTimeMillis() - gameStartTime >= timeLimit) {
                 ui.broadcastMessage("\n═══ TIME'S UP! ═══\n");
                 gameIsOver = true;
@@ -206,6 +189,7 @@ public class Game {
             // Track time for this player's move
             long turnStartTime = System.currentTimeMillis();
 
+            // Process the current turn (the console is cleared and the full game state is displayed)
             gameIsOver = turn(currentPlayer, parade, deck, "Plays");
 
             // Calculate time bonus if in timed mode
@@ -219,86 +203,61 @@ public class Game {
                     ui.broadcastMessage("\n" + getDisplayName(currentPlayer) + " gets " + bonus + " time bonus points for a quick move!");
                 }
 
-                // Show progress bar with remaining time
                 long elapsedTime = System.currentTimeMillis() - gameStartTime;
                 ui.broadcastMessage(displayTimeProgressBar(elapsedTime));
-                ui.broadcastMessage("\n"); // Add extra spacing
+                ui.broadcastMessage("\n");
             }
 
-            // Shift to next players' turn.
+            // Next player's turn
             currentPlayerIndex = (currentPlayerIndex + 1) % combinedPlayers.size();
         }
 
-        // The only time we break out of the loop is when the game is over. now, we play
-        // one final round, without drawing
-        // to stop the drawing mechanic, we set the deck to be empty.
-
+        // Final round and scoring code remains as before...
         deck.clearDeck();
-
-        // Bring out the FINAL TURN print, then call a separate function afterwards for
-        // per round
         for (int i = 0; i < combinedPlayers.size() - 1; i++) {
             ui.broadcastMessage("══════════════════════════════════════════════════════════════");
             ui.broadcastMessage("FINAL TURN: NO ONE CAN DRAW CARDS");
             ui.broadcastMessage("══════════════════════════════════════════════════════════════");
 
-            // everyone EXCEPT the current player index at the last turn will move. no drawing will be done here.
             Player p = combinedPlayers.get((i + currentPlayerIndex) % combinedPlayers.size());
             turn(p, parade, deck, "Play");
         }
 
-        // here, the game is over. as per the rules, each player will discard 2 cards
-        // from their hand
         ui.broadcastMessage("══════════════════════════════════════════════════════════════\n");
         ui.broadcastMessage("Choose cards from your hand to discard! The remaining cards in your hand will be added to your river, so choose wisely!\n");
         ui.broadcastMessage("══════════════════════════════════════════════════════════════\n");
         for (Player currentPlayer : combinedPlayers) {
-
             Card firstDiscardedCard = null;
             Card secondDiscardedCard = null;
 
             if (currentPlayer instanceof HumanPlayer) {
-                HumanPlayer currentHumanPlayer = (HumanPlayer)(currentPlayer);
-                displayHand(currentHumanPlayer);
-
+                HumanPlayer currentHumanPlayer = (HumanPlayer) currentPlayer;
+                // Using the updated state display instead of separate hand display
                 turn(currentHumanPlayer, parade, deck, "Discards");
-                //displayCardPlayedOrDiscarded(currentHumanPlayer, firstDiscardedCard, "Discard");
-
-                displayHand(currentHumanPlayer);
-
                 turn(currentHumanPlayer, parade, deck, "Discards");
-                //displayCardPlayedOrDiscarded(currentHumanPlayer, secondDiscardedCard, "Discard");
-
-                //displayHand(currentHumanPlayer);
-
             } else {
                 firstDiscardedCard = currentPlayer.chooseCardToDiscard();
                 displayCardPlayedOrDiscarded(currentPlayer, firstDiscardedCard, "Discard");
-
                 secondDiscardedCard = currentPlayer.chooseCardToDiscard();
                 displayCardPlayedOrDiscarded(currentPlayer, secondDiscardedCard, "Discard");
             }
                 
-            // we add the rest of their hand into their river.
             ArrayList<Card> currentPlayerRiver = currentPlayer.getRiver();
             ArrayList<Card> currentPlayerHand = currentPlayer.getHand();
             for (Card c : currentPlayerHand) {
                 currentPlayerRiver.add(c);
             }
 
-            // print the river for each player, and their name
             Collections.sort(currentPlayerRiver, new CardComparator());
-            ui.broadcastMessage("\n"); // Add spacing before showing river
+            ui.broadcastMessage("\n");
             ui.broadcastMessage(getDisplayName(currentPlayer) + "'s River: ");
             ui.broadcastMessage(CardPrinter.printCardRow(currentPlayerRiver, false));
             ui.broadcastMessage("\n");
         }
 
-        // we calculate the score for each player
         ScoreCalculator scorer = new ScoreCalculator(combinedPlayers);
         TreeMap<Integer, ArrayList<Player>> scoreMap = scorer.getScoreMap();
 
-        // Add GAME OVER banner
         ui.broadcastMessage("\n");
         ui.broadcastMessage(" _____                        _____                 ");
         ui.broadcastMessage("|  __ \\                      |  _  |                ");
@@ -309,20 +268,15 @@ public class Game {
         ui.broadcastMessage("                                                     ");
         ui.broadcastMessage("\n");
 
-        // Apply time bonuses if in timed mode
         if (timedMode) {
             ui.broadcastMessage("\n--- TIME BONUS POINTS ---");
-
-            // Apply log2 bonus for all players
             for (Player player : combinedPlayers) {
                 int bonus = timeBonus.get(player);
                 if (bonus > 0) {
-                    // Calculate log2 deduction (rounded down to nearest integer)
-                    int logDeduction = (int) (Math.log(bonus) / Math.log(2)); // log2(x) = ln(x)/ln(2)
+                    int logDeduction = (int) (Math.log(bonus) / Math.log(2));
                     ui.broadcastMessage(getDisplayName(player) + " earned " + bonus + " bonus points, resulting in a " +
                             logDeduction + " point deduction!");
 
-                    // Find the player in the scoreMap and adjust their score
                     for (Integer score : scoreMap.keySet()) {
                         ArrayList<Player> playersWithScore = scoreMap.get(score);
                         if (playersWithScore.contains(player)) {
@@ -330,11 +284,7 @@ public class Game {
                             if (playersWithScore.isEmpty()) {
                                 scoreMap.remove(score);
                             }
-
-                            // Apply log2 bonus (negative score is better in Parade)
                             int newScore = score - logDeduction;
-
-                            // Add player to the new score
                             if (!scoreMap.containsKey(newScore)) {
                                 scoreMap.put(newScore, new ArrayList<>());
                             }
@@ -344,53 +294,105 @@ public class Game {
                     }
                 }
             }
-
-            // Add a line break after all bonuses are displayed
             ui.broadcastMessage("\n");
         }
 
         return scoreMap;
     }
 
+    /**
+     * New method to clear the console and display the current game state.
+     * Shows:
+     *   - A header with "Current Turn" where the active player's name is highlighted in green.
+     *   - Each player's river.
+     *   - (For human players) Their hand is shown so they can select a card.
+     *   - The parade is displayed at the bottom.
+     */
+    private void displayGameState(Player currentPlayer) {
+        // Clear the console
+        clearConsole();
+
+        // Build and display the "Current Turn" header
+        StringBuilder header = new StringBuilder("Current Turn: ");
+        for (int i = 0; i < combinedPlayers.size(); i++) {
+            Player p = combinedPlayers.get(i);
+            String displayName = getDisplayName(p);
+            if (p.equals(currentPlayer)) {
+                // ANSI escape code for green text
+                header.append("\u001B[32m").append(displayName).append("\u001B[0m");
+            } else {
+                header.append(displayName);
+            }
+            if (i < combinedPlayers.size() - 1) {
+                header.append(" ▶ ");
+            }
+        }
+        ui.broadcastMessage(header.toString());
+        ui.broadcastMessage("------------------------------------------------------------");
+
+        // Display each player's river
+        for (Player p : combinedPlayers) {
+            String riverHeader = getDisplayName(p) + "'s River: ";
+            ui.broadcastMessage(riverHeader);
+            ArrayList<Card> river = p.getRiver();
+            if (river == null || river.isEmpty()) {
+                ui.broadcastMessage("   (Empty)");
+            } else {
+                ArrayList<Card> sortedRiver = new ArrayList<>(river);
+                Collections.sort(sortedRiver, new CardComparator());
+                ui.broadcastMessage(CardPrinter.printCardRow(sortedRiver, true));
+            }
+        }
+        ui.broadcastMessage("------------------------------------------------------------");
+
+        // If the current player is human, show their hand privately.
+        if (currentPlayer instanceof HumanPlayer) {
+            HumanPlayer hp = (HumanPlayer) currentPlayer;
+            Session s = hp.getSession();
+            ui.displayMessage("YOUR HAND:", s);
+            ui.displayMessage(CardPrinter.printCardRow(hp.getHand(), false), s);
+        }
+
+        // Display the parade below the rivers
+        ui.broadcastMessage("The Parade:");
+        ui.broadcastMessage(CardPrinter.printCardRow(parade, true));
+    }
+
+    /**
+     * Modified turn method.
+     * At the beginning and after processing the move, the full game state is shown.
+     */
     public boolean turn(Player currentPlayer, ArrayList<Card> parade, Deck deck, String action) {
         Session s = null;
         boolean gameIsOver = false;
         Card choice = null;
 
-        // print the following only for human players. bots -> dont care
+        // Show updated state at the start of the turn.
+        displayGameState(currentPlayer);
+
         if (currentPlayer instanceof HumanPlayer) {
             HumanPlayer hp = (HumanPlayer) currentPlayer;
             s = hp.getSession();
-
-            displayParade(parade, s);
-
-            displayHand(hp);
-
-            ui.displayMessage("Your turn! Number of cards:" + hp.getHand().size(), s);
+            
+            ui.displayMessage("Your turn! Number of cards: " + hp.getHand().size(), s);
 
             if (ui instanceof MultiplayerUI) {
                 try {
                     int i = 0;
                     String playerInput = InputManager.waitForInput();
                     if (playerInput == null) {
-                        // timed out
                         i = 0;
                     } else {
                         i = Integer.parseInt(playerInput);
                     }
-
                     choice = currentPlayer.playCard(i);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    // Default: choice = 0;
                     choice = currentPlayer.playCard(0);
                 }
             } else {
-                // use the overloaded method to handle singleplayer input
-                // (Does not have thread blocking, etc).
                 choice = currentPlayer.chooseCardToPlay();
             }
-
         } else {
             choice = currentPlayer.chooseCardToPlay();
         }
@@ -401,11 +403,10 @@ public class Game {
             int choiceValue = choice.getValue();
             Color choiceColor = choice.getColor();
 
-            // Add the current card to the parade.
+            // Add the played card to the parade.
             parade.add(0, choice);
 
-            // Process the parade for cards to be removed and added to the current player's
-            // river.
+            // Process the parade to move matching cards into the current player's river.
             ArrayList<Card> currRiver = currentPlayer.getRiver();
             Iterator<Card> iterator = parade.iterator();
             List<Card> takenCards = new ArrayList<Card>();
@@ -428,7 +429,6 @@ public class Game {
                 }
             }
 
-            // Display which cards were taken
             if (!takenCards.isEmpty()) {
                 ui.broadcastMessage(getDisplayName(currentPlayer) + " takes the following cards from the parade:");
                 ui.broadcastMessage(CardPrinter.printCardRow(takenCards, true));    
@@ -436,20 +436,16 @@ public class Game {
                 ui.broadcastMessage(getDisplayName(currentPlayer) + " takes no cards from the parade!");
             }
 
-            // game ends if the deck is empty OR the current river has one of each color
             if (currRiver.size() != 0) {
                 Collections.sort(currRiver, new CardComparator());
             }
 
-            // Change to one function instead
+            // Check win condition: if the river has all 6 colors.
             if (currRiver.size() != 0) {
-                // create a set to store the colors of the river, avoid duplicates
                 HashSet<Color> checkColor = new HashSet<Color>();
                 for (Card c : currRiver) {
                     checkColor.add(c.getColor());
                 }
-
-                // if per river size == 6
                 if (checkColor.size() == 6) {
                     gameIsOver = true;
                 }
@@ -465,27 +461,27 @@ public class Game {
             return true;
         }
 
-        displayCurrentPlayerRiver(currentPlayer);
+        // After the move, update the display to reflect the new game state.
+        displayGameState(currentPlayer);
         return gameIsOver;
     }
 
-    // Calculate time bonus based on how quickly the player made their move
+    // Calculate time bonus based on turn duration
     private int calculateTimeBonus(long turnDuration) {
-        // For a 1-minute game, quick moves should be rewarded more
-        if (timeLimit <= 60 * 1000) { // 1-minute game
+        if (timeLimit <= 60 * 1000) {
             if (turnDuration < 3000)
-                return 3; // 3 points for moves under 3 seconds
+                return 3;
             if (turnDuration < 6000)
-                return 2; // 2 points for moves under 6 seconds
+                return 2;
             if (turnDuration < 10000)
-                return 1; // 1 point for moves under 10 seconds
-        } else { // For longer games
+                return 1;
+        } else {
             if (turnDuration < 5000)
-                return 3; // 3 points for moves under 5 seconds
+                return 3;
             if (turnDuration < 10000)
-                return 2; // 2 points for moves under 10 seconds
+                return 2;
             if (turnDuration < 15000)
-                return 1; // 1 point for moves under 15 seconds
+                return 1;
         }
         return 0;
     }
@@ -498,70 +494,29 @@ public class Game {
         return String.format("%02d:%02d", minutes, seconds);
     }
 
-    // Add this new method to the Game class
+    // Display time progress bar
     private String displayTimeProgressBar(long elapsedTime) {
-        int barLength = 30; // Length of the progress bar
-        double progress = Math.min(1.0, (double) elapsedTime / timeLimit); // Cap at 1.0 (100%)
+        int barLength = 30;
+        double progress = Math.min(1.0, (double) elapsedTime / timeLimit);
         int filledBars = (int) (progress * barLength);
 
-        // Create the progress bar string
         StringBuilder progressBar = new StringBuilder("[");
         for (int i = 0; i < barLength; i++) {
-            if (i < filledBars) {
-                progressBar.append("█");
-            } else {
-                progressBar.append(" ");
-            }
+            progressBar.append(i < filledBars ? "█" : " ");
         }
         progressBar.append("]");
 
-        // Calculate remaining time
         long remainingTime = Math.max(0, timeLimit - elapsedTime);
         String timeString = formatTime(remainingTime);
-
-        // Calculate percentage (capped at 100)
         int percentage = Math.min(100, (int) (progress * 100));
 
-        // Print the progress bar and time
         return String.format("\nTime remaining: %s%n%s%d%%", timeString, progressBar.toString(), percentage);
     }
 
-    private void displayCurrentPlayerRiver(Player currentPlayer) {
-
-        ArrayList<Card> currentPlayerRiver = currentPlayer.getRiver();
-
-        Collections.sort(currentPlayerRiver, new CardComparator());
-
-        String currentPlayerName = getDisplayName(currentPlayer);
-
-        ui.broadcastMessage(currentPlayerName + "'s River: ");
-
-        if (currentPlayerRiver == null || currentPlayerRiver.isEmpty()) {
-            ui.broadcastMessage(String.format("%s's River is Empty!", currentPlayerName));
-        } else {
-            ui.broadcastMessage(CardPrinter.printCardRow(currentPlayerRiver, false));
-        }
-    }
-
-    private void displayHand(HumanPlayer hp) {
-        Session currentSession = hp.getSession();
-        ui.displayMessage("YOUR HAND:", currentSession);
-        ui.displayMessage(CardPrinter.printCardRow(hp.getHand(), false), currentSession);
-    }
-
-    private void displayParade(List<Card> parade, Session s) {
-        ui.displayMessage("══════════════════════════════════════════════════════════════", s);
-        ui.displayMessage("THE PARADE:", s);
-        ui.displayMessage(CardPrinter.printCardRow(parade, true), s);
-        ui.displayMessage("══════════════════════════════════════════════════════════════", s);
-    }
-
     private void displayCardPlayedOrDiscarded(Player currentPlayer, Card choice, String playOrDiscard) {
-
         if (playOrDiscard.equals("Play")) {
             ui.broadcastMessage(getDisplayName(currentPlayer) + " played:");
             ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
-
         } else {
             ui.broadcastMessage(getDisplayName(currentPlayer) + " discarded:");
             ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
@@ -569,23 +524,34 @@ public class Game {
     }
 
     public static void clearConsole() {
-        // Try standard clearing methods first
+        // Clear the screen using the proper platform logic
+        ClearConsole.clear();
+    
+        // Force a wide, consistent console width for Visual Studio Code or IDEs
+        int consoleWidth = getConsoleWidth();
+    
+        String title = " NEW TURN ";
+        int sideWidth = (consoleWidth - title.length() - 2);
+        int paddingLeft = sideWidth / 2;
+        int paddingRight = sideWidth - paddingLeft;
+    
+        // Print the full-width rounded box
+        System.out.println("╭" + "─".repeat(consoleWidth - 2) + "╮");
+        System.out.println("│" + " ".repeat(paddingLeft) + title + " ".repeat(paddingRight) + "│");
+        System.out.println("╰" + "─".repeat(consoleWidth - 2) + "╯");
+    }
+    
+    private static int getConsoleWidth() {
+        // Try environment variables commonly set in Unix-based terminals
         try {
-            final String os = System.getProperty("os.name");
-            
-            if (os.contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
-            }
-        } catch (Exception e) {
-            // Do nothing with the exception
-        }
-        
-        // Always add this as a fallback
-        System.out.println("=================================================================");
-        System.out.println("                         NEW TURN                                ");
-        System.out.println("=================================================================");
+            return Integer.parseInt(System.getenv("COLUMNS"));
+        } catch (Exception ignored) {}
+    
+        // If COLUMNS isn't available, try fallback environment
+        try {
+            return Integer.parseInt(System.getenv("CONSOLE_WIDTH"));
+        } catch (Exception ignored) {}
+    
+        return 80; // Final fallback width
     }
 }
