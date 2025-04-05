@@ -180,10 +180,10 @@ public class Game {
             gameStartTime = System.currentTimeMillis();
 
             // Display time limit
-            ui.broadcastMessage("\n--- TIMED MODE ACTIVE ---\n");
+            ui.broadcastMessage("\n═══ TIMED MODE ACTIVE ═══\n");
             ui.broadcastMessage("Time limit: " + (timeLimit / 60000) + " minutes\n");
             ui.broadcastMessage("Bonus points will be awarded for quick moves!\n");
-            ui.broadcastMessage("---------------------------\n");
+            ui.broadcastMessage("═══════════════════════════\n");
         }
 
         ArrayList<Integer> scores = new ArrayList<Integer>();
@@ -198,7 +198,7 @@ public class Game {
 
             // Check if time has run out in timed mode
             if (timedMode && System.currentTimeMillis() - gameStartTime >= timeLimit) {
-                ui.broadcastMessage("\n--- TIME'S UP! ---\n");
+                ui.broadcastMessage("\n═══ TIME'S UP! ═══\n");
                 gameIsOver = true;
                 break;
             }
@@ -206,7 +206,7 @@ public class Game {
             // Track time for this player's move
             long turnStartTime = System.currentTimeMillis();
 
-            gameIsOver = turn(currentPlayer, parade, deck);
+            gameIsOver = turn(currentPlayer, parade, deck, "Plays");
 
             // Calculate time bonus if in timed mode
             if (timedMode) {
@@ -238,20 +238,20 @@ public class Game {
         // Bring out the FINAL TURN print, then call a separate function afterwards for
         // per round
         for (int i = 0; i < combinedPlayers.size() - 1; i++) {
-            ui.broadcastMessage("-------------------------------------------------------------------------------------------------------------------------");
-            ui.broadcastMessage("--------------------------------------------FINAL TURN: NO ONE CAN DRAW CARDS--------------------------------------------");
-            ui.broadcastMessage("-------------------------------------------------------------------------------------------------------------------------");
+            ui.broadcastMessage("══════════════════════════════════════════════════════════════");
+            ui.broadcastMessage("FINAL TURN: NO ONE CAN DRAW CARDS");
+            ui.broadcastMessage("══════════════════════════════════════════════════════════════");
 
             // everyone EXCEPT the current player index at the last turn will move. no drawing will be done here.
             Player p = combinedPlayers.get((i + currentPlayerIndex) % combinedPlayers.size());
-            turn(p, parade, deck);
+            turn(p, parade, deck, "Play");
         }
 
         // here, the game is over. as per the rules, each player will discard 2 cards
         // from their hand
-        ui.broadcastMessage("-----------------------------------------------------------------------------------------------------------------------------------------\n");
-        ui.broadcastMessage("---------Choose cards from your hand to discard! The remaining cards in your hand will be added to your river, so choose wisely!---------\n");
-        ui.broadcastMessage("-----------------------------------------------------------------------------------------------------------------------------------------\n");
+        ui.broadcastMessage("══════════════════════════════════════════════════════════════\n");
+        ui.broadcastMessage("Choose cards from your hand to discard! The remaining cards in your hand will be added to your river, so choose wisely!\n");
+        ui.broadcastMessage("══════════════════════════════════════════════════════════════\n");
         for (Player currentPlayer : combinedPlayers) {
 
             Card firstDiscardedCard = null;
@@ -261,15 +261,15 @@ public class Game {
                 HumanPlayer currentHumanPlayer = (HumanPlayer)(currentPlayer);
                 displayHand(currentHumanPlayer);
 
-                firstDiscardedCard = currentHumanPlayer.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(currentHumanPlayer, firstDiscardedCard, "Discard");
+                turn(currentHumanPlayer, parade, deck, "Discards");
+                //displayCardPlayedOrDiscarded(currentHumanPlayer, firstDiscardedCard, "Discard");
 
                 displayHand(currentHumanPlayer);
 
-                secondDiscardedCard = currentHumanPlayer.chooseCardToDiscard();
-                displayCardPlayedOrDiscarded(currentHumanPlayer, secondDiscardedCard, "Discard");
+                turn(currentHumanPlayer, parade, deck, "Discards");
+                //displayCardPlayedOrDiscarded(currentHumanPlayer, secondDiscardedCard, "Discard");
 
-                displayHand(currentHumanPlayer);
+                //displayHand(currentHumanPlayer);
 
             } else {
                 firstDiscardedCard = currentPlayer.chooseCardToDiscard();
@@ -352,7 +352,7 @@ public class Game {
         return scoreMap;
     }
 
-    public boolean turn(Player currentPlayer, ArrayList<Card> parade, Deck deck) {
+    public boolean turn(Player currentPlayer, ArrayList<Card> parade, Deck deck, String action) {
         Session s = null;
         boolean gameIsOver = false;
         Card choice = null;
@@ -395,74 +395,77 @@ public class Game {
             choice = currentPlayer.chooseCardToPlay();
         }
 
-        displayCardPlayedOrDiscarded(currentPlayer, choice, "Play");
+        displayCardPlayedOrDiscarded(currentPlayer, choice, action);
 
-        int choiceValue = choice.getValue();
-        Color choiceColor = choice.getColor();
+        if (action.equals("Plays")) {
+            int choiceValue = choice.getValue();
+            Color choiceColor = choice.getColor();
 
-        // Add the current card to the parade.
-        parade.add(0, choice);
+            // Add the current card to the parade.
+            parade.add(0, choice);
 
-        // Process the parade for cards to be removed and added to the current player's
-        // river.
-        ArrayList<Card> currRiver = currentPlayer.getRiver();
-        Iterator<Card> iterator = parade.iterator();
-        List<Card> takenCards = new ArrayList<Card>();
+            // Process the parade for cards to be removed and added to the current player's
+            // river.
+            ArrayList<Card> currRiver = currentPlayer.getRiver();
+            Iterator<Card> iterator = parade.iterator();
+            List<Card> takenCards = new ArrayList<Card>();
 
-        for (int i = 0; i < choiceValue; i++) {
-            if (iterator.hasNext()) {
-                iterator.next();
-            }
-        }
-
-        while (iterator.hasNext()) {
-            Card checkCard = iterator.next();
-            int checkValue = checkCard.getValue();
-            Color checkColor = checkCard.getColor();
-
-            if (checkColor.equals(choiceColor) || checkValue <= choiceValue) {
-                currRiver.add(checkCard);
-                takenCards.add(checkCard);
-                iterator.remove();
-            }
-        }
-
-        // Display which cards were taken
-        if (!takenCards.isEmpty()) {
-            ui.broadcastMessage(getDisplayName(currentPlayer) + " takes the following cards from the parade:");
-            ui.broadcastMessage(CardPrinter.printCardRow(takenCards, true));    
-        } else {
-            ui.broadcastMessage(getDisplayName(currentPlayer) + " takes no cards from the parade!");
-        }
-
-        // game ends if the deck is empty OR the current river has one of each color
-        if (currRiver.size() != 0) {
-            Collections.sort(currRiver, new CardComparator());
-        }
-
-        // Change to one function instead
-        if (currRiver.size() != 0) {
-            // create a set to store the colors of the river, avoid duplicates
-            HashSet<Color> checkColor = new HashSet<Color>();
-            for (Card c : currRiver) {
-                checkColor.add(c.getColor());
+            for (int i = 0; i < choiceValue; i++) {
+                if (iterator.hasNext()) {
+                    iterator.next();
+                }
             }
 
-            // if per river size == 6
-            if (checkColor.size() == 6) {
+            while (iterator.hasNext()) {
+                Card checkCard = iterator.next();
+                int checkValue = checkCard.getValue();
+                Color checkColor = checkCard.getColor();
+
+                if (checkColor.equals(choiceColor) || checkValue <= choiceValue) {
+                    currRiver.add(checkCard);
+                    takenCards.add(checkCard);
+                    iterator.remove();
+                }
+            }
+
+            // Display which cards were taken
+            if (!takenCards.isEmpty()) {
+                ui.broadcastMessage(getDisplayName(currentPlayer) + " takes the following cards from the parade:");
+                ui.broadcastMessage(CardPrinter.printCardRow(takenCards, true));    
+            } else {
+                ui.broadcastMessage(getDisplayName(currentPlayer) + " takes no cards from the parade!");
+            }
+
+            // game ends if the deck is empty OR the current river has one of each color
+            if (currRiver.size() != 0) {
+                Collections.sort(currRiver, new CardComparator());
+            }
+
+            // Change to one function instead
+            if (currRiver.size() != 0) {
+                // create a set to store the colors of the river, avoid duplicates
+                HashSet<Color> checkColor = new HashSet<Color>();
+                for (Card c : currRiver) {
+                    checkColor.add(c.getColor());
+                }
+
+                // if per river size == 6
+                if (checkColor.size() == 6) {
+                    gameIsOver = true;
+                }
+            }
+
+            Card toDraw = deck.drawCard();
+            if (toDraw == null) {
                 gameIsOver = true;
+            } else {
+                currentPlayer.drawCard(toDraw);
             }
-        }
-
-        Card toDraw = deck.drawCard();
-        if (toDraw == null) {
-            gameIsOver = true;
         } else {
-            currentPlayer.drawCard(toDraw);
+            return true;
         }
 
         displayCurrentPlayerRiver(currentPlayer);
-
         return gameIsOver;
     }
 

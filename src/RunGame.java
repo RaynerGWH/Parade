@@ -145,6 +145,7 @@ public class RunGame {
             // Display current account stats
             System.out.println("Current Balance: " + account.getBalance());
             System.out.println("Wins           : " + account.getWins());
+            System.out.println("Losses         : " + account.getLosses());
 
             List<Flair> availableFlairs = flairShop.getAvailableFlairs();
             System.out.println("\nAvailable Flairs:");
@@ -279,8 +280,10 @@ public class RunGame {
                     System.out.println("Connection interrupted.");
                 } catch (DeploymentException e) {
                     System.out.println("An error has occured. Check the IP address that you entered.");
+                    continue;
                 } catch (Exception e) {
                     System.out.println("An error has occured. Please restart the game.");
+                    continue;
                 }
             }
         } else {

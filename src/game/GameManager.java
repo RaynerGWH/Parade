@@ -55,8 +55,6 @@ public class GameManager {
         TreeMap<Integer, ArrayList<Player>> scores = g.startGame();
         printRankings(scores);
         handleRewards(scores);
-
-        //Handle rewards distribution here
     }
 
     public void singleplayerHandler() {
@@ -99,7 +97,7 @@ public class GameManager {
             System.out.println("Give this to your friends to get them to join!");
         } catch (Exception e) {
             System.out.println("Unable to start server. Please restart the game and try again.");
-            return;
+            System.exit(-1);
         }
     }
 
@@ -184,33 +182,31 @@ public class GameManager {
         boolean isMultiplayer = (ui instanceof MultiplayerUI);
         
         // Determine the winning score.
-        if (scores.isEmpty()) {
+        if (!scores.isEmpty()) {
             int winningScore = scores.firstKey();
             ArrayList<Player> winners = scores.get(winningScore);
             
             if (isMultiplayer) {
                 MultiplayerUI MUI = (MultiplayerUI)ui;
                 ArrayList<Player> players = playerMgr.getPlayers();
+System.out.println(players);
                 // Multiplayer: For each winning human player, add 1 win and bonus = 100 * number of players.
                 int bonus = 100 * playerMgr.getPlayers().size();
 
                 for (Player p : players) {
                     if (winners.contains(p) && p instanceof HumanPlayer) {
                         HumanPlayer hp = (HumanPlayer)p;
-                        Account a = hp.getAccount();
-                        hp.getAccount().incrementWins();
-                        hp.getAccount().addBalance(bonus);
-                    }
-
-                    if (p instanceof HumanPlayer) {
+                        Account account = hp.getAccount();
+                        account.incrementWins();
+                        account.addBalance(bonus);
+                        
+                    } else if (p instanceof HumanPlayer) {
                         HumanPlayer hp = (HumanPlayer) p;
-                        
-                        
-                        // Send account object to client endpoint, to handle the logic. Then, close the connection bnetween client and server.
+                        Account account = hp.getAccount();
+                        account.incrementLosses();
                         MUI.sendAccount(hp.getAccount(),hp.getSession());
                     }
                 }
-
             } else {
                 try {
                     ArrayList<BeginnerComputerPlayer> bcpList = new ArrayList<BeginnerComputerPlayer>();
