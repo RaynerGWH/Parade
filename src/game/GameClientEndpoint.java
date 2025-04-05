@@ -16,6 +16,8 @@ public class GameClientEndpoint{
     private Scanner sc;
     private CountDownLatch latch;
     private AccountFileManager acctMgr = new AccountFileManager();
+    private boolean isShuttingDown = false;
+
 
     public GameClientEndpoint(URI endpointURI, Scanner sc) throws DeploymentException, IOException {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
@@ -113,7 +115,24 @@ public class GameClientEndpoint{
     @OnClose
     public void onClose(Session session) {
         System.out.println("Disconnected from server");
-        latch.countDown();
+        if (!isShuttingDown && latch != null && latch.getCount() > 0) {
+            latch.countDown();
+        }
+    }
+
+    public void shutdown() {
+        isShuttingDown = true;
+        if (session != null && session.isOpen()) {
+            try {
+                session.close();
+            } catch (Exception e) {
+                // Ignore errors during shutdown.
+            }
+        }
+        // Ensure the latch is released so any waiting threads are unblocked.
+        if (latch != null && latch.getCount() > 0) {
+            latch.countDown();
+        }
     }
 
     public void setLatch(CountDownLatch latch) {

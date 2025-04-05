@@ -154,13 +154,13 @@ public class GameManager {
         }
     }
 
-    public static void printRankings(TreeMap<Integer, ArrayList<Player>> scores) {
-        System.out.println("\n=== FINAL RANKINGS ===");
+    public void printRankings(TreeMap<Integer, ArrayList<Player>> scores) {
+        ui.broadcastMessage("\n=== FINAL RANKINGS ===");
         int rank = 1;
         for (Map.Entry<Integer, ArrayList<Player>> entry : scores.entrySet()) {
             ArrayList<Player> players = entry.getValue();
             for (Player player : players) {
-                System.out.println(getOrdinal(rank) + ": " + player.getName() + " | Score: " + entry.getKey());
+                ui.broadcastMessage(getOrdinal(rank) + ": " + player.getName() + " | Score: " + entry.getKey());
             }
             rank += players.size(); // Increase rank appropriately
         }
@@ -198,12 +198,13 @@ public class GameManager {
                         Account account = hp.getAccount();
                         account.incrementWins();
                         account.addBalance(bonus);
+                        MUI.sendAccount(account,hp.getSession());
                         
                     } else if (p instanceof HumanPlayer) {
                         HumanPlayer hp = (HumanPlayer) p;
                         Account account = hp.getAccount();
                         account.incrementLosses();
-                        MUI.sendAccount(hp.getAccount(),hp.getSession());
+                        MUI.sendAccount(account,hp.getSession());
                     }
                 }
             } else {

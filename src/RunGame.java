@@ -264,6 +264,9 @@ public class RunGame {
                     CountDownLatch latch = new CountDownLatch(1);
                     gce.setLatch(latch);
                     latch.await();
+                    gce.shutdown();
+                    break;
+
                 } catch (URISyntaxException e) {
                     System.out.println("Invalid IP address entered.");
                 } catch (InterruptedException e) {
