@@ -42,7 +42,7 @@ public class CardPrinter {
                 lines[4].append(colorCode).append("╰───────╯").append(RESET).append(" ");
     
                 if (cards.size() > 1 && !isParade) {
-                    lines[5].append("   [").append(i).append("]    ");
+                    lines[5].append("   [").append(i + 1).append("]    ");
                 }
     
                 cardCount++;

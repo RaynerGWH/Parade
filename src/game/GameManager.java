@@ -73,7 +73,7 @@ public class GameManager {
         playerMgr.initializeHumanPlayers(sessions, isMulti);
 
         while (true) {
-            System.out.print("Do you want to add bots? (Y/N): ");
+            System.out.print("Do you want to add bots? (Y/N)\n> ");
             String input = sc.nextLine().trim().toUpperCase();
             if (input.equals("Y")) {
                 botHandler(playerMgr.getPlayers().size());
@@ -103,7 +103,7 @@ public class GameManager {
             ClearConsole.clear();
             System.out.println("WebSocket server is running...");
             System.out.println("==============================");
-            System.out.println("Your Host IP: " + hostIp + ":8080");
+            System.out.println("Your Host IP: \u001B[32m" + hostIp + ":8080\u001B[0m");
             System.out.println("==============================");
             System.out.println("Give this to your friends to get them to join!");
         } catch (Exception e) {
@@ -159,7 +159,7 @@ public class GameManager {
                 System.out.println("Invalid number of players. Make sure that there is more than one!");
 
             } else {
-                System.out.println("Invalid command. Type \"START\" to begin.");
+                System.out.println("Invalid command. Type \"START\" to start the game\n> ");
                 
             }
         }

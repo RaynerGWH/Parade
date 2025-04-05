@@ -43,14 +43,14 @@ public class HumanPlayer extends AbstractPlayer {
         while (true) {
             String input = sc.nextLine();
             try {
-                index = Integer.parseInt(input);
+                index = Integer.parseInt(input) - 1;
                 if (index >= 0 && index < hand.size()) {
                     return playCard(index);
                 } else {
-                    System.out.println("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + ".");
+                    System.out.print("Invalid index. Please enter a number between 1 and " + hand.size() + "\n> ");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
+                System.out.print("Invalid input. Please enter a valid number\n> ");
             }
         }
     }
@@ -63,14 +63,14 @@ public class HumanPlayer extends AbstractPlayer {
         while (true) {
             String input = sc.nextLine();
             try {
-                index = Integer.parseInt(input);
+                index = Integer.parseInt(input) - 1;
                 if (index >= 0 && index < hand.size()) {
                     return playCard(index);
                 } else {
-                    System.out.println("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + ".");
+                    System.out.print("Invalid index. Please enter a number between 1 and " + hand.size() + "\n> ");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
+                System.out.print("Invalid input. Please enter a valid number\n> ");
             }
         }
     }
@@ -95,7 +95,7 @@ public class HumanPlayer extends AbstractPlayer {
             }
         }
         
-        String prompt = displayName + ", enter the position of the card you want to " + action + " (0 - 4)\n> ";
+        String prompt = displayName + ", enter the position of the card you want to " + action + " (1 - 5)\n> ";
         System.out.print(prompt);
     }
 

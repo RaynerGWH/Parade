@@ -345,17 +345,18 @@ public class Game {
         }
         ui.broadcastMessage("------------------------------------------------------------");
 
+        // Display the parade
+        ui.broadcastMessage("The Parade:");
+        ui.broadcastMessage(CardPrinter.printCardRow(parade, true));
+        
         // If the current player is human, show their hand privately.
         if (currentPlayer instanceof HumanPlayer) {
             HumanPlayer hp = (HumanPlayer) currentPlayer;
             Session s = hp.getSession();
-            ui.displayMessage("YOUR HAND:", s);
+            ui.displayMessage("Your Hand:", s);
             ui.displayMessage(CardPrinter.printCardRow(hp.getHand(), false), s);
         }
 
-        // Display the parade below the rivers
-        ui.broadcastMessage("The Parade:");
-        ui.broadcastMessage(CardPrinter.printCardRow(parade, true));
     }
 
     /**
