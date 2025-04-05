@@ -49,7 +49,7 @@ public class GameClientEndpoint{
         if (message.contains("Your turn! Number of cards:")) {
             //handle number of cards
             String[] messageArr = message.split(":");
-            int numCards = Integer.parseInt(messageArr[messageArr.length - 1]);
+            int numCards = Integer.parseInt(messageArr[messageArr.length - 1].trim());
             new Thread(() -> {
                 String input;
                 int choice = -1;

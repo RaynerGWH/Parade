@@ -155,7 +155,7 @@ public class GameManager {
                 return;
             }
 
-            if (GameServerEndpoint.getNumPlayers() <= 0) {
+            if (GameServerEndpoint.getNumPlayers() <= 1) {
                 System.out.println("Invalid number of players. Make sure that there is more than one!");
 
             } else {
