@@ -76,20 +76,11 @@ public class GameManager {
             System.out.print("Do you want to add bots? (Y/N): ");
             String input = sc.nextLine().trim().toUpperCase();
             if (input.equals("Y")) {
-                while (true) {
-                    System.out.print("How many bots do you want to add? ");
-                    String countStr = sc.nextLine().trim();
-                    try {
-                        int botCount = Integer.parseInt(countStr);
-                        numBots = botHandler(botCount);
-                        break;
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid number. Please enter a valid number.");
-                    }
-                }
-                break;
+                botHandler(playerMgr.getPlayers().size());
+
             } else if (input.equals("N")) {
                 break;
+
             } else {
                 System.out.println("Invalid input. Please type Y or N.");
             }
