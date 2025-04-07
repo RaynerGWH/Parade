@@ -16,7 +16,7 @@ import account.AccountFileManager;
 public class Game {
     // ASSUMPTION: GAME is only started by the host, except in singleplayer
     // instances.
-    
+
     // private Deck deck;
     // private boolean gameIsOver = false;
     // private ArrayList<Card> parade;
@@ -39,7 +39,6 @@ public class Game {
         this.gse = gse;
         this.scanner = scanner;
     }
-
 
     public TreeMap<Integer, ArrayList<Player>> startGame() {
         // Assign accounts to HumanPlayers if not already set
@@ -71,13 +70,12 @@ public class Game {
                 System.out.println(Constants.TIMED_MODE_MESSAGE);
                 System.out.println("════════════════════════════════════════════════════════════════════════════");
 
-
                 // Initialize time bonus tracking
                 timeBonus = new HashMap<>();
                 for (Player player : gameState.getPlayers()) {
                     timeBonus.put(player, 0);
                 }
-                gameStartTime = System.currentTimeMillis();
+                gameStartTime = System.currentTimeMillis() + Constants.THREE_SECOND_EXTENSION;
 
             } else if (gameModeChoice.equals("1")) {
                 validGameMode = true;
@@ -90,20 +88,25 @@ public class Game {
             gameMode.initialize(scanner);
         }
 
+        System.out.println("\n\nPRESS ENTER TO START THE GAME!\n\n");
+        scanner.nextLine();
+        // Countdown to game start after game mode selection
+        ConsoleUtils.displayCountdown(ui);
+        
         // Initialize parade with initial cards
         gameState.initializeParade(Constants.INITIAL_PARADE_LENGTH);
-
+        
         // Create turn manager
         TurnManager turnManager = new TurnManager(ui, scanner);
-
+        
 
         // Display timed mode info if applicable
         if (timedMode) {
-            TimedMode timedGameMode = (TimedMode)(gameMode);
-            long timeLimit = timedGameMode.getTimeLimit();
-            
+            TimedMode timedGameMode = (TimedMode) (gameMode);
+            timeLimit = timedGameMode.getTimeLimit();
+
             ui.broadcastMessage("\n═══ TIMED MODE ACTIVE ═══\n");
-            ui.broadcastMessage("Time limit: " + (timeLimit / 60000) + " minutes\n");
+            ui.broadcastMessage("Time limit: " + (timeLimit / 60000) + " minute(s)\n");
             ui.broadcastMessage("Bonus points will be awarded for quick moves!\n");
             ui.broadcastMessage("═══════════════════════════\n");
         }
@@ -132,7 +135,7 @@ public class Game {
 
             // Update game mode after turn (for timing bonuses, etc.)
             if (timedMode) {
-                TimedMode timedGameMode = (TimedMode)gameMode;
+                TimedMode timedGameMode = (TimedMode) gameMode;
                 int bonus = timedGameMode.getLastTurnBonus();
 
                 if (bonus > 0) {
@@ -141,6 +144,8 @@ public class Game {
 
                     // Display time progress
                     long elapsedTime = System.currentTimeMillis() - gameStartTime;
+
+                    // In ConsoleUtils.java, add to displayTimeProgressBar
                     ui.broadcastMessage(ConsoleUtils.displayTimeProgressBar(elapsedTime, timeLimit));
                     ui.broadcastMessage("\n");
                 }

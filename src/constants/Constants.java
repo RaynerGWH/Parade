@@ -55,6 +55,9 @@ public class Constants {
     public static final String PLAY = "Play";
     public static final String DISCARD = "Discard";
 
+    // Three second extension for timed mode due to countdown
+    public static final long THREE_SECOND_EXTENSION = 3 * 1000;
+
     // Countdown Numbers
     public static final String COUNTDOWN_THREE = 
         "       █████    ██  \r\n" +      

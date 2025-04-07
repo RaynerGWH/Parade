@@ -52,8 +52,8 @@ public class TimedMode implements GameMode {
                 System.out.print("\n10-minute game selected!\n");
                 break;
         }
-
-        gameStartTime = System.currentTimeMillis();
+        
+        gameStartTime = System.currentTimeMillis() + Constants.THREE_SECOND_EXTENSION;
     }
 
     @Override

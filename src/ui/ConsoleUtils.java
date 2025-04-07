@@ -1,5 +1,7 @@
 package ui;
 
+import constants.*;
+
 public class ConsoleUtils {
     private static final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
 
@@ -62,7 +64,6 @@ public class ConsoleUtils {
         return 80; // Final fallback width
     }
 
-    
     /**
      * Display time progress bar.
      * 
@@ -87,6 +88,7 @@ public class ConsoleUtils {
 
         return String.format("\nTime remaining: %s%n%s%d%%", timeString, progressBar.toString(), percentage);
     }
+
     /**
      * Format milliseconds to mm:ss format.
      * 
@@ -98,5 +100,42 @@ public class ConsoleUtils {
         long minutes = seconds / 60;
         seconds = seconds % 60;
         return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    /**
+     * Displays a countdown animation before starting the game.
+     * Uses constants for countdown numbers and adds a delay between each number.
+     * 
+     * @param ui The UserInterface to display messages on
+     */
+    public static void displayCountdown(UserInterface ui) {
+        ui.broadcastMessage("\nGame starting in...");
+
+        try {
+            // Display 3
+            clear();
+            ui.broadcastMessage(Constants.COUNTDOWN_THREE);
+            Thread.sleep(1000);
+            clear();
+
+            // Display 2
+            ui.broadcastMessage(Constants.COUNTDOWN_TWO);
+            Thread.sleep(1000);
+            clear();
+
+            // Display 1
+            ui.broadcastMessage(Constants.COUNTDOWN_ONE);
+            Thread.sleep(1000);
+            clear();
+
+            // Game start message
+            ui.broadcastMessage("\n🎮 GAME START! 🎮\n");
+            ui.broadcastMessage(Constants.SEPARATOR);
+
+        } catch (InterruptedException e) {
+            // If interrupted, just continue with the game
+            Thread.currentThread().interrupt();
+            ui.broadcastMessage("Countdown interrupted. Starting game immediately!");
+        }
     }
 }
