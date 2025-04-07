@@ -49,8 +49,10 @@ public class CardPrinter {
                     if (numRows > 5) {  // Check if lines[5] exists
                         lines[5].append("   [").append(i).append("]    ");
                     }
+=======
+                    lines[5].append("   [").append(i + 1).append("]    ");
+
                 }
-    
                 cardCount++;
     
                 // Wrap around after 12 cards (terminal visual limit)

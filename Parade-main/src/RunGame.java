@@ -111,7 +111,7 @@ public class RunGame {
                         int numBots = 0;
         
                         if (numPlayers < 8) {
-                            System.out.print("Enter number of Bots: ");
+                            System.out.print("Enter number of Bots\n> );
                             numBots = Integer.parseInt(rg.sc.nextLine());
                             if (numPlayers + numBots > 8) {
                                 throw new NumberFormatException();
@@ -124,8 +124,6 @@ public class RunGame {
         
                         Game g = new Game(rg.playerMgr.getPlayers());
                         TreeMap<Integer, ArrayList<Player>> scores = g.startGame();
-        
-                        printRankings(scores);
                         return; // Game ended
                     } catch (NumberFormatException e) {
                         System.out.println("Please enter a valid number!");
@@ -143,18 +141,6 @@ public class RunGame {
             } else {
                 System.out.println("Command not recognized.");
             }
-        }
-    }
-
-    public static void printRankings(TreeMap<Integer, ArrayList<Player>> scores) {
-        System.out.println("\n=== FINAL RANKINGS ===");
-        int rank = 1;
-        for (Map.Entry<Integer, ArrayList<Player>> entry : scores.entrySet()) {
-            ArrayList<Player> players = entry.getValue();
-            for (Player player : players) {
-                System.out.println(getOrdinal(rank) + ": " + player.getName() + " | Score: " + entry.getKey());
-            }
-            rank += players.size(); // Increase rank appropriately
         }
     }
 

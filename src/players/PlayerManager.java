@@ -54,7 +54,7 @@ public class PlayerManager {
         for (int i = 1; i <= count; i++) {
             while (true) {
                 try {
-                    System.out.print("Enter difficulty of bot " + i + " (Level 1 or 2): ");
+                    System.out.print("Enter difficulty of bot " + i + " (Level 1 or 2)\n> ");
                     String difficulty = sc.nextLine();
                     int diffLvl = Integer.parseInt(difficulty);
                     Player bot = checkDiff(diffLvl);
