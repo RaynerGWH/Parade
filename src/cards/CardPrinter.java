@@ -48,10 +48,9 @@ public class CardPrinter {
                 if (cards.size() > 1 && !isParade) {
                     if (numRows > 5) {  // Check if lines[5] exists
                         lines[5].append("   [").append(i).append("]    ");
+                    } else {
+                        lines[5].append("   [").append(i + 1).append("]    ");
                     }
-=======
-                    lines[5].append("   [").append(i + 1).append("]    ");
-
                 }
                 cardCount++;
     

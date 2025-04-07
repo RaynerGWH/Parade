@@ -246,6 +246,7 @@ public class AccountFileManager {
                 // addAccount(newAccount);
                 // return newAccount;
                 System.out.println("Error loading account: File may be corrupted. Please delete Save.PG1 file and try again.");
+                System.exit(-1);
             } catch (IOException e) {
                 System.out.println("Invalid input. Account can only ");
             }
