@@ -45,6 +45,7 @@ public class YLComputer extends AbstractPlayer {
         }
         
         //TODO: card logic!
+        return null;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class YLComputer extends AbstractPlayer {
         int index = hand.size() - 1;
         Card card = playCard(index);
         System.out.println(NAME + " (Intermediate) discards: " + card);
-        CardPrinter.printCardRow(card, false);
+        CardPrinter.printCardRow(Collections.singletonList(card), false);
         return card;
     }
 
@@ -75,7 +76,7 @@ public class YLComputer extends AbstractPlayer {
         //YL looks at the river of every player, checks to see if he will be the majority holder if he adds cards of a particular color
         //else, he will discard the max value card
         //TODO: discard logic!
-
+        return null;
     }
 
     public String getName() {
