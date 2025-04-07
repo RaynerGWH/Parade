@@ -283,7 +283,7 @@ public class GameManager {
         websocketServer = new Server(hostIp, 8080, "/", properties, GameServerEndpoint.class);
         try {
             websocketServer.start();
-            ClearConsole.clear();
+            ConsoleUtils.clear();
             System.out.println("WebSocket server is running...");
             System.out.println("==============================");
             System.out.println("Your Host IP: \u001B[32m" + hostIp + ":8080\u001B[0m");
@@ -328,7 +328,7 @@ public class GameManager {
 
     public void humanHandler() {
         // We start the server only if there are other human players(besides yourself)
-        ClearConsole.clear();
+        ConsoleUtils.clear();
         startWebSocketServer();
         while (true) {
             System.out.print("Waiting for players... Type \"START\" to start the game\n> ");

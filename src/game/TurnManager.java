@@ -1,6 +1,5 @@
 package game;
 
-
 import java.util.*;
 
 import cards.*;
@@ -289,6 +288,6 @@ public class TurnManager {
      * Clears the console display.
      */
     private void clearConsole() {
-        ClearConsole.clear();
+        ConsoleUtils.clear();
     }
 }

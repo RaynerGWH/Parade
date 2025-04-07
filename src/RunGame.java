@@ -142,7 +142,7 @@
 //      */
 //     private void openFlairShopMenu(Account account) {
 //         while (true) {
-            
+
 //             // Display current account stats
 //             System.out.println("Current Balance: " + account.getBalance());
 //             System.out.println("Wins           : " + account.getWins());
@@ -475,7 +475,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
-import ui.ClearConsole;
+import ui.ConsoleUtils;
 import ui.MultiplayerUI;
 import ui.SinglePlayerUI;
 import ui.UserInterface;
@@ -513,6 +513,7 @@ public class RunGame {
 
     /**
      * Entry point of the program.
+     * 
      * @param args command-line arguments (unused).
      */
     public static void main(String[] args) {
@@ -541,26 +542,28 @@ public class RunGame {
         // Our snippet-1 style GameManager that takes the main scanner.
         this.gameMgr = new GameManager(this.mainScanner);
 
-        // Instantiate the FlairShop with the file manager, so successful purchases save to Save.PG1.
+        // Instantiate the FlairShop with the file manager, so successful purchases save
+        // to Save.PG1.
         this.flairShop = new FlairShop(this.fileMgr);
     }
 
     /**
-     * Primary run loop that offers the user the choice to read the rulebook or start the game.
+     * Primary run loop that offers the user the choice to read the rulebook or
+     * start the game.
      */
     private void run() {
         try {
             // Fancy animation on startup.
-            ClearConsole.clear();
+            ConsoleUtils.clear();
             printParadeAnimation();
             printParadeAnimationLoop();
             mainScanner.nextLine();
 
             while (true) {
-                ClearConsole.clear();
-                System.out.print("Enter 'R' to refer to the rulebook,\n" + 
-                                 "      'S' to start the game, or\n" +
-                                 "      'SHOP' to open the flair shop\n> ");
+                ConsoleUtils.clear();
+                System.out.print("Enter 'R' to refer to the rulebook,\n" +
+                        "      'S' to start the game, or\n" +
+                        "      'SHOP' to open the flair shop\n> ");
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
                 if (command.equals("R")) {
@@ -599,16 +602,17 @@ public class RunGame {
             mainScanner.close();
         }
     }
-    
 
     /**
-     * Displays the FlairShop menu, showing available flairs and letting the user purchase them.
+     * Displays the FlairShop menu, showing available flairs and letting the user
+     * purchase them.
      * Also allows the user to select (wear) one of their owned flairs.
+     * 
      * @param account the account that wants to browse/purchase flairs
      */
     private void openFlairShopMenu(Account account) {
         while (true) {
-            
+
             // Display current account stats
             System.out.println("Current Balance : " + account.getBalance());
             System.out.println("Wins            : " + account.getWins());
@@ -629,12 +633,11 @@ public class RunGame {
                     }
                 }
                 System.out.printf("%d) %s - Cost: %.2f, Required Wins: %d %s%n",
-                    i + 1,
-                    flair.getFlairName(),
-                    flair.getCost(),
-                    flair.getRequiredWins(),
-                    status
-                );
+                        i + 1,
+                        flair.getFlairName(),
+                        flair.getCost(),
+                        flair.getRequiredWins(),
+                        status);
             }
 
             System.out.println("\nEnter the number of the flair to purchase or wear it, or 'Q' to quit shop\n> ");
@@ -687,7 +690,8 @@ public class RunGame {
                             }
                         }
                     } else {
-                        System.out.println("Purchase failed. You may not meet the requirements or have enough balance.");
+                        System.out
+                                .println("Purchase failed. You may not meet the requirements or have enough balance.");
                     }
                 }
             } catch (NumberFormatException e) {
@@ -706,7 +710,8 @@ public class RunGame {
 
     /**
      * Launches multi-player mode, hosting (H) or joining (J).
-     * If hosting, we create a GameServerEndpoint; if joining, we create a GameClientEndpoint.
+     * If hosting, we create a GameServerEndpoint; if joining, we create a
+     * GameClientEndpoint.
      */
     private void startMultiPlayer() {
         System.out.print("Please enter 'H' to host, or 'J' to join\n> ");
@@ -753,55 +758,56 @@ public class RunGame {
 
     /**
      * Prints the fancy 'PARADE' animation seen in snippet 1/2.
+     * 
      * @throws InterruptedException if the thread is interrupted during sleep.
      */
     private void printParadeAnimation() throws InterruptedException {
         String purpleColor = "\u001B[35m";
         String resetColor = "\u001B[0m";
         String[] paradeLetterP = {
-            "██████╗ ",
-            "██╔══██╗",
-            "██████╔╝",
-            "██╔═══╝ ",
-            "██║     ",
-            "╚═╝     "};
+                "██████╗ ",
+                "██╔══██╗",
+                "██████╔╝",
+                "██╔═══╝ ",
+                "██║     ",
+                "╚═╝     " };
 
         String[] paradeLetterA1 = {
-            " █████╗ ",
-            "██╔══██╗",
-            "███████║",
-            "██╔══██║",
-            "██║  ██║",
-            "╚═╝  ╚═╝"};
+                " █████╗ ",
+                "██╔══██╗",
+                "███████║",
+                "██╔══██║",
+                "██║  ██║",
+                "╚═╝  ╚═╝" };
 
         String[] paradeLetterR = {
-            "██████╗ ",
-            "██╔══██╗",
-            "██████╔╝",
-            "██╔══██╗",
-            "██║  ██║",
-            "╚═╝  ╚═╝"};
+                "██████╗ ",
+                "██╔══██╗",
+                "██████╔╝",
+                "██╔══██╗",
+                "██║  ██║",
+                "╚═╝  ╚═╝" };
 
         // We reuse the letter A
         String[] paradeLetterA2 = paradeLetterA1;
         String[] paradeLetterD = {
-            "██████╗ ",
-            "██╔══██╗",
-            "██║  ██║",
-            "██║  ██║",
-            "██████╔╝",
-            "╚═════╝ "};
+                "██████╗ ",
+                "██╔══██╗",
+                "██║  ██║",
+                "██║  ██║",
+                "██████╔╝",
+                "╚═════╝ " };
 
         String[] paradeLetterE = {
-            "███████╗",
-            "██╔════╝",
-            "█████╗  ",
-            "██╔══╝  ",
-            "███████╗",
-            "╚══════╝"};
+                "███████╗",
+                "██╔════╝",
+                "█████╗  ",
+                "██╔══╝  ",
+                "███████╗",
+                "╚══════╝" };
 
         String[][] letters = {
-            paradeLetterP, paradeLetterA1, paradeLetterR, paradeLetterA2, paradeLetterD, paradeLetterE
+                paradeLetterP, paradeLetterA1, paradeLetterR, paradeLetterA2, paradeLetterD, paradeLetterE
         };
 
         int timer = 70;
@@ -818,74 +824,74 @@ public class RunGame {
 
     private void printParadeAnimationLoop() throws IOException, InterruptedException {
         String[] colors = {
-            "\u001B[31m", // Red
-            "\u001B[91m", // Orange (bright red)
-            "\u001B[33m", // Yellow
-            "\u001B[32m", // Green
-            "\u001B[34m", // Blue
-            "\u001B[35m"  // Purple
+                "\u001B[31m", // Red
+                "\u001B[91m", // Orange (bright red)
+                "\u001B[33m", // Yellow
+                "\u001B[32m", // Green
+                "\u001B[34m", // Blue
+                "\u001B[35m" // Purple
         };
         String resetColor = "\u001B[0m";
-    
+
         String[][] letters = {
-            {
-                "██████╗ ",
-                "██╔══██╗",
-                "██████╔╝",
-                "██╔═══╝ ",
-                "██║     ",
-                "╚═╝     "
-            },
-            {
-                " █████╗ ",
-                "██╔══██╗",
-                "███████║",
-                "██╔══██║",
-                "██║  ██║",
-                "╚═╝  ╚═╝"
-            },
-            {
-                "██████╗ ",
-                "██╔══██╗",
-                "██████╔╝",
-                "██╔══██╗",
-                "██║  ██║",
-                "╚═╝  ╚═╝"
-            },
-            {
-                " █████╗ ",
-                "██╔══██╗",
-                "███████║",
-                "██╔══██║",
-                "██║  ██║",
-                "╚═╝  ╚═╝"
-            },
-            {
-                "██████╗ ",
-                "██╔══██╗",
-                "██║  ██║",
-                "██║  ██║",
-                "██████╔╝",
-                "╚═════╝ "
-            },
-            {
-                "███████╗",
-                "██╔════╝",
-                "█████╗  ",
-                "██╔══╝  ",
-                "███████╗",
-                "╚══════╝"
-            }
+                {
+                        "██████╗ ",
+                        "██╔══██╗",
+                        "██████╔╝",
+                        "██╔═══╝ ",
+                        "██║     ",
+                        "╚═╝     "
+                },
+                {
+                        " █████╗ ",
+                        "██╔══██╗",
+                        "███████║",
+                        "██╔══██║",
+                        "██║  ██║",
+                        "╚═╝  ╚═╝"
+                },
+                {
+                        "██████╗ ",
+                        "██╔══██╗",
+                        "██████╔╝",
+                        "██╔══██╗",
+                        "██║  ██║",
+                        "╚═╝  ╚═╝"
+                },
+                {
+                        " █████╗ ",
+                        "██╔══██╗",
+                        "███████║",
+                        "██╔══██║",
+                        "██║  ██║",
+                        "╚═╝  ╚═╝"
+                },
+                {
+                        "██████╗ ",
+                        "██╔══██╗",
+                        "██║  ██║",
+                        "██║  ██║",
+                        "██████╔╝",
+                        "╚═════╝ "
+                },
+                {
+                        "███████╗",
+                        "██╔════╝",
+                        "█████╗  ",
+                        "██╔══╝  ",
+                        "███████╗",
+                        "╚══════╝"
+                }
         };
-    
+
         int colorShift = 0;
         int numRows = letters[0].length;
-    
+
         System.out.print("\u001B[?25l"); // hide cursor
-    
+
         while (System.in.available() == 0) {
-            ClearConsole.clear();
-    
+            ConsoleUtils.clear();
+
             // Assign each letter a color based on the current shift
             for (int row = 0; row < numRows; row++) {
                 StringBuilder line = new StringBuilder();
@@ -895,22 +901,22 @@ public class RunGame {
                 }
                 System.out.println(line);
             }
-    
+
             System.out.print("\nPress ENTER to start...");
             Thread.sleep(500);
             colorShift = (colorShift + 1) % colors.length;
         }
-    
+
         System.out.print("\u001B[?25h"); // show cursor again
     }
-    
-    
 
     /**
-     * Scrolls through the rulebook file, using the same Scanner as the main program.
-     * We do NOT close the scanner here, so that main program remains interactive afterwards.
+     * Scrolls through the rulebook file, using the same Scanner as the main
+     * program.
+     * We do NOT close the scanner here, so that main program remains interactive
+     * afterwards.
      *
-     * @param sc The shared Scanner from RunGame.
+     * @param sc       The shared Scanner from RunGame.
      * @param filePath Path to the rulebook file.
      */
     public static void scrollRulebook(Scanner sc, String filePath) {
@@ -925,7 +931,7 @@ public class RunGame {
                 int end = Math.min(start + linesPerPage, lines.size());
 
                 // We clear the console
-                ClearConsole.clear();
+                ConsoleUtils.clear();
 
                 // Print the page
                 System.out.println("Page " + (currentPage + 1) + " of " + totalPages + ":");
@@ -968,7 +974,7 @@ public class RunGame {
                         }
                         break;
                     case "Q":
-                        ClearConsole.clear();
+                        ConsoleUtils.clear();
                         System.out.println("Exited rulebook.\n");
                         return;
                     default:
@@ -983,6 +989,7 @@ public class RunGame {
 
     /**
      * Handles user navigation after they reach the last page.
+     * 
      * @return true if user selected Q (quit entirely), false otherwise.
      */
     private static boolean navigateEndOfRulebook(Scanner sc, int totalPages, int currentPage) {
@@ -1006,7 +1013,7 @@ public class RunGame {
                     return false;
                 case "Q":
                     System.out.println("Exiting rulebook.");
-                    return true;  // user chose to quit => exit entire method
+                    return true; // user chose to quit => exit entire method
                 default:
                     System.out.println("Invalid input.");
                     // remain in loop until valid choice

@@ -31,7 +31,7 @@ public class Constants {
 
     // Classic Mode Message
     public static final String CLASSIC_MODE_MESSAGE = "\n" + 
-                "█████╗ ██╗      █████╗  ██████╗ ██████╗██╗ █████╗     ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" +
+                " █████╗ ██╗      █████╗  ██████╗ ██████╗██╗ █████╗     ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" +
                 "██╔══██╗██║     ██╔══██╗██╔════╝██╔════╝██║██╔══██╗    ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" +
                 "██║  ╚═╝██║     ███████║╚█████╗ ╚█████╗ ██║██║  ╚═╝    ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" +
                 "██║  ██╗██║     ██╔══██║ ╚═══██╗ ╚═══██╗██║██║  ██╗    ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" +
@@ -54,4 +54,32 @@ public class Constants {
     // Action Messages
     public static final String PLAY = "Play";
     public static final String DISCARD = "Discard";
+
+    // Countdown Numbers
+    public static final String COUNTDOWN_THREE = 
+        "       █████    ██  \r\n" +      
+        "      ██   ██   ██  \r\n" +
+        "           ██   ██  \r\n" +
+        "       ██████   ██  \r\n" +
+        "           ██   ██  \r\n" +
+        "      ██   ██       \r\n" +
+        "       █████    ██  \r\n";
+
+    public static final String COUNTDOWN_TWO = 
+        "       █████    ██  \r\n" +
+        "      ██   ██   ██  \r\n" +
+        "           ██   ██  \r\n" +
+        "       █████    ██  \r\n" +
+        "      ██        ██  \r\n" +
+        "      ██            \r\n" +
+        "      ███████   ██  \r\n";
+
+    public static final String COUNTDOWN_ONE = 
+        "         ██    ██  \r\n" +
+        "       ████    ██  \r\n" +
+        "         ██    ██  \r\n" +
+        "         ██    ██  \r\n" +
+        "         ██    ██  \r\n" +
+        "         ██        \r\n" +
+        "       ██████  ██  \r\n";
 }
