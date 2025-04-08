@@ -37,7 +37,12 @@ public class PlayerManager {
             }
 
             ArrayList<Card> hand = initialiseHand();
-            players.add(new HumanPlayer(hand, username, s, sc));
+            HumanPlayer humanPlayer = new HumanPlayer(hand, username, s, sc);
+            
+            // Set the account on the player so it can be accessed for display purposes
+            humanPlayer.setAccount(a);
+            
+            players.add(humanPlayer);
         }
     }
 

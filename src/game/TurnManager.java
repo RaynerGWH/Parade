@@ -27,8 +27,21 @@ public class TurnManager {
      * @param action        The action type ("Play" or "Discards")
      * @return true if the game should end after this turn, false otherwise
      */
-
     public boolean executeTurn(GameState gameState, Player currentPlayer, GameMode gameMode, String action) {
+        return executeTurn(gameState, currentPlayer, gameMode, action, false);
+    }
+
+    /**
+     * Executes a single turn for the specified player with the option to mark it as a final turn.
+     * 
+     * @param gameState     The current game state
+     * @param currentPlayer The player whose turn it is
+     * @param gameMode      The current game mode
+     * @param action        The action type ("Play" or "Discards")
+     * @param isFinalTurn   Whether this is a final turn (affects display)
+     * @return true if the game should end after this turn, false otherwise
+     */
+    public boolean executeTurn(GameState gameState, Player currentPlayer, GameMode gameMode, String action, boolean isFinalTurn) {
         // Move turn logic from Game.turn() here
         // Return whether the game is over
         Session s = null;
@@ -149,7 +162,7 @@ public class TurnManager {
         }
 
         // Handle turn advancement
-        handleTurnAdvancement(currentPlayer, gameState.getPlayers());
+        handleTurnAdvancement(currentPlayer, gameState.getPlayers(), isFinalTurn);
 
         return gameIsOver;
     }
@@ -158,6 +171,14 @@ public class TurnManager {
      * Handles the advancement to the next player's turn, with appropriate UI feedback.
      */
     private void handleTurnAdvancement(Player currentPlayer, List<Player> players) {
+        handleTurnAdvancement(currentPlayer, players, false);
+    }
+
+    /**
+     * Handles the advancement to the next player's turn, with appropriate UI feedback.
+     * @param isFinalTurn whether this is part of the final turns phase
+     */
+    private void handleTurnAdvancement(Player currentPlayer, List<Player> players, boolean isFinalTurn) {
         if (currentPlayer instanceof HumanPlayer) {
             HumanPlayer humanPlayer = (HumanPlayer) currentPlayer;
             Session playerSession = humanPlayer.getSession();
@@ -170,7 +191,7 @@ public class TurnManager {
                     int currentPlayerIndex = players.indexOf(currentPlayer);
                     int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
                     Player nextPlayer = players.get(nextPlayerIndex);
-                    broadcastNewTurn(nextPlayer);
+                    broadcastNewTurn(nextPlayer, isFinalTurn);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -181,7 +202,7 @@ public class TurnManager {
                 int currentPlayerIndex = players.indexOf(currentPlayer);
                 int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
                 Player nextPlayer = players.get(nextPlayerIndex);
-                broadcastNewTurn(nextPlayer);
+                broadcastNewTurn(nextPlayer, isFinalTurn);
             }
         } else {
             if (ui instanceof MultiplayerUI) {
@@ -191,7 +212,7 @@ public class TurnManager {
                     int currentPlayerIndex = players.indexOf(currentPlayer);
                     int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
                     Player nextPlayer = players.get(nextPlayerIndex);
-                    broadcastNewTurn(nextPlayer);
+                    broadcastNewTurn(nextPlayer, isFinalTurn);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -202,7 +223,7 @@ public class TurnManager {
                 int currentPlayerIndex = players.indexOf(currentPlayer);
                 int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
                 Player nextPlayer = players.get(nextPlayerIndex);
-                broadcastNewTurn(nextPlayer);
+                broadcastNewTurn(nextPlayer, isFinalTurn);
             }
         }
     }
@@ -279,7 +300,32 @@ public class TurnManager {
      * Broadcasts a message indicating the next player's turn.
      */
     private void broadcastNewTurn(Player nextPlayer) {
+        broadcastNewTurn(nextPlayer, false);
+    }
+
+    /**
+     * Broadcasts a message indicating the next player's turn.
+     * @param nextPlayer the player whose turn is starting
+     * @param isFinalTurn whether this is part of the final turns phase
+     */
+    private void broadcastNewTurn(Player nextPlayer, boolean isFinalTurn) {
         String playerName = PlayerDisplayUtils.getDisplayName(nextPlayer);
+        
+        // If it's a final turn, display the final turn banner first
+        if (isFinalTurn) {
+            ui.broadcastMessage("═════════════════════════════════════════════════════════════");
+            ui.broadcastMessage("                         FINAL TURN                         ");
+            ui.broadcastMessage("                   NO CARDS WILL BE DRAWN                   ");
+            ui.broadcastMessage("═════════════════════════════════════════════════════════════");
+            
+            // Small delay to ensure banner is seen
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        
         ui.broadcastMessage("===============================================================");
         ui.broadcastMessage("                      " + playerName + "'s TURN                ");
         ui.broadcastMessage("===============================================================");

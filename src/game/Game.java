@@ -1,13 +1,12 @@
 package game;
 
+import account.Account;
+import account.AccountFileManager;
 import constants.Constants;
+import java.util.*;
 import players.*;
 import players.human.HumanPlayer;
 import ui.*;
-import account.Account;
-import account.AccountFileManager;
-
-import java.util.*;
 
 public class Game {
     // ASSUMPTION: GAME is only started by the host, except in singleplayer
@@ -145,6 +144,12 @@ public class Game {
 
             // Move to next player
             currentPlayerIndex = (currentPlayerIndex + 1) % gameState.getPlayers().size();
+        }
+
+        // If in timed mode, get the updated time bonus map from the TimedMode instance
+        if (timedMode) {
+            TimedMode timedGameMode = (TimedMode) gameMode;
+            timeBonus = timedGameMode.getTimeBonusMap();
         }
 
         // EndGameHandler to handle the final round and scoring after the game is over.

@@ -1,6 +1,7 @@
 package game;
 
 import account.*;
+import ui.LoginUI;
 
 import java.io.*;
 import jakarta.websocket.*;
@@ -28,17 +29,21 @@ public class GameClientEndpoint{
     @OnOpen
     public void onOpen(Session session) {
         System.out.println("Connected to server");
-        Account a = acctMgr.initialize();
+        
+        // Instead of creating a LoginUI here (which causes NullPointerException),
+        // load the existing account or create one if it doesn't exist
+        Account account = acctMgr.initialize();
+        
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos)){
             // Convert Account to byte array for sending
-            oos.writeObject(a);
+            oos.writeObject(account);
             oos.flush();
 
             byte[] accountBytes = baos.toByteArray();
             session.getBasicRemote().sendBinary(ByteBuffer.wrap(accountBytes));
             
-            System.out.println("Sent account: " + a.getUsername());
+            System.out.println("Sent account: " + account.getUsername());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,11 +1,10 @@
 package game;
 
 import cards.*;
+import java.util.*;
 import players.*;
 import players.human.HumanPlayer;
 import ui.*;
-
-import java.util.*;
 
 /**
  * Handles the final rounds of the game and scoring calculations.
@@ -66,20 +65,48 @@ public class EndGameHandler {
     }
 
     /**
-     * Executes final turns for each player except the last one.
+     * Executes final turns for each player except the last player.
      * 
      * @param gameMode The current game mode
      * @param players  List of players
      */
     private void executeFinalTurns(GameMode gameMode, List<Player> players) {
-        // Final turns - each player gets one more turn except the last player
+        // Display initial final turns banner
+        ui.broadcastMessage("\n");
+        ui.broadcastMessage("██████╗ ███████╗ ██████╗ ██╗███╗   ██╗    ███████╗██╗███╗   ██╗ █████╗ ██╗         ████████╗██╗   ██╗██████╗ ███╗   ██╗███████╗");
+        ui.broadcastMessage("██╔══██╗██╔════╝██╔════╝ ██║████╗  ██║    ██╔════╝██║████╗  ██║██╔══██╗██║         ╚══██╔══╝██║   ██║██╔══██╗████╗  ██║██╔════╝");
+        ui.broadcastMessage("██████╔╝█████╗  ██║  ███╗██║██╔██╗ ██║    █████╗  ██║██╔██╗ ██║███████║██║            ██║   ██║   ██║██████╔╝██╔██╗ ██║███████╗");
+        ui.broadcastMessage("██╔══██╗██╔══╝  ██║   ██║██║██║╚██╗██║    ██╔══╝  ██║██║╚██╗██║██╔══██║██║            ██║   ██║   ██║██╔══██╗██║╚██╗██║╚════██║");
+        ui.broadcastMessage("██████╔╝███████╗╚██████╔╝██║██║ ╚████║    ██║     ██║██║ ╚████║██║  ██║███████╗       ██║   ╚██████╔╝██║  ██║██║ ╚████║███████║");
+        ui.broadcastMessage("╚═════╝ ╚══════╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝    ╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝       ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝");
+        ui.broadcastMessage("\n");
+        
+        // Force a delay to ensure clients receive the banner
+        try {
+            Thread.sleep(800);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        
+        // Modify TurnManager to accept a boolean for final turn
         for (int i = 0; i < players.size() - 1; i++) {
-            ui.broadcastMessage("══════════════════════════════════════════════════════════════");
-            ui.broadcastMessage("FINAL TURN: NO ONE CAN DRAW CARDS");
-            ui.broadcastMessage("══════════════════════════════════════════════════════════════");
-
             Player p = players.get(i);
-            turnManager.executeTurn(gameState, p, gameMode, "Play");
+            
+            // Display final turn reminder before each player's turn
+            ui.broadcastMessage("══════════════════════════════════════════════════════════════");
+            ui.broadcastMessage("                          FINAL TURN                          ");
+            ui.broadcastMessage("                  NO CARDS WILL BE DRAWN                     ");
+            ui.broadcastMessage("══════════════════════════════════════════════════════════════");
+            
+            // Ensure clients receive this message before the turn starts
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            
+            // Execute the turn with the final turn flag
+            turnManager.executeTurn(gameState, p, gameMode, "Play", true);
         }
     }
 
@@ -96,15 +123,25 @@ public class EndGameHandler {
                 "Choose cards from your hand to discard! The remaining cards in your hand will be added to your river, so choose wisely!\n");
         ui.broadcastMessage("══════════════════════════════════════════════════════════════\n");
 
+        // Each player completes both of their discards before moving to the next player
         for (Player currentPlayer : players) {
             if (currentPlayer instanceof HumanPlayer) {
                 HumanPlayer currentHumanPlayer = (HumanPlayer) currentPlayer;
-                // Using the TurnManager for discard turns
-                turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, "Discards");
-                turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, "Discards");
+                
+                // First discard
+                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their first card:");
+                turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, "Discards", true);
+                
+                // Second discard
+                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their second card:");
+                turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, "Discards", true);
             } else {
+                // Bot player discards two cards in sequence
+                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their first card:");
                 Card firstDiscardedCard = currentPlayer.chooseCardToDiscard();
                 turnManager.displayCardPlayedOrDiscarded(currentPlayer, firstDiscardedCard, "Discards");
+                
+                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their second card:");
                 Card secondDiscardedCard = currentPlayer.chooseCardToDiscard();
                 turnManager.displayCardPlayedOrDiscarded(currentPlayer, secondDiscardedCard, "Discards");
             }
@@ -148,13 +185,35 @@ public class EndGameHandler {
      * @param players  List of players
      */
     private void applyTimeBonuses(TreeMap<Integer, ArrayList<Player>> scoreMap, List<Player> players) {
-        ui.broadcastMessage("\n--- TIME BONUS POINTS ---");
+        ui.broadcastMessage("══════════════════════════════════════════════════════════════");
+        ui.broadcastMessage("                    TIME BONUS POINTS                         ");
+        ui.broadcastMessage("══════════════════════════════════════════════════════════════");
+        
+        // Force a small delay to ensure clients receive this message
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        
+        boolean anyBonusesApplied = false;
+        
         for (Player player : players) {
             int bonus = timeBonus.get(player);
             if (bonus > 0) {
+                anyBonusesApplied = true;
                 int logDeduction = (int) (Math.log(bonus) / Math.log(2));
-                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(player) + " earned " + bonus + " bonus points, resulting in a " +
-                        logDeduction + " point deduction!");
+                String bonusMessage = PlayerDisplayUtils.getDisplayName(player) + " earned " + bonus + 
+                        " bonus points, resulting in a " + logDeduction + " point deduction!";
+                
+                ui.broadcastMessage(bonusMessage);
+                
+                // Force a small delay between messages
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
 
                 for (Integer score : scoreMap.keySet()) {
                     ArrayList<Player> playersWithScore = scoreMap.get(score);
@@ -168,11 +227,27 @@ public class EndGameHandler {
                             scoreMap.put(newScore, new ArrayList<>());
                         }
                         scoreMap.get(newScore).add(player);
+                        
+                        // Display score change information
+                        ui.broadcastMessage("  → " + PlayerDisplayUtils.getDisplayName(player) + 
+                                           " score changed from " + score + " to " + newScore);
                         break;
                     }
                 }
             }
         }
-        ui.broadcastMessage("\n");
+        
+        if (!anyBonusesApplied) {
+            ui.broadcastMessage("No time bonuses earned in this game.");
+        }
+        
+        ui.broadcastMessage("══════════════════════════════════════════════════════════════");
+        
+        // Force a small delay after all bonus calculations
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }

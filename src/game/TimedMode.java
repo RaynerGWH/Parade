@@ -1,8 +1,7 @@
 package game;
 
-import java.util.*;
-
 import constants.Constants;
+import java.util.*;
 import players.*;
 
 
@@ -127,19 +126,19 @@ public class TimedMode implements GameMode {
     private int calculateTimeBonus(long turnDuration) {
         if (timeLimit <= 60 * 1000) {
             // For 1-minute games, faster bonuses
-            if (turnDuration < 3000)
+            if (turnDuration < 8000)  // Was 3000, increased to 8 seconds
                 return 3;
-            if (turnDuration < 6000)
+            if (turnDuration < 11000) // Was 6000, increased to 11 seconds
                 return 2;
-            if (turnDuration < 10000)
+            if (turnDuration < 15000) // Was 10000, increased to 15 seconds
                 return 1;
         } else {
             // For longer games, slightly more relaxed timing
-            if (turnDuration < 5000)
+            if (turnDuration < 10000) // Was 5000, increased to 10 seconds
                 return 3;
-            if (turnDuration < 10000)
+            if (turnDuration < 15000) // Was 10000, increased to 15 seconds
                 return 2;
-            if (turnDuration < 15000)
+            if (turnDuration < 20000) // Was 15000, increased to 20 seconds
                 return 1;
         }
         return 0;
