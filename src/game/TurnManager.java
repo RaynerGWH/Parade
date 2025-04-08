@@ -176,7 +176,7 @@ public class TurnManager {
                 }
             } else {
                 humanPlayer.waitForEnterToEndTurn();
-                clearConsole();
+                ConsoleUtils.clear();
                 
                 int currentPlayerIndex = players.indexOf(currentPlayer);
                 int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
@@ -186,6 +186,7 @@ public class TurnManager {
         } else {
             if (ui instanceof MultiplayerUI) {
                 try {
+                    ui.broadcastMessage("Any player can hit ENTER to continue...");
                     InputManager.waitForEnterPress();
                     int currentPlayerIndex = players.indexOf(currentPlayer);
                     int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
@@ -196,7 +197,7 @@ public class TurnManager {
                 }
             } else if (ui instanceof SinglePlayerUI) {
                 HumanPlayer.waitForAnyPlayerToAdvance(scanner);
-                clearConsole();
+                ConsoleUtils.clear();
                 
                 int currentPlayerIndex = players.indexOf(currentPlayer);
                 int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
@@ -242,7 +243,7 @@ public class TurnManager {
             } else {
                 ArrayList<Card> sortedRiver = new ArrayList<>(river);
                 Collections.sort(sortedRiver, new CardComparator());
-                ui.broadcastMessage(CardPrinter.printCardRow(sortedRiver, true));
+                ui.broadcastMessage(CardPrinter.printCardRow(sortedRiver, false));
             }
         }
         ui.broadcastMessage("------------------------------------------------------------");
@@ -282,12 +283,5 @@ public class TurnManager {
         ui.broadcastMessage("===============================================================");
         ui.broadcastMessage("                      " + playerName + "'s TURN                ");
         ui.broadcastMessage("===============================================================");
-    }
-    
-    /**
-     * Clears the console display.
-     */
-    private void clearConsole() {
-        ConsoleUtils.clear();
     }
 }

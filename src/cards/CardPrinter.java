@@ -78,33 +78,8 @@ public class CardPrinter {
      * In a WebSocket environment, the client may need to interpret these.
      */
     private static String getColorCode(Color color) {
-        // Add a special marker to recognize colors in WebSocket transmission
-        String colorName;
-        switch (color) {
-            case RED:
-                colorName = "RED";
-                break;
-            case BLUE:
-                colorName = "BLUE";
-                break;
-            case PURPLE:
-                colorName = "PURPLE";
-                break;
-            case GREEN:
-                colorName = "GREEN";
-                break;
-            case GREY:
-                colorName = "GREY";
-                break;
-            case ORANGE:
-                colorName = "ORANGE";
-                break;
-            default:
-                colorName = "NONE";
-        }
-        
         // For direct console output
-        if (color == Color.RED || color == Color.ORANGE) {
+        if (color == Color.RED) {
             return "\u001B[1;31m"; // Red
         } else if (color == Color.BLUE) {
             return "\u001B[1;34m"; // Blue
@@ -112,8 +87,10 @@ public class CardPrinter {
             return "\u001B[1;35m"; // Purple
         } else if (color == Color.GREEN) {
             return "\u001B[1;32m"; // Green
-        } else { // GREY
+        } else if (color == Color.GREY) { // GREY
             return "\u001B[1;37m"; // White
+        } else {
+            return "\u001B[38;2;255;165;0m"; // RGB for orange
         }
     }
 }

@@ -4,23 +4,15 @@ import constants.Constants;
 import players.*;
 import players.human.HumanPlayer;
 import ui.*;
-
-import java.util.*;
-
-import jakarta.websocket.Session;
-
-// Import the Account and AccountFileManager classes so we can access flair info and load accounts
 import account.Account;
 import account.AccountFileManager;
+
+import java.util.*;
 
 public class Game {
     // ASSUMPTION: GAME is only started by the host, except in singleplayer
     // instances.
 
-    // private Deck deck;
-    // private boolean gameIsOver = false;
-    // private ArrayList<Card> parade;
-    // private List<Player> combinedPlayers;
     private UserInterface ui;
     private GameServerEndpoint gse;
     private Scanner scanner;
