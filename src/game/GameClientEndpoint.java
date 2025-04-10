@@ -9,6 +9,7 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @ClientEndpoint
 public class GameClientEndpoint{
@@ -56,10 +57,11 @@ public class GameClientEndpoint{
         inputThread.start();
     }
 
-    @OnMessage
+        @OnMessage
     public void onMessage(String message) {
-        // Check if this is a new turn marker and clear the console
+        // Check if this is a new turn marker and clear any pending input
         if (message.contains("TURN") && message.contains("===============")) {
+            InputManager.clearInput();
             return;
         }
 
@@ -67,40 +69,49 @@ public class GameClientEndpoint{
             // Handle the number of cards prompt
             String[] messageArr = message.split(":");
             int numCards = Integer.parseInt(messageArr[messageArr.length - 1]);
+            
             new Thread(() -> {
                 String input;
                 int choice = -1;
-                while (true) {
-                    if (message.contains("discard")) {
-                        System.out.print("Enter the position of the card you want to discard: ");
-                    } else {
-                        System.out.print("Enter your input: ");
-                    }
-                    try {
-                        // Wait for input provided by the dedicated InputReader thread
-                        input = InputManager.waitForInput();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                
+                System.out.println(message);
+                
+                if (message.contains("discard")) {
+                    System.out.print("Enter the position of the card you want to discard: ");
+                } else {
+                    System.out.print("Enter your input: ");
+                }
+                
+                try {
+                    // Wait for input WITH TIMEOUT - this is a key change
+                    input = InputManager.waitForInputWithTimeout(30, TimeUnit.SECONDS);
+                    
+                    // Handle timeout case
+                    if (input == null) {
+                        System.out.println("\nTime's up! Using default action.");
+                        // Send default action to server (e.g., play first card)
+                        session.getBasicRemote().sendText("0");
                         return;
                     }
-
+                    
+                    // Process valid input
                     try {
                         choice = Integer.parseInt(input);
                     } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a number.");
-                        continue;
+                        System.out.println("Invalid input. Using default action (0).");
+                        session.getBasicRemote().sendText("0");
+                        return;
                     }
-
+                    
                     int handSize = numCards;
                     if (choice >= 0 && choice < handSize) {
-                        break;
+                        session.getBasicRemote().sendText(String.valueOf(choice));
                     } else {
-                        System.out.println("Invalid choice. Enter a number between 0 and " + (handSize - 1) + ".");
+                        System.out.println("Invalid choice. Using default action (0).");
+                        session.getBasicRemote().sendText("0");
                     }
-                }
-
-                try {
-                    session.getBasicRemote().sendText(String.valueOf(choice));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -108,46 +119,49 @@ public class GameClientEndpoint{
         } else if (message.contains("Hit \"ENTER\" to end turn!")) {
             // Handle the turn advancement prompt
             System.out.println(message);
+            
             new Thread(() -> {
-                System.out.print("Press ENTER to end your turn...");
-                try {
-                    // Wait for ENTER (an empty input) from the dedicated InputReader
-                    InputManager.waitForInput();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                
-                // Clear the console immediately when the user presses ENTER
-                clearConsole();
+                System.out.print("Press ENTER to end your turn (auto-advancing in 30 seconds)...");
                 
                 try {
-                    // Send empty string to indicate ENTER key press
+                    // Wait for ENTER with timeout
+                    String input = InputManager.waitForInputWithTimeout(30, TimeUnit.SECONDS);
+                    
+                    // If timeout occurred, auto-advance
+                    if (input == null) {
+                        System.out.println("\nAuto-advancing turn...");
+                    } else {
+                        // User pressed ENTER
+                        clearConsole();
+                    }
+                    
+                    // In either case, send the end-turn signal
                     session.getBasicRemote().sendText("");
-                } catch (IOException e) {
+                } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                 }
             }).start();
         } else if (message.contains("Any player can hit ENTER to continue...")) {
             // Handle the prompt allowing any player to hit ENTER to continue
             System.out.println(message);
+            
             new Thread(() -> {
-                System.out.print("Press ENTER to continue...");
-                try {
-                    // Wait for the empty input (ENTER) from InputManager
-                    InputManager.waitForInput();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                
-                // Clear the console immediately when the user presses ENTER
-                clearConsole();
+                System.out.print("Press ENTER to continue (auto-continuing in 30 seconds)...");
                 
                 try {
+                    // Wait with timeout
+                    String input = InputManager.waitForInputWithTimeout(30, TimeUnit.SECONDS);
+                    
+                    // Handle timeout or input
+                    if (input == null) {
+                        System.out.println("\nAuto-continuing...");
+                    } else {
+                        clearConsole();
+                    }
+                    
                     // Send empty string to signal continuation
                     session.getBasicRemote().sendText("");
-                } catch (IOException e) {
+                } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                 }
             }).start();
@@ -156,8 +170,6 @@ public class GameClientEndpoint{
         }
     }
 
-
-    
     @OnMessage
     public void onMessage(Session session, ByteBuffer byteBuffer) {
         try {

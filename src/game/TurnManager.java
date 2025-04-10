@@ -67,7 +67,7 @@ public class TurnManager {
                     } else {
                         int i = 0;
                         String playerInput = InputManager.waitForInput();
-                        if (playerInput == null || playerInput == "" || !playerInput.matches("^[0-9]*$")) {
+                        if (playerInput == null || playerInput.equals("") || !playerInput.matches("^[0-9]*$")) {
                             // timed out
                             i = 0;
                         } else {
@@ -172,13 +172,6 @@ public class TurnManager {
         handleTurnAdvancement(currentPlayer, gameState.getPlayers(), isFinalTurn);
 
         return gameIsOver;
-    }
-
-    /**
-     * Handles the advancement to the next player's turn, with appropriate UI feedback.
-     */
-    private void handleTurnAdvancement(Player currentPlayer, List<Player> players) {
-        handleTurnAdvancement(currentPlayer, players, false);
     }
 
     /**
