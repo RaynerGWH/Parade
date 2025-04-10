@@ -67,7 +67,7 @@ public class TurnManager {
                     } else {
                         int i = 0;
                         String playerInput = InputManager.waitForInput();
-                        if (playerInput == null) {
+                        if (playerInput == null || playerInput == "" || !playerInput.matches("^[0-9]*$")) {
                             // timed out
                             i = 0;
                         } else {
