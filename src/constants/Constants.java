@@ -15,7 +15,7 @@ public class Constants {
     public static final String TIME_UP_MESSAGE = "\n═══ TIME'S UP! ═══\n";
 
     // UI Messages
-    public static final String PRESS_ENTER_TO_START = "Press ENTER to start...";
+    public static final String PRESS_ENTER_TO_START = "                                              [Enter] Start Game 🕹️ 🕹️";
 
     // Card limits
     public static final int MAX_HAND_SIZE = 5;
@@ -112,12 +112,12 @@ public class Constants {
     // ASCII art letters for "PARADE"
     public static final String[][] PARADE_LETTERS = {
             { // P"
-                    "                           ██████╗ ",
-                    "                           ██╔══██╗",
-                    "                           ██████╔╝",
-                    "                           ██╔═══╝ ",
-                    "                           ██║     ",
-                    "                           ╚═╝     "
+                    "                              ██████╗ ",
+                    "                              ██╔══██╗",
+                    "                              ██████╔╝",
+                    "                              ██╔═══╝ ",
+                    "                              ██║     ",
+                    "                              ╚═╝     "
             },
             { // A
                     " █████╗ ",

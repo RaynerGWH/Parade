@@ -36,14 +36,11 @@ public class FlairShop {
         this.availableFlairs = new ArrayList<>();
 
         // Sample flairs (name, description, minWins, cost)
-        availableFlairs.add(new Flair("grass toucher", "grass is horrified at your presence", 0, 0.0));
-        availableFlairs.add(new Flair("wife beater", "grass is horrified at your presence", 0, 0.0));
-        availableFlairs.add(new Flair("TEST", "-", 1, 400.00));
-        availableFlairs.add(new Flair("i luv cat", "meow meow", 5, 100.0));
-        availableFlairs.add(new Flair("i luv dawg", "roof roof", 5, 100.0));
-        availableFlairs.add(new Flair("mr halfway there", "25 more wins to a pointless title", 25, 250.0));
-        availableFlairs.add(new Flair("pointless title", "pls get a life :3", 50, 500.0));
-        availableFlairs.add(new Flair("egg", "maybe there's an easter egg...", 100, 9999.0));
+        availableFlairs.add(new Flair("grass toucher 🌿", "grass is horrified at your presence", 0, 0.0));
+        availableFlairs.add(new Flair("chicken jockey 🐔", "grass is horrified at your presence", 0, 0.0));
+        availableFlairs.add(new Flair("i luv cat 🐱", "meow meow", 5, 100.0));
+        availableFlairs.add(new Flair("i luv dawg 🐶", "roof roof", 5, 100.0));
+        availableFlairs.add(new Flair("egg 🥚", "maybe there's an easter egg...", 100, 9999.0));
     }
 
     /**

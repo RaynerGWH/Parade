@@ -119,9 +119,7 @@ public class RunGame {
             boolean exitRequested = false;
             while (!exitRequested) {
                 ConsoleUtils.clear();
-                System.out.print("Enter 'R' to refer to the rulebook,\n" +
-                        "      'S' to start the game, or\n" +
-                        "      'SHOP' to open the flair shop\n> ");
+                System.out.print("\n\n                   [R] Read Rulebook 📖           [S] Start Game 🎮           [B] Buy Flairs ✨\n> ");
 
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
@@ -133,7 +131,7 @@ public class RunGame {
                         selectGameMode();
                         exitRequested = true; // Exit run() after starting a game.
                         break;
-                    case "SHOP":
+                    case "B":
                         flairShopUI.openFlairShopMenu(currentAccount);
                         break;
                     default:
