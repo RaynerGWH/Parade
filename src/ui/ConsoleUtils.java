@@ -1,5 +1,7 @@
 package ui;
 
+import java.io.IOException;
+
 import constants.*;
 
 public class ConsoleUtils {
@@ -137,5 +139,61 @@ public class ConsoleUtils {
             Thread.currentThread().interrupt();
             ui.broadcastMessage("Countdown interrupted. Starting game immediately!");
         }
+    }
+
+    /**
+     * Prints a single-run "PARADE" animation using a purple color.
+     * The animation speed increases (delay decreases) for each subsequent row.
+     *
+     * @throws InterruptedException if the thread is interrupted during sleep.
+     */
+    public static void printParadeAnimation() throws InterruptedException {
+        final String purpleColor = Constants.ANSI_PURPLE;
+        int timer = 70; // initial delay in milliseconds
+
+        // Loop through the 6 rows of the ASCII art letters.
+        for (int row = 0; row < 6; row++) {
+            for (String[] letter : Constants.PARADE_LETTERS) {
+                System.out.print(purpleColor + letter[row]);
+                Thread.sleep(timer);
+            }
+            System.out.print(Constants.ANSI_RESET);
+            System.out.println();
+            timer /= 1.3; // speed up for the next row
+        }
+    }
+
+    /**
+     * Continuously prints the "PARADE" animation with cycling colors until input is available.
+     * Clears the console on each iteration and hides the cursor for a cleaner display.
+     *
+     * @throws IOException if an I/O error occurs.
+     * @throws InterruptedException if the thread is interrupted during sleep.
+     */
+    public static void printParadeAnimationLoop() throws IOException, InterruptedException {
+        int colorShift = 0;
+        int numRows = Constants.PARADE_LETTERS[0].length;
+
+        System.out.print(Constants.ANSI_HIDE_CURSOR); // hide cursor
+
+        while (System.in.available() == 0) {
+            clear();
+
+            // Assign each letter a color based on the current shift
+            for (int row = 0; row < numRows; row++) {
+                StringBuilder line = new StringBuilder();
+                for (int i = 0; i < Constants.PARADE_LETTERS.length; i++) {
+                    String color = Constants.RAINBOW_COLORS[(i - colorShift + Constants.RAINBOW_COLORS.length) % Constants.RAINBOW_COLORS.length];
+                    line.append(color).append(Constants.PARADE_LETTERS[i][row]).append(Constants.ANSI_RESET).append(" ");
+                }
+                System.out.println(line);
+            }
+
+            System.out.print("\n" + Constants.PRESS_ENTER_TO_START);
+            Thread.sleep(500);
+            colorShift = (colorShift + 1) % Constants.RAINBOW_COLORS.length;
+        }
+
+        System.out.print(Constants.ANSI_SHOW_CURSOR); // show cursor again
     }
 }
