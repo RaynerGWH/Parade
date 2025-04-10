@@ -60,7 +60,7 @@ public class GameManager {
     public void singleplayerHandler() {
         boolean isMulti = false;
         AccountFileManager acctMgr = new AccountFileManager();
-        Account userAcct = acctMgr.initialize();
+        Account userAcct = LoginManager.getCurrentAccount();
         sessions.put(null, userAcct);
         playerMgr.initializeHumanPlayers(sessions, isMulti);
         botHandler(1);
