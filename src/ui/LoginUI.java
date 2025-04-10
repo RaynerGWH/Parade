@@ -35,9 +35,9 @@ public class LoginUI {
      * @return The selected account
      */
     public Account showLoginMenu() {
+        // Clear the console
+        ConsoleUtils.clear();
         while (true) {
-            // Clear the console
-            ConsoleUtils.clear();
             
         System.out.println(
             BLUE + 
@@ -91,6 +91,8 @@ public class LoginUI {
                         // Ignore
                     }
             }
+            // Clear the console
+            ConsoleUtils.clear();
         }
     }
 } 
