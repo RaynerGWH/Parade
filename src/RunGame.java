@@ -12,6 +12,7 @@ import ui.LoginUI;
 import ui.MultiplayerUI;
 import ui.SinglePlayerUI;
 import ui.UserInterface;
+import ui.Header;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -112,6 +113,7 @@ public class RunGame {
         try {
             // Show parade animations on startup.
             ConsoleUtils.clear();
+            System.out.println(Header.renderHeader(null));
             ConsoleUtils.printParadeAnimation();
             ConsoleUtils.printParadeAnimationLoop();
             mainScanner.nextLine(); // Wait for user input before proceeding.

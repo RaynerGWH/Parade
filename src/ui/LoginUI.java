@@ -53,11 +53,7 @@ public class LoginUI {
         // Animate the title first
         for (int i = 0; i < titleVariants.size(); i++) {
             ConsoleUtils.clear();
-            System.out.println(Header.renderHeader(
-                titleVariants.get(i),
-                mayanSymbols,
-                Collections.emptyList()
-            ));
+            System.out.println(Header.renderHeader(null));
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -68,14 +64,9 @@ public class LoginUI {
         // Final screen
         while (true) {
             ConsoleUtils.clear();
-            System.out.println(BLUE + Header.renderHeader(
-                "P A R A D E",
-                mayanSymbols,
-                List.of(
-                    "[1] Login Existing Account",
-                    "[2] Create New Account"
-                )
-            ) + WHITE);
+            System.out.println(Header.renderHeader(
+                List.of("[1] Login Existing Account", "[2] Create New Account")
+            ));
             System.out.print("Choose your path, adventurer!\n> ");
 
             String choice = scanner.nextLine().trim();
