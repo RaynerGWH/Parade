@@ -112,12 +112,12 @@ public class Constants {
     // ASCII art letters for "PARADE"
     public static final String[][] PARADE_LETTERS = {
             { // P"
-                    "                              ██████╗ ",
-                    "                              ██╔══██╗",
-                    "                              ██████╔╝",
-                    "                              ██╔═══╝ ",
-                    "                              ██║     ",
-                    "                              ╚═╝     "
+                    "                               ██████╗ ",
+                    "                               ██╔══██╗",
+                    "                               ██████╔╝",
+                    "                               ██╔═══╝ ",
+                    "                               ██║     ",
+                    "                               ╚═╝     "
             },
             { // A
                     " █████╗ ",
