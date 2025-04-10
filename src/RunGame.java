@@ -119,7 +119,7 @@ public class RunGame {
             boolean exitRequested = false;
             while (!exitRequested) {
                 ConsoleUtils.clear();
-                System.out.print("\n\n                    [R] Read Rulebook 📖           [S] Start Game 🎮       [B] Buy Flairs ✨\n> ");
+                System.out.print("\n\n                   [R] Read Rulebook 📖           [S] Start Game 🎮           [B] Buy Flairs ✨\n> ");
 
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
