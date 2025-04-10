@@ -113,7 +113,6 @@ public class RunGame {
         try {
             // Show parade animations on startup.
             ConsoleUtils.clear();
-            System.out.println(Header.renderHeader(null));
             ConsoleUtils.printParadeAnimation();
             ConsoleUtils.printParadeAnimationLoop();
             mainScanner.nextLine(); // Wait for user input before proceeding.
@@ -121,7 +120,8 @@ public class RunGame {
             boolean exitRequested = false;
             while (!exitRequested) {
                 ConsoleUtils.clear();
-                System.out.print("\n\n                   [R] Read Rulebook 📖           [S] Start Game 🎮           [B] Buy Flairs ✨\n> ");
+                System.out.println(Header.renderHeader(List.of("[R] Read Rulebook 📖", "[S] Start Game 🎮", "[B] Buy Flairs ✨")));
+                System.out.print("\n> ");
 
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
