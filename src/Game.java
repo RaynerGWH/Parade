@@ -19,6 +19,7 @@ import exceptions.NoAvailableNPCNamesException;
 import game.ScoreCalculator;
 import players.*;
 import players.computer.*;
+import ui.ConsoleUtils;
 import cards.*;
 
 public class Game {
@@ -360,10 +361,10 @@ public class Game {
         System.out.println();
         if (!takenCards.isEmpty()) {
             System.out.println(currentPlayer.getName() + " takes the following cards from the parade: " + takenCards);
-            clearConsole();
+            ConsoleUtils.clearConsole();
         } else {
             System.out.println(currentPlayer.getName() + " takes no cards from the parade!");
-            clearConsole();
+            ConsoleUtils.clearConsole();
         }
         System.out.println();
 
@@ -396,31 +397,9 @@ public class Game {
 
         System.out.println(currentPlayer.getName() + "'s River: " + currRiver.toString());
         System.out.println();
-        clearConsole();
+        ConsoleUtils.clearConsole();
 
         return gameIsOver;
-    }
-
-    public static void clearConsole() {
-        // Try standard clearing methods first
-        try {
-            final String os = System.getProperty("os.name");
-            
-            if (os.contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
-            }
-        } catch (Exception e) {
-            // Do nothing with the exception
-        }
-        
-        // Always add this as a fallback
-        // System.out.println("\n\n\n\n\n\n\n\n\n\n");
-        System.out.println("=================================================================");
-        System.out.println("                         NEW TURN                                ");
-        System.out.println("=================================================================");
     }
 
     // Calculate time bonus based on how quickly the player made their move
@@ -458,9 +437,6 @@ public class Game {
             if (i < filledBars) {
                 progressBar.append("█");
             }
-            // } else if (i == filledBars && progress < 1.0) { // Only show > if not at 100%
-            //     progressBar.append(">");
-            // } 
             else {
                 progressBar.append(" ");
             }

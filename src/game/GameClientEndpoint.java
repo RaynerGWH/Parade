@@ -132,7 +132,7 @@ public class GameClientEndpoint{
                         System.out.println("\nAuto-advancing turn...");
                     } else {
                         // User pressed ENTER
-                        clearConsole();
+                        clearTurnConsole();
                     }
                     
                     // In either case, send the end-turn signal
@@ -156,7 +156,7 @@ public class GameClientEndpoint{
                     if (input == null) {
                         System.out.println("\nAuto-continuing...");
                     } else {
-                        clearConsole();
+                        clearTurnConsole();
                     }
                     
                     // Send empty string to signal continuation
@@ -213,7 +213,7 @@ public class GameClientEndpoint{
     /**
      * Clears the console for better readability between turns
      */
-    private void clearConsole() {
+    private void clearTurnConsole() {
         try {
             final String os = System.getProperty("os.name");
             

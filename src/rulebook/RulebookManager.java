@@ -108,11 +108,11 @@ public class RulebookManager {
     private int updateRulebookPage(int currentPage) {
         String prompt;
         if (currentPage == 0) {
-            prompt = "\nEnter (N)ext or (Q)uit: ";
+            prompt = "\nEnter (N)ext or (Q)uit:\n> ";
         } else if (currentPage == totalPages - 1) {
-            prompt = "\nEnter (P)revious, (F)irst, or (Q)uit: ";
+            prompt = "\nEnter (P)revious, (F)irst, or (Q)uit:\n> ";
         } else {
-            prompt = "\nEnter (N)ext, (P)revious, (F)irst, or (Q)uit: ";
+            prompt = "\nEnter (N)ext, (P)revious, (F)irst, or (Q)uit:\n> ";
         }
 
         System.out.print(prompt);

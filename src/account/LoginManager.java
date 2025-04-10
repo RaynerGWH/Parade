@@ -45,7 +45,6 @@ public class LoginManager {
             System.out.println("\n===== PARADE LOGIN =====");
             System.out.println("1. Login with existing account");
             System.out.println("2. Create new account");
-            System.out.println("3. Continue as guest");
             System.out.print("> ");
 
             String choice = scanner.nextLine().trim();
@@ -55,8 +54,6 @@ public class LoginManager {
                     return handleLogin();
                 case "2":
                     return handleAccountCreation();
-                case "3":
-                    return createGuestAccount();
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
@@ -129,17 +126,6 @@ public class LoginManager {
             System.out.println("Failed to save account: " + e.getMessage());
             return null;
         }
-    }
-
-    /**
-     * Creates a guest account (unsaved).
-     *
-     * @return A temporary guest account
-     */
-    public Account createGuestAccount() {
-        String guestName = "Guest_" + (int)(Math.random() * 10000);
-        System.out.println("Continuing as " + guestName);
-        return new Account(guestName);
     }
 
     /**

@@ -33,12 +33,13 @@ public class FlairShopUI {
     public void openFlairShopMenu(Account account) {
         while (true) {
             // Display account stats.
+            ConsoleUtils.clear();
             System.out.println("Current Balance : " + account.getBalance());
             System.out.println("Wins            : " + account.getWins());
             System.out.println("Losses          : " + account.getLosses());
 
             List<Flair> availableFlairs = flairShop.getAvailableFlairs();
-            System.out.println("\nAvailable Flairs:");
+            System.out.println("\nWelcome adverturer! Which flair would you like to buy today:");
             for (int i = 0; i < availableFlairs.size(); i++) {
                 Flair flair = availableFlairs.get(i);
                 String status = "";
@@ -58,7 +59,7 @@ public class FlairShopUI {
                         status);
             }
 
-            System.out.println("\nEnter the number of the flair to purchase or wear it, or 'Q' to quit shop\n> ");
+            System.out.print("\nEnter the number of the flair to purchase or wear it, or 'Q' to quit shop\n> ");
             String input = scanner.nextLine().trim();
             if (input.equalsIgnoreCase("Q")) {
                 System.out.println("Exiting shop menu.");

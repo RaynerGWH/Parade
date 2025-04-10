@@ -81,8 +81,6 @@ public class LoginUI {
                         return created;
                     }
                     break;
-                case "3":
-                    return loginManager.createGuestAccount();
                 default:
                     System.out.println("Invalid choice. Please try again.");
                     try {

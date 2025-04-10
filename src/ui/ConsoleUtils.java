@@ -151,6 +151,7 @@ public class ConsoleUtils {
         final String purpleColor = Constants.ANSI_PURPLE;
         int timer = 70; // initial delay in milliseconds
 
+        System.out.println("\n");
         // Loop through the 6 rows of the ASCII art letters.
         for (int row = 0; row < 6; row++) {
             for (String[] letter : Constants.PARADE_LETTERS) {
@@ -179,6 +180,7 @@ public class ConsoleUtils {
         while (System.in.available() == 0) {
             clear();
 
+            System.out.println("\n");
             // Assign each letter a color based on the current shift
             for (int row = 0; row < numRows; row++) {
                 StringBuilder line = new StringBuilder();
