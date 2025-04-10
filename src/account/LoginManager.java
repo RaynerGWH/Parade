@@ -65,8 +65,14 @@ public class LoginManager {
      */
     public Account handleLogin() {
         if (accounts.isEmpty()) {
-            System.out.println("No accounts found. Please create a new one.");
-            return null;
+            System.out.println("No accounts found. Would you like to create a new one? (Y/N)");
+            String input = scanner.nextLine().trim().toLowerCase();
+            if (input.equals("y")) {
+                handleAccountCreation();
+                return null;
+            } else {
+                return null;
+            }
         }
 
         List<Account> accountList = new ArrayList<>(accounts.values());
@@ -102,29 +108,31 @@ public class LoginManager {
      * @return The newly created account or null if creation failed
      */
     public Account handleAccountCreation() {
-        System.out.print("Enter a username (alphanumeric only): ");
-        String username = scanner.nextLine().trim();
+        while (true) {
+            System.out.print("Enter a username (alphanumeric only): ");
+            String username = scanner.nextLine().trim();
 
-        if (!username.matches("^[a-zA-Z0-9]+$")) {
-            System.out.println("Invalid username. Please use only alphanumeric characters.(No spaces)");
-            return null;
-        }
+            if (!username.matches("^[a-zA-Z0-9]+$")) {
+                System.out.println("Invalid username. Please use only alphanumeric characters.(No spaces)");
+                continue;
+            }
 
-        if (accounts.containsKey(username.toLowerCase())) {
-            System.out.println("Username already exists.");
-            return null;
-        }
+            if (accounts.containsKey(username.toLowerCase())) {
+                System.out.println("Username already exists.");
+                continue;
+            }
 
-        Account newAccount = new Account(username);
-        try {
-            fileManager.save(newAccount);
-            accounts.put(username.toLowerCase(), newAccount);
-            System.out.println("Account created successfully!");
-            currAccount = newAccount;
-            return newAccount;
-        } catch (IOException e) {
-            System.out.println("Failed to save account: " + e.getMessage());
-            return null;
+            Account newAccount = new Account(username);
+            try {
+                fileManager.save(newAccount);
+                accounts.put(username.toLowerCase(), newAccount);
+                System.out.println("Account created successfully!");
+                currAccount = newAccount;
+                return newAccount;
+            } catch (IOException e) {
+                System.out.println("Failed to save account: " + e.getMessage());
+                return null;
+            }
         }
     }
 
