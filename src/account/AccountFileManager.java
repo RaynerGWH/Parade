@@ -1,7 +1,6 @@
 package account;
 
 import exceptions.CorruptFileException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -138,9 +137,9 @@ public class AccountFileManager {
         if (!accounts.isEmpty()) {
             System.out.println("Available accounts:");
             for (int i = 0; i < accounts.size(); i++) {
-                System.out.println((i + 1) + ". " + accounts.get(i).getUsername());
+                System.out.println("[" + (i + 1) + "] " + accounts.get(i).getUsername());
             }
-            System.out.print("Enter the number to select an account, or 0 to create a new one: ");
+            System.out.print("Enter the number to select an account, or type [0] to create a new one: ");
             int choice = Integer.parseInt(sc.nextLine());
 
             if (choice > 0 && choice <= accounts.size()) {

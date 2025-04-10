@@ -120,7 +120,7 @@ public class RunGame {
             boolean exitRequested = false;
             while (!exitRequested) {
                 ConsoleUtils.clear();
-                System.out.println(Header.renderHeader(List.of("[R] Read Rulebook 📖", "[S] Start Game 🎮", "[B] Buy Flairs ✨")));
+                System.out.println(Header.renderHeader(List.of("[R] Read Rulebook 📖", "[S] Start Game 🎮", "[B] Buy Flairs ✨", "[Q] Quit ❌")));
                 System.out.print("\n> ");
 
                 String command = mainScanner.nextLine().trim().toUpperCase();
@@ -136,9 +136,18 @@ public class RunGame {
                     case "B":
                         flairShopUI.openFlairShopMenu(currentAccount);
                         break;
+                    case "Q":
+                    if (confirmQuit()) {
+                        System.out.println("Exiting game. Goodbye!");
+                        System.exit(0);
+                    }
+                    break;
                     default:
-                        System.out.println("Command not recognized.");
-                        break;
+                    ConsoleUtils.clear();
+                    System.out.println(Header.renderHeader(List.of(
+                        "Invalid command. Please enter [R], [S], [B] or [Q].")));
+                    System.out.print("\nPress ENTER to try again...");
+                    mainScanner.nextLine();
                 }
             }
         } catch (Exception e) {
@@ -153,21 +162,35 @@ public class RunGame {
      * Displays a main menu to choose either Singleplayer or Multiplayer mode.
      */
     private void selectGameMode() {
-        System.out.print("Enter 'S' for Singleplayer or 'M' for Multiplayer\n> ");
-        String mode = mainScanner.nextLine().trim().toUpperCase();
-
-        switch (mode) {
-            case "S":
-                startSinglePlayer();
-                break;
-            case "M":
-                startMultiPlayer();
-                break;
-            default:
-                System.out.println("Please only enter 'S' or 'M'.");
-                selectGameMode(); // Retry if input is invalid.
+        while (true) {
+            ConsoleUtils.clear();
+            System.out.println(Header.renderHeader(List.of("SELECT GAMEMODE", "[S] Singleplayer 👤", "[M] Multiplayer 👥🎮", "[Q] Quit ❌")));
+            System.out.print("\n> ");
+            String mode = mainScanner.nextLine().trim().toUpperCase();
+    
+            switch (mode) {
+                case "S":
+                    startSinglePlayer();
+                    return;
+                case "M":
+                    startMultiPlayer();
+                    return;
+                case "Q":
+                    if (confirmQuit()) {
+                        System.out.println("Exiting game. Goodbye!");
+                        System.exit(0);
+                    }
+                    break;
+                default:
+                    ConsoleUtils.clear();
+                    System.out.println(Header.renderHeader(List.of(
+                        "Invalid command. Please enter [S], [M], or [Q].")));
+                    System.out.print("\nPress ENTER to try again...");
+                    mainScanner.nextLine();
+            }
         }
     }
+    
 
     /**
      * Starts single-player mode (snippet-1 approach).
@@ -182,21 +205,39 @@ public class RunGame {
      */
     private void startMultiPlayer() {
         while (true) {
-            System.out.print("Please enter 'H' to host, or 'J' to join\n> ");
+            ConsoleUtils.clear();
+            System.out.println(Header.renderHeader(List.of(
+                "SELECT CONNECTION",
+                "[H] Host Room 🛖",
+                "[J] Join Room 🔗",
+                "[Q] Quit ❌"
+            )));
+            System.out.print("\n> ");
             String subCmd = mainScanner.nextLine().trim().toUpperCase();
-
-            if (subCmd.equals("H")) {
-                hostMultiPlayer();
-                return;
-            } else if (subCmd.equals("J")) {
-                joinMultiPlayer();
-                return;
-            } else {
-                System.out.println("Unrecognized command. Please enter 'H' to host or 'J' to join.");
+    
+            switch (subCmd) {
+                case "H":
+                    hostMultiPlayer();
+                    return;
+                case "J":
+                    joinMultiPlayer();
+                    return;
+                case "Q":
+                    if (confirmQuit()) {
+                        System.out.println("Exiting game. Goodbye!");
+                        System.exit(0);
+                    }
+                    break;
+                default:
+                    ConsoleUtils.clear();
+                    System.out.println(Header.renderHeader(List.of(
+                        "Invalid command. Please enter [H], [J], or [Q].")));
+                    System.out.print("\nPress ENTER to try again...");
+                    mainScanner.nextLine();
             }
         }
     }
-
+    
     /**
      * Hosts a multi-player game.
      */
@@ -233,6 +274,21 @@ public class RunGame {
                 System.out.println("An unexpected error occurred. Please try again.");
             }
         }
+    }
+
+    /**
+     * Asks user to confirm quit request.
+     * @return true if user confirms quit, false otherwise
+     */
+    private boolean confirmQuit() {
+        ConsoleUtils.clear();
+        System.out.println(Header.renderHeader(List.of(
+            "Are you sure you want to quit?",
+            "Press [Q] to confirm, or press the ENTER key to stay in the game."
+        )));
+        System.out.print("\n> ");
+        String confirm = mainScanner.nextLine().trim().toUpperCase();
+        return confirm.equals("Q");
     }
 
     public Account getCurrentAccount() {

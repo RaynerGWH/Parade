@@ -1,9 +1,8 @@
 package account;
 
+import exceptions.CorruptFileException;
 import java.io.IOException;
 import java.util.*;
-
-import exceptions.CorruptFileException;
 
 /**
  * Manages the login process and authentication for multiple user accounts.
@@ -81,7 +80,7 @@ public class LoginManager {
             System.out.printf("%d. %s%n", i + 1, accountList.get(i).getUsername());
         }
 
-        System.out.print("Select account by number (or 0 to cancel): ");
+        System.out.print("\nSelect account by number (type [0] to cancel): ");
         String input = scanner.nextLine().trim();
         try {
             int choice = Integer.parseInt(input);
