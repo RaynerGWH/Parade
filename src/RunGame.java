@@ -2,7 +2,6 @@ import account.Account;
 import account.AccountFileManager;
 import account.Flair;
 import account.FlairShop;
-import account.LoginManager;
 import game.GameClientEndpoint;
 import game.GameManager;
 import game.GameServerEndpoint;
@@ -55,6 +54,8 @@ public class RunGame {
     /** The AccountFileManager used to load/save data to Save.PG1. */
     private final AccountFileManager fileMgr;
 
+    private Account currentAccount;
+
     /**
      * Entry point of the program.
      * @param args command-line arguments (unused).
@@ -76,7 +77,7 @@ public class RunGame {
         
         // Create LoginUI and get an Account
         LoginUI loginUI = new LoginUI(this.mainScanner, false);
-        Account currentAccount = loginUI.showLoginMenu();
+        this.currentAccount = loginUI.showLoginMenu();
         
         // Save the account to ensure persistence
         try {
@@ -87,7 +88,7 @@ public class RunGame {
 
         // Put that Account into our local list.
         this.accounts = new ArrayList<>();
-        this.accounts.add(currentAccount);
+        this.accounts.add(this.currentAccount);
 
         // No-arg constructor for PlayerManager.
         // this.playerMgr = new PlayerManager();
@@ -116,6 +117,7 @@ public class RunGame {
                 System.out.print("Enter 'R' to refer to the rulebook,\n" +
                         "      'S' to start the game, or\n" +
                         "      'SHOP' to open the flair shop\n> ");
+
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
                 if (command.equals("R")) {
@@ -140,7 +142,6 @@ public class RunGame {
 
                 } else if (command.equals("SHOP")) {
                     // Show the shop menu (for demonstration, we pick the first account)
-                    Account currentAccount = accounts.get(0);
                     openFlairShopMenu(currentAccount);
 
                 } else {
@@ -281,7 +282,7 @@ public class RunGame {
                         uriString += mainScanner.nextLine();
                         uriString += "/game";
                         URI uri = new URI(uriString);
-                        GameClientEndpoint gce = new GameClientEndpoint(uri, mainScanner);
+                        GameClientEndpoint gce = new GameClientEndpoint(uri, mainScanner, this.currentAccount);
                         CountDownLatch latch = new CountDownLatch(1);
                         gce.setLatch(latch);
                         latch.await();
@@ -563,5 +564,9 @@ public class RunGame {
                     break;
             }
         }
+    }
+
+    public Account getCurrentAccount() {
+        return currentAccount;
     }
 }

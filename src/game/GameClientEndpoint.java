@@ -1,7 +1,6 @@
 package game;
 
 import account.*;
-import ui.LoginUI;
 
 import java.io.*;
 import jakarta.websocket.*;
@@ -18,32 +17,40 @@ public class GameClientEndpoint{
     private CountDownLatch latch;
     private AccountFileManager acctMgr = new AccountFileManager();
     private boolean isShuttingDown = false;
+    private Account currAccount;
 
 
-    public GameClientEndpoint(URI endpointURI, Scanner sc) throws DeploymentException, IOException {
+    public GameClientEndpoint(URI endpointURI, Scanner sc, Account currAccount) throws DeploymentException, IOException {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, endpointURI);
         this.sc = sc;
+        this.currAccount = currAccount;
+    }
+
+    public Account getAccount() {
+        return currAccount;
     }
 
     @OnOpen
     public void onOpen(Session session) {
         System.out.println("Connected to server");
+        Account toSend = getAccount();
+        if (toSend)
+        System.out.println(toSend.toString());
         
         // Instead of creating a LoginUI here (which causes NullPointerException),
         // load the existing account or create one if it doesn't exist
-        Account account = acctMgr.initialize();
         
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos)){
             // Convert Account to byte array for sending
-            oos.writeObject(account);
+            oos.writeObject(currAccount);
             oos.flush();
 
             byte[] accountBytes = baos.toByteArray();
             session.getBasicRemote().sendBinary(ByteBuffer.wrap(accountBytes));
             
-            System.out.println("Sent account: " + account.getUsername());
+            System.out.println("Sent account: " + currAccount.getUsername());
         } catch (IOException e) {
             e.printStackTrace();
         }

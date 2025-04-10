@@ -27,6 +27,6 @@ public class InputManager {
     public static void waitForEnterPress() throws InterruptedException {
         String input = INPUT_QUEUE.poll(30, TimeUnit.SECONDS);
         INPUT_QUEUE.clear();
-    }
+    }    
 }
 

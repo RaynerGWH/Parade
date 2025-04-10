@@ -59,16 +59,23 @@ public class TurnManager {
 
             if (ui instanceof MultiplayerUI) {
                 try {
-                    int i = 0;
-                    String playerInput = InputManager.waitForInput();
-                    if (playerInput == null) {
-                        // timed out
-                        i = 0;
+                    //implement check if session is open: if it is not, we immediately play a pre determined card(idx 0) after 2s hard coded delay.
+                    //or else, we continue as per normal
+                    if (!(s.isOpen())) {
+                        Thread.sleep(2000);
+                        choice = currentPlayer.playCard(0);
                     } else {
-                        i = Integer.parseInt(playerInput);
-                    }
+                        int i = 0;
+                        String playerInput = InputManager.waitForInput();
+                        if (playerInput == null) {
+                            // timed out
+                            i = 0;
+                        } else {
+                            i = Integer.parseInt(playerInput);
+                        }
 
-                    choice = currentPlayer.playCard(i);
+                        choice = currentPlayer.playCard(i);
+                    }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     // Default: choice = 0;
