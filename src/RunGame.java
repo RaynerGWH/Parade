@@ -269,9 +269,14 @@ public class RunGame {
 
             if (subCmd.equals("H")) {
                 // Host
-                GameServerEndpoint gse = new GameServerEndpoint();
-                UserInterface ui = new MultiplayerUI(gse);
-                gameMgr.start(ui, gse);
+                try {
+                    GameServerEndpoint gse = new GameServerEndpoint();
+                    UserInterface ui = new MultiplayerUI(gse);
+                    gameMgr.start(ui, gse);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
                 return;
             } else if (subCmd.equals("J")) {
                 // Join

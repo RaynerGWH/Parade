@@ -25,7 +25,7 @@ public class InputManager {
      * This is specifically for turn advancement.
      */
     public static void waitForEnterPress() throws InterruptedException {
-        String input = INPUT_QUEUE.poll(30, TimeUnit.SECONDS);
+        String input = INPUT_QUEUE.take();
         INPUT_QUEUE.clear();
     }    
 }
