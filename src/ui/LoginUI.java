@@ -2,7 +2,6 @@ package ui;
 
 import account.Account;
 import account.LoginManager;
-
 import java.util.Scanner;
 
 /**
@@ -12,6 +11,11 @@ public class LoginUI {
     private final Scanner scanner;
     private final LoginManager loginManager;
     private boolean isMultiplayer;
+    final String BLUE = "\u001B[38;5;117m";
+    final String PURPLE = "\u001B[38;5;183m";
+    final String WHITE = "\u001B[97m";
+    final String GRAY = "\u001B[38;5;250m";
+    final String RESET = "\u001B[0m";
     
     /**
      * Creates a new LoginUI.
@@ -35,11 +39,32 @@ public class LoginUI {
             // Clear the console
             ConsoleUtils.clear();
             
-            System.out.println("\n===== PARADE LOGIN =====");
-            System.out.println("1. Login with existing account");
-            System.out.println("2. Create new account");
-            System.out.println("3. Continue as guest");
-            System.out.print("> ");
+        System.out.println(
+            BLUE + 
+            "                                                                ╱|      \n" +
+            "                                                             ♡ (` - 7.        \n" +
+            "                                                               |、⁻〵      \n" + 
+            BLUE +
+            "❦❧༺═──⟡⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯じしˍ,)ノ⎯⎯⎯⎯⎯⟡──═༻\n" +
+            " ❦║                                                                              ║\n" +
+            " ❦║" + WHITE + "                       ☆ WELCOME TO THE PARADE PARADISE ☆                     " + BLUE + "║\n" +
+            " ❦║                                                                              ║\n" +
+            " ❦║" + WHITE + "               Only the worthy may proceed beyond this screen...              " + BLUE + "║\n" +
+            " ❦║                                                                              ║\n" +
+            " ❦༺═──⟡⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⟡──═༻" + RESET
+
+        );
+
+        // "꧁║" + PURPLE + "             ╭─────────────────────╮     ╭────────────────────────╮           " + BLUE + "║\n" +
+        // "꧁║" + PURPLE + "             │ [1] Login Existing  │     │ [2] Create New Account │           " + BLUE + "║\n" +
+        // "꧁║" + PURPLE + "             ╰─────────────────────╯     ╰────────────────────────╯           " + BLUE + "║\n" +
+        // "꧁║                                                                              ║\n" +
+        // "꧁║" + PURPLE + "                         ╭─────────────────────────╮                          " + BLUE + "║\n" +
+        // "꧁║" + PURPLE + "                         │  [3] Continue as Guest  │                          " + BLUE + "║\n" +
+        // "꧁║" + PURPLE + "                         ╰─────────────────────────╯                          " + BLUE + "║\n" +
+        // "꧁║                                                                              ║\n" +
+
+        System.out.print(BLUE + "꧁ " + WHITE + "Choose your path, adventurer! \n> " + RESET);
             
             String choice = scanner.nextLine().trim();
             
