@@ -63,7 +63,12 @@ public class AccountFileManager {
         String content = new String(decryptedData);
 
         validateHeader(content);
-        return parseContent(content);
+        Account a = parseContent(content);
+        if (file.getName().startsWith(a.getUsername())) {
+            return a;
+        }
+
+        throw new CorruptFileException("An error has occured. Please delete the .PG1 file for this account");
     }
 
     private void validateHeader(String content) throws CorruptFileException {
@@ -100,7 +105,7 @@ public class AccountFileManager {
         }
     }
 
-    public void save(Account account) throws IOException {
+    public void save(Account account) throws IOException{
         String filename = account.getUsername() + ".PG1";
         Path path = Paths.get(filename);
         String content = HEADER + account.toString();

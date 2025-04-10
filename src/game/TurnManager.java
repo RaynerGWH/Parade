@@ -1,6 +1,7 @@
 package game;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import cards.*;
 import constants.Constants;
@@ -66,7 +67,7 @@ public class TurnManager {
                         choice = currentPlayer.playCard(0);
                     } else {
                         int i = 0;
-                        String playerInput = InputManager.waitForInput();
+                        String playerInput = InputManager.waitForInputWithTimeout(30, TimeUnit.SECONDS);
                         if (playerInput == null || playerInput.equals("") || !playerInput.matches("^[0-9]*$")) {
                             // timed out
                             i = 0;
@@ -179,7 +180,7 @@ public class TurnManager {
      * @param isFinalTurn whether this is part of the final turns phase
      */
     private void handleTurnAdvancement(Player currentPlayer, List<Player> players, boolean isFinalTurn) {
-        if (currentPlayer instanceof HumanPlayer) {
+        if (currentPlayer instanceof HumanPlayer && ((HumanPlayer)currentPlayer).getSession().isOpen()) {
             HumanPlayer humanPlayer = (HumanPlayer) currentPlayer;
             Session playerSession = humanPlayer.getSession();
             
@@ -264,7 +265,7 @@ public class TurnManager {
             } else {
                 ArrayList<Card> sortedRiver = new ArrayList<>(river);
                 Collections.sort(sortedRiver, new CardComparator());
-                ui.broadcastMessage(CardPrinter.printCardRow(sortedRiver, false));
+                ui.broadcastMessage(CardPrinter.printCardRow(sortedRiver, true));
             }
         }
         ui.broadcastMessage("------------------------------------------------------------");
@@ -296,12 +297,6 @@ public class TurnManager {
         }
     }
 
-    /**
-     * Broadcasts a message indicating the next player's turn.
-     */
-    private void broadcastNewTurn(Player nextPlayer) {
-        broadcastNewTurn(nextPlayer, false);
-    }
 
     /**
      * Broadcasts a message indicating the next player's turn.

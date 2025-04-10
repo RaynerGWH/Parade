@@ -29,18 +29,6 @@ public class Game {
     }
 
     public TreeMap<Integer, ArrayList<Player>> startGame() {
-        // Assign accounts to HumanPlayers if not already set
-        // for (Player p : gameState.getPlayers()) {
-        //     if (p instanceof HumanPlayer) {
-        //         HumanPlayer hp = (HumanPlayer) p;
-        //         if (hp.getAccount() == null) {
-        //             AccountFileManager accountFileManager = new AccountFileManager(scanner);
-        //             Account loadedAccount = accountFileManager.initialize();
-        //             hp.setAccount(loadedAccount);
-        //         }
-        //     }
-        // }
-
         // Game mode selection with validation
         GameMode gameMode = new ClassicMode();
         boolean validGameMode = false;

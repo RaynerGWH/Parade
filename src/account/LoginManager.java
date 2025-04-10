@@ -108,8 +108,8 @@ public class LoginManager {
         System.out.print("Enter a username (alphanumeric only): ");
         String username = scanner.nextLine().trim();
 
-        if (!username.matches("^[A-Za-z0-9]+$")) {
-            System.out.println("Invalid username. Please use only alphanumeric characters.");
+        if (!username.matches("^[a-zA-Z0-9]+$")) {
+            System.out.println("Invalid username. Please use only alphanumeric characters.(No spaces)");
             return null;
         }
 

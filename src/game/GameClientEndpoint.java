@@ -30,7 +30,6 @@ public class GameClientEndpoint{
     public void onOpen(Session session) {
         System.out.println("Connected to server");
 
-        
         // Instead of creating a LoginUI here (which causes NullPointerException),
         // load the existing account or create one if it doesn't exist
         
@@ -83,7 +82,6 @@ public class GameClientEndpoint{
                 }
                 
                 try {
-                    // Wait for input WITH TIMEOUT - this is a key change
                     input = InputManager.waitForInputWithTimeout(30, TimeUnit.SECONDS);
                     
                     // Handle timeout case
@@ -97,6 +95,9 @@ public class GameClientEndpoint{
                     // Process valid input
                     try {
                         choice = Integer.parseInt(input);
+                        if (choice < 0 || choice >= numCards) {
+                            throw new NumberFormatException();
+                        }
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input. Using default action (0).");
                         session.getBasicRemote().sendText("0");

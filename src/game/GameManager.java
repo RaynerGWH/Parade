@@ -126,13 +126,13 @@ public class GameManager {
     public int botHandler(int numPlayers) {
         int numBots = 0;
         int maximumNumberOfBots = 8 - numPlayers;
-        int minimumNumberOfBots = 2 - numPlayers;
+        int minimumNumberOfBots = Math.max(2 - numPlayers, 1);
 
         while (true) {
             try {
                 System.out.print("Enter number of Bots (" + minimumNumberOfBots + " - " + maximumNumberOfBots + ")\n> ");
                 numBots = Integer.parseInt(sc.nextLine());
-                if (numPlayers + numBots > 8 || numPlayers + numBots < 2) {
+                if (numBots > maximumNumberOfBots || numBots < minimumNumberOfBots) {
                     throw new NumberFormatException();
                 }
                 playerMgr.initializeComputerPlayers(numBots);
