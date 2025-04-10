@@ -282,7 +282,7 @@ public class RunGame {
                         uriString += mainScanner.nextLine();
                         uriString += "/game";
                         URI uri = new URI(uriString);
-                        GameClientEndpoint gce = new GameClientEndpoint(uri, mainScanner, this.currentAccount);
+                        GameClientEndpoint gce = new GameClientEndpoint(uri, mainScanner);
                         CountDownLatch latch = new CountDownLatch(1);
                         gce.setLatch(latch);
                         latch.await();

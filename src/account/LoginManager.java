@@ -12,6 +12,7 @@ public class LoginManager {
     private final Scanner scanner;
     private final Map<String, Account> accounts;
     private final AccountFileManager fileManager;
+    private static Account currAccount;
 
     public LoginManager(Scanner scanner) {
         this.scanner = scanner;
@@ -87,6 +88,7 @@ public class LoginManager {
             if (choice > 0 && choice <= accountList.size()) {
                 Account selected = accountList.get(choice - 1);
                 System.out.println("Login successful! Welcome back, " + selected.getUsername());
+                currAccount = selected;
                 return selected;
             } else {
                 System.out.println("Invalid selection.");
@@ -121,6 +123,7 @@ public class LoginManager {
             fileManager.save(newAccount);
             accounts.put(username.toLowerCase(), newAccount);
             System.out.println("Account created successfully!");
+            currAccount = newAccount;
             return newAccount;
         } catch (IOException e) {
             System.out.println("Failed to save account: " + e.getMessage());
@@ -150,5 +153,9 @@ public class LoginManager {
         } catch (IOException e) {
             System.out.println("Error saving account: " + e.getMessage());
         }
+    }
+
+    public static Account getCurrentAccount() {
+        return currAccount;
     }
 }
