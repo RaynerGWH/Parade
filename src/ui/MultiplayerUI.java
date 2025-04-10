@@ -27,4 +27,5 @@ public class MultiplayerUI implements UserInterface {
     public void broadcastMessage(String message) {
         GameServerEndpoint.broadcast(message);
     }
+    
 }
