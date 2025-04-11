@@ -18,6 +18,7 @@ import exceptions.InvalidPlayerCountException;
 import exceptions.NoAvailableNPCNamesException;
 import game.ScoreCalculator;
 import players.*;
+import ui.Header;
 import players.computer.*;
 import ui.ConsoleUtils;
 import cards.*;
@@ -362,10 +363,10 @@ public class Game {
         System.out.println();
         if (!takenCards.isEmpty()) {
             System.out.println(currentPlayer.getName() + " takes the following cards from the parade: " + takenCards);
-            ConsoleUtils.clearConsole();
+            ConsoleUtils.clear();
         } else {
             System.out.println(currentPlayer.getName() + " takes no cards from the parade!");
-            ConsoleUtils.clearConsole();
+            ConsoleUtils.clear();
         }
         System.out.println();
 
@@ -398,7 +399,7 @@ public class Game {
 
         System.out.println(currentPlayer.getName() + "'s River: " + currRiver.toString());
         System.out.println();
-        ConsoleUtils.clearConsole();
+        ConsoleUtils.clearConsoleWithHeader();
 
         return gameIsOver;
     }
