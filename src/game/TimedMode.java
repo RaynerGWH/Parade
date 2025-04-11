@@ -28,7 +28,7 @@ public class TimedMode implements GameMode {
 
         while (!validChoice) {
             try {
-                System.out.print("Enter category (1-3)\n> ");
+                System.out.print("Enter category (1-3)" + UIConstants.LIGHT_PURPLE + "\n> ");
                 timeChoice = Integer.parseInt(scanner.nextLine().trim());
                 if (timeChoice >= 1 && timeChoice <= 3) {
                     validChoice = true;

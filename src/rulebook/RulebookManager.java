@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
+
+import constants.UIConstants;
 import ui.ConsoleUtils;
 /**
  * Manages rulebook functionality including displaying and navigating the rulebook.
@@ -110,9 +112,9 @@ public class RulebookManager {
         if (currentPage == 0) {
             prompt = "\nEnter (N)ext or (Q)uit:\n> ";
         } else if (currentPage == totalPages - 1) {
-            prompt = "\nEnter (P)revious, (F)irst, or (Q)uit:\n> ";
+            prompt = "\nEnter (P)revious, (F)irst, or (Q)uit:" + UIConstants.LIGHT_PURPLE +  "\n> ";
         } else {
-            prompt = "\nEnter (N)ext, (P)revious, (F)irst, or (Q)uit:\n> ";
+            prompt = "\nEnter (N)ext, (P)revious, (F)irst, or (Q)uit:" + UIConstants.LIGHT_PURPLE + "\n> ";
         }
 
         System.out.print(prompt);

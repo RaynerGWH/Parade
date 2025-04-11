@@ -74,7 +74,7 @@ public class GameManager {
         playerMgr.initializeHumanPlayers(sessions, isMulti);
 
         while (true) {
-            System.out.print("Do you want to add bots? (Y/N)\n> ");
+            System.out.print("Do you want to add bots? (Y/N)" + UIConstants.LIGHT_PURPLE + "\n> ");
             String input = sc.nextLine().trim().toUpperCase();
             if (input.equals("Y")) {
                 botHandler(playerMgr.getPlayers().size());
@@ -131,7 +131,7 @@ public class GameManager {
 
         while (true) {
             try {
-                System.out.print("Enter number of Bots (" + minimumNumberOfBots + " - " + maximumNumberOfBots + ")\n> ");
+                System.out.print("Enter number of Bots (" + minimumNumberOfBots + " - " + maximumNumberOfBots + ")" + UIConstants.LIGHT_PURPLE + "\n> ");
                 numBots = Integer.parseInt(sc.nextLine());
                 if (numBots > maximumNumberOfBots || numBots < minimumNumberOfBots) {
                     throw new NumberFormatException();
@@ -153,14 +153,14 @@ public class GameManager {
         ConsoleUtils.clear();
         startWebSocketServer();
         while (true) {
-            System.out.print("Waiting for players... Type \"START\" to start the game\n> ");
+            System.out.print("Waiting for players... Type \"START\" to start the game" + UIConstants.LIGHT_PURPLE + "\n> ");
             String command = sc.nextLine();
             if (command.toUpperCase().trim().equals("START") && GameServerEndpoint.getNumPlayers() > 0) {
                 return;
             } else if (command.toUpperCase().trim().equals("START") && GameServerEndpoint.getNumPlayers() <= 1) {
                 System.out.println("Invalid number of players. Make sure that there is more than one!");
             } else {
-                System.out.println("Invalid command. Type \"START\" to start the game\n> ");
+                System.out.println("Invalid command. Type \"START\" to start the game" + UIConstants.LIGHT_PURPLE + "\n> ");
             }
         }
     }

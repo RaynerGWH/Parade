@@ -126,8 +126,8 @@ public class RunGame {
             boolean exitRequested = false;
             while (!exitRequested) {
                 ConsoleUtils.clear();
-                System.out.println(Header.renderHeader(List.of("[R] Read Rulebook 📖", "[S] Start Game 🎮", "[B] Buy Flairs ✨", "[Q] Quit ❌")));
-                System.out.print("\n> ");
+                System.out.println(UIConstants.RESET_COLOR + Header.renderHeader(List.of("[R] Read Rulebook 📖", "[S] Start Game 🎮", "[B] Buy Flairs ✨", "[Q] Quit ❌")));
+                System.out.print(UIConstants.LIGHT_PURPLE + "\n> ");
 
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
@@ -171,7 +171,7 @@ public class RunGame {
         while (true) {
             ConsoleUtils.clear();
             System.out.println(Header.renderHeader(List.of("SELECT GAMEMODE", "[S] Singleplayer 👤", "[M] Multiplayer 👥🎮", "[Q] Quit ❌")));
-            System.out.print("\n> ");
+            System.out.print(UIConstants.LIGHT_PURPLE + "\n> ");
             String mode = mainScanner.nextLine().trim().toUpperCase();
 
             switch (mode) {
@@ -183,7 +183,7 @@ public class RunGame {
                     return;
                 case "Q":
                     if (confirmQuit()) {
-                        System.out.println("Exiting game. Goodbye!");
+                        System.out.println("🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
                         System.exit(0);
                     }
                     break;
@@ -217,7 +217,7 @@ public class RunGame {
                 "[J] Join Room 🔗",
                 "[Q] Quit ❌"
             )));
-            System.out.print("\n> ");
+            System.out.print(UIConstants.LIGHT_PURPLE + "\n> ");
             String subCmd = mainScanner.nextLine().trim().toUpperCase();
 
             switch (subCmd) {
@@ -229,7 +229,7 @@ public class RunGame {
                     return;
                 case "Q":
                     if (confirmQuit()) {
-                        System.out.println("Exiting game. Goodbye!");
+                        System.out.println("🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
                         System.exit(0);
                     }
                     break;
@@ -258,7 +258,7 @@ public class RunGame {
     private void joinMultiPlayer() {
         while (true) {
             try {
-                System.out.print("Enter a valid IP Address\n> ");
+                System.out.print("Enter a valid IP Address\n" + UIConstants.LIGHT_PURPLE + "> ");
                 String ipAddress = mainScanner.nextLine().trim();
                 URI serverURI = new URI("ws://" + ipAddress + "/game");
 
@@ -289,9 +289,10 @@ public class RunGame {
         ConsoleUtils.clear();
         System.out.println(Header.renderHeader(List.of(
             "❓ Are you certain you wish to leave the Parade?",
-            "[Q] Quit your journey.\n[Enter] March onward with the crowd."
+            "[Q] Quit your journey.",
+            "[Enter] March onward with the crowd."
         )));
-        System.out.print(UIConstants.LIGHT_PURPLE + "\n> " + UIConstants.RESET_COLOR);
+        // System.out.print(UIConstants.LIGHT_PURPLE + "> " + UIConstants.RESET_COLOR);
         String confirm = mainScanner.nextLine().trim().toUpperCase();
         return confirm.equals("Q");
     }

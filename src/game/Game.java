@@ -36,7 +36,7 @@ public class Game {
             System.out.println("Game Modes available:");
             System.out.println("    1. Classic");
             System.out.println("    2. Timed");
-            System.out.print("Enter '1' or '2'\n> ");
+            System.out.print("Enter '1' or '2'" + UIConstants.LIGHT_PURPLE + "\n> ");
             String gameModeChoice = scanner.nextLine().trim();
 
             if (gameModeChoice.equals("2")) {

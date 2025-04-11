@@ -3,6 +3,7 @@ package ui;
 import account.Account;
 import account.Flair;
 import account.FlairShop;
+import constants.UIConstants;
 
 import java.util.List;
 import java.util.Scanner;
@@ -62,7 +63,7 @@ public void openFlairShopMenu(Account account) {
         }
 
         System.out.print("\n                                [1-7] Buy or Wear 🎩           [Q] Quit Shop 🚪\n");
-        System.out.print("\n\n                             [Balance] $" + account.getBalance() + "           [Wins] " + account.getWins() + "           [Losses] " + account.getLosses() + "\n\n> ");
+        System.out.print("\n\n                             [Balance] $" + account.getBalance() + "           [Wins] " + account.getWins() + "           [Losses] " + account.getLosses() + "\n\n" + UIConstants.LIGHT_PURPLE + "> ");
         String input = scanner.nextLine().trim();
         if (input.equalsIgnoreCase("Q")) {
             System.out.println("Exiting shop menu.");
@@ -102,7 +103,7 @@ public void openFlairShopMenu(Account account) {
         if (!ownedFlairs.isEmpty() && ownedFlairs.get(0).equalsIgnoreCase(flair.getFlairName())) {
             System.out.println("This flair is already being worn.");
         } else {
-            System.out.print("You already own this flair. Do you want to wear it? (Y/N)\n> ");
+            System.out.print("You already own this flair. Do you want to wear it? (Y/N)" + UIConstants.LIGHT_PURPLE + "\n> ");
             String wearInput = scanner.nextLine().trim();
             if (wearInput.equalsIgnoreCase("Y")) {
                 boolean setWorn = flairShop.selectFlairToWear(flair.getFlairName(), account);
@@ -123,7 +124,7 @@ public void openFlairShopMenu(Account account) {
         boolean purchased = flairShop.purchaseFlair(flair.getFlairName(), account);
         if (purchased) {
             System.out.println("Purchase successful! You now own '" + flair.getFlairName() + "'.");
-            System.out.print("Do you want to wear this flair now? (Y/N)\n> ");
+            System.out.print("Do you want to wear this flair now? (Y/N)" + UIConstants.LIGHT_PURPLE + "\n> ");
             String wearNowInput = scanner.nextLine().trim();
             if (wearNowInput.equalsIgnoreCase("Y")) {
                 boolean setWorn = flairShop.selectFlairToWear(flair.getFlairName(), account);

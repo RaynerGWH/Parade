@@ -64,7 +64,7 @@ public class LoginUI {
             System.out.println(Header.renderHeader(
                 List.of("[1] 🔐 Rejoin with an Existing Account", "[2] 🆕 Begin Anew — Create a New Account")
             ));
-            System.out.print("🎭 The Parade drums echo in the distance...\n\n" + UIConstants.LIGHT_PURPLE + "Which path shall you walk, brave soul? > " + UIConstants.RESET_COLOR);
+            System.out.print("🎭 The Parade drums echo in the distance...\n" + UIConstants.LIGHT_PURPLE + "> ");
 
             String choice = scanner.nextLine().trim();
 
@@ -82,7 +82,7 @@ public class LoginUI {
                     }
                     break;
                 default:
-                    System.out.println("\n❌ Invalid choice. Please enter ‘1’ or ‘2’ — only the chosen paths may proceed. 🎴✨");
+                    System.out.println(UIConstants.RESET_COLOR + "\n❌ Invalid choice. Please enter [1] or [2] — only the chosen paths may proceed. 🎴✨");
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {
