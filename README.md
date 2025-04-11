@@ -51,10 +51,12 @@ Source code
 
 ---
 
-### 🔁 Sequence Diagram
-For those interested in the program's flow, the sequence diagram shows how different parts of the code interact during gameplay. It helps visualize the process from playing a card to calculating scores.
+### 🧱 UML Diagram
+We prepared a UML diagram to illustrate the relationships of the classes and how they are organized.
 
 ---
 
-### 🧱 UML Diagram
-We prepared a UML diagram to illustrate the relationships of the classes and how they are organized.
+### 🔁 Sequence Diagram
+For those interested in the program's flow, the sequence diagram shows how different parts of the code interact during gameplay. It helps visualize the process from playing a card to calculating scores.
+
+
