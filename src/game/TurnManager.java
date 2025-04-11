@@ -258,7 +258,7 @@ public class TurnManager {
                 turnLine.append(UIConstants.GRAY).append(name).append(UIConstants.RESET_COLOR);
             }
             if (i < players.size() - 1) {
-                turnLine.append(" ▶ ");
+                turnLine.append(" ➤  ");
             }
         }
         boxedLines.add(turnLine.toString());

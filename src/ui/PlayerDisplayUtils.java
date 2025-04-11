@@ -53,7 +53,7 @@ public class PlayerDisplayUtils {
                 header.append(displayName);
             }
             if (i < players.size() - 1) {
-                header.append(" ▶ ");
+                header.append(" ➤ ");
             }
         }
         return header.toString();
