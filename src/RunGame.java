@@ -287,8 +287,8 @@ public class RunGame {
     private boolean confirmQuit() {
         ConsoleUtils.clear();
         System.out.println(Header.renderHeader(List.of(
-            "Are you sure you want to quit?",
-            "Press [Q] to confirm, or press the ENTER key to stay in the game."
+            "❓ Are you certain you wish to leave the Parade?",
+            "[Q] Quit your journey.\n[Enter] March onward with the crowd."
         )));
         System.out.print("\n> ");
         String confirm = mainScanner.nextLine().trim().toUpperCase();
