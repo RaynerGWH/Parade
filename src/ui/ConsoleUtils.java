@@ -1,9 +1,7 @@
 package ui;
 
-import java.io.IOException;
-
 import constants.UIConstants;
-import constants.GameplayConstants;
+import java.io.IOException;
 
 public class ConsoleUtils {
     private static final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
@@ -132,8 +130,8 @@ public class ConsoleUtils {
             clear();
 
             // Game start message
-            ui.broadcastMessage("\n                                               🎮 GAME START! 🎮\n");
-            ui.broadcastMessage(UIConstants.SEPARATOR);
+            // ui.broadcastMessage("\n                                               🎮 GAME START! 🎮\n");
+            // ui.broadcastMessage(UIConstants.SEPARATOR);
 
         } catch (InterruptedException e) {
             // If interrupted, just continue with the game

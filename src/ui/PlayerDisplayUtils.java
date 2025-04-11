@@ -1,9 +1,8 @@
 package ui;
 
-import java.util.List;
-
 import account.Account;
 import constants.UIConstants;
+import java.util.List;
 import players.Player;
 import players.human.HumanPlayer;
 
@@ -70,9 +69,9 @@ public class PlayerDisplayUtils {
         String playerName = getDisplayName(nextPlayer);
         StringBuilder announcement = new StringBuilder();
 
-        announcement.append("===============================================================\n");
-        announcement.append("                      ").append(playerName).append("'s TURN                \n");
-        announcement.append("===============================================================");
+        // announcement.append("===============================================================\n");
+        // announcement.append("                      ").append(playerName).append("'s TURN                \n");
+        // announcement.append("===============================================================");
 
         return announcement.toString();
     }

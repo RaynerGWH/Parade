@@ -238,48 +238,62 @@ public class TurnManager {
      * Displays the current game state to all players.
      */
     public void displayGameState(GameState gameState, Player currentPlayer) {
-        // Move displayGameState logic here
         List<Player> players = gameState.getPlayers();
         ArrayList<Card> parade = gameState.getParade();
-        
-        // Build the "Current Turn" header
-        StringBuilder header = new StringBuilder("Current Turn: ");
+
+        // Header
+        System.out.println(Header.renderHeader(null));
+
+        // Build lines for boxed section
+        List<String> boxedLines = new ArrayList<>();
+
+        // Current Turn Line
+        StringBuilder turnLine = new StringBuilder("Current Turn: ");
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
-            String displayName = PlayerDisplayUtils.getDisplayName(p);
+            String name = PlayerDisplayUtils.getDisplayName(p);
             if (p.equals(currentPlayer)) {
-                // ANSI escape code for green text
-                header.append(UIConstants.GREEN).append(displayName).append(UIConstants.RESET_COLOR);
+                turnLine.append(UIConstants.GREEN).append(name).append(UIConstants.RESET_COLOR);
             } else {
-                header.append(displayName);
+                turnLine.append(UIConstants.GRAY).append(name).append(UIConstants.RESET_COLOR);
             }
             if (i < players.size() - 1) {
-                header.append(" ▶ ");
+                turnLine.append(" ▶ ");
             }
         }
-        ui.broadcastMessage(header.toString());
-        ui.broadcastMessage("------------------------------------------------------------");
+        boxedLines.add(turnLine.toString());
 
-        // Display each player's river
+        // Each player's river (store string representations of cards, not color-coded visuals)
         for (Player p : players) {
-            String riverHeader = PlayerDisplayUtils.getDisplayName(p) + "'s River: ";
-            ui.broadcastMessage(riverHeader);
+            boxedLines.add("");
+            boxedLines.add(PlayerDisplayUtils.getDisplayName(p) + "'s River:");
             ArrayList<Card> river = p.getRiver();
             if (river == null || river.isEmpty()) {
-                ui.broadcastMessage("   (Empty)");
+                boxedLines.add("  (Empty)");
             } else {
                 ArrayList<Card> sortedRiver = new ArrayList<>(river);
                 Collections.sort(sortedRiver, new CardComparator());
-                ui.broadcastMessage(CardPrinter.printCardRow(sortedRiver, true));
+                String[] riverLines = CardPrinter.printCardRow(sortedRiver, true).split("\n");
+                boxedLines.addAll(Arrays.asList(riverLines));
             }
         }
-        ui.broadcastMessage("------------------------------------------------------------");
 
-        // Display the parade
+        // Encapsulate inside a box
+        int maxLength = boxedLines.stream().mapToInt(line -> line.replaceAll("\\e\\[[;\\d]*m", "").length()).max().orElse(0);
+        String top = "╭" + "─".repeat(maxLength + 2) + "╮";
+        String bottom = "╰" + "─".repeat(maxLength + 2) + "╯";
+
+        ui.broadcastMessage(top);
+        for (String line : boxedLines) {
+            ui.broadcastMessage("│ " + padRight(line, maxLength) + " │");
+        }
+        ui.broadcastMessage(bottom);
+
+        // Divider and Parade
         ui.broadcastMessage("The Parade:");
         ui.broadcastMessage(CardPrinter.printCardRow(parade, true));
 
-        // If the current player is human, show their hand privately
+        // Show hand for current human player only
         if (currentPlayer instanceof HumanPlayer) {
             HumanPlayer hp = (HumanPlayer) currentPlayer;
             Session s = hp.getSession();
@@ -288,17 +302,22 @@ public class TurnManager {
         }
     }
 
+    private String padRight(String text, int width) {
+        String plainText = text.replaceAll("\\e\\[[;\\d]*m", "");
+        return text + " ".repeat(Math.max(0, width - plainText.length()));
+    }
+
     /**
      * Displays information about a card being played or discarded.
     */
     public void displayCardPlayedOrDiscarded(Player currentPlayer, Card choice, String action) {
         // Move displayCardPlayedOrDiscarded logic here
         if (action.equals(GameplayConstants.PLAY)) {
-            ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " played:");
-            ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
+            // ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " played:");
+            // ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
         } else {
-            ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discarded:");
-            ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
+            // ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discarded:");
+            // ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
         }
     }
 
@@ -326,8 +345,8 @@ public class TurnManager {
             }
         }
         
-        ui.broadcastMessage("===============================================================");
-        ui.broadcastMessage("                      " + playerName + "'s TURN                ");
-        ui.broadcastMessage("===============================================================");
+        // ui.broadcastMessage("===============================================================");
+        // ui.broadcastMessage("                      " + playerName + "'s TURN                ");
+        // ui.broadcastMessage("===============================================================");
     }
 }
