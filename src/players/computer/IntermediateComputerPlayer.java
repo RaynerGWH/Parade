@@ -23,7 +23,7 @@ public class IntermediateComputerPlayer extends AbstractPlayer {
                 System.out.println(name + " has no cards to play.");
                 return null;
             }
-    
+
             // Always prioritises the card with the highest value
             //sort hand
             Collections.sort(hand, Comparator.comparing(Card::getValue));

@@ -28,4 +28,3 @@ public enum PlayerName {
         return DISPLAYNAME;
     }
 }
-
