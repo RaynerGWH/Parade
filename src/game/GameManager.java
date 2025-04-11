@@ -79,7 +79,7 @@ public class GameManager {
                 botHandler(playerMgr.getPlayers().size());
                 break;
 
-            } else if (input.equals("N") && playerMgr.getPlayers().size() > 2) {
+            } else if (input.equals("N") && playerMgr.getPlayers().size() >= 2) {
                 break;
 
             } else if (input.equals("N") && playerMgr.getPlayers().size() < 2) {

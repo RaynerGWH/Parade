@@ -7,7 +7,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.*;
 import account.*;
 
 @ServerEndpoint("/game")
@@ -32,22 +32,56 @@ public class GameServerEndpoint {
             // Convert ByteBuffer to byte array
             byte[] data = new byte[byteBuffer.remaining()];
             byteBuffer.get(data);
-
+    
             // Deserialize the object from the byte array
             try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
                  ObjectInputStream ois = new ObjectInputStream(bais)) {
                 
                 Object obj = ois.readObject();
-
+    
                 if (obj instanceof Account) {
-                    Account account = (Account) obj;
-                    SESSIONS.put(session, account);
-                    System.out.println("Account received: " + account.getUsername());
+                    Account originalAccount = (Account) obj;
+                    String originalUsername = originalAccount.getUsername();
+                    
+                    // Ensures unique usernames for all players joining the game. 
+                    String uniqueUsername = originalUsername;
+                    int counter = 1;
+    
+                    // Check if this username already exists in any session
+                    boolean isDuplicate = true;
+                    while (isDuplicate) {
+                        isDuplicate = false;
+                        for (Account existingAccount : SESSIONS.values()) {
+                            if (existingAccount.getUsername().equals(uniqueUsername)) {
+                                uniqueUsername = originalUsername + "_" + counter++;
+                                isDuplicate = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Create a new account with the unique username upon duplicate name joining
+                    Account accountToStore;
+                    if (!uniqueUsername.equals(originalUsername)) {
+                        // Create new account with unique username and copy properties
+                        accountToStore = new Account(
+                            originalAccount.getId(),
+                            uniqueUsername,
+                            originalAccount.getWins(),
+                            originalAccount.getLosses(),
+                            originalAccount.getBalance(),
+                            new ArrayList<>(originalAccount.getUnlockedFlairs())
+                        );
+                    } else {
+                        accountToStore = originalAccount;
+                    }
+                    
+                    SESSIONS.put(session, accountToStore);
+                    System.out.println("Account received: " + accountToStore.getUsername());
                     
                     // Broadcast with explicit error handling
-                    broadcast(account.getUsername() + " has joined the game.");
+                    broadcast(accountToStore.getUsername() + " has joined the game.");
                     System.out.println("Type \"START\" to start the game");
-
                 } else {
                     System.out.println("Received unknown object type: " + obj.getClass().getName());
                 }
@@ -57,6 +91,7 @@ public class GameServerEndpoint {
             e.printStackTrace();
         }
     }
+    
 
     @OnClose
     public void onClose(Session session) {

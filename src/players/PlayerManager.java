@@ -24,17 +24,8 @@ public class PlayerManager {
             Session s = entry.getKey();
             Account a = entry.getValue();
             String username = a.getUsername();
-            
-            if (usernames.containsKey(username)) {
-                int occurances = usernames.get(username);
-                username += "_" + occurances;
-                occurances++;
-                usernames.put(username, occurances);
 
-            } else {
-                usernames.put(username, 1);
-
-            }
+            usernames.put(username, 1);
 
             ArrayList<Card> hand = initialiseHand();
             HumanPlayer humanPlayer = new HumanPlayer(hand, username, s, sc);
