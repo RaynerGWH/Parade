@@ -1,6 +1,6 @@
 package game;
 
-import constants.Constants;
+import constants.UIConstants;
 import constants.GameplayConstants;
 
 import java.util.*;

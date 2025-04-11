@@ -20,14 +20,14 @@ public class ScoreCalculator {
      */
     public ScoreCalculator(List<Player> players) {
         this.players = players;
-        Map<Player, Set<Color>> majorityMap = calculateMajorities();
+        Map<Player, Set<CardColor>> majorityMap = calculateMajorities();
         
         TreeMap<Integer, ArrayList<Player>> scoreMap = new TreeMap<Integer, ArrayList<Player>>();
 
         for (int i = 0; i < players.size(); i++) {
             Player currentPlayer = players.get(i);
             ArrayList<Card> river = currentPlayer.getRiver();
-            Set<Color> majColors = majorityMap.get(currentPlayer);
+            Set<CardColor> majColors = majorityMap.get(currentPlayer);
             
             if (river == null || river.size() == 0) {
                 if (scoreMap.containsKey(0)) {
@@ -45,7 +45,7 @@ public class ScoreCalculator {
 
             for (Card c : river) {
                 //for every car
-                Color currColor = c.getColor();
+                CardColor currColor = c.getColor();
                 if (majColors.contains(currColor)) {
                     currScore++;
                 } else {
@@ -81,21 +81,21 @@ public class ScoreCalculator {
      * @return A map where each key is a Player and the value is a set of Colors for which that player has a strict majority.
      */
     
-    public Map<Player, Set<Color>> calculateMajorities() {
+    public Map<Player, Set<CardColor>> calculateMajorities() {
         // Initialize the map to hold majority colors for each player.
-        Map<Player, Set<Color>> majorityMap = new HashMap<>();
+        Map<Player, Set<CardColor>> majorityMap = new HashMap<>();
         for (Player p : players) {
             majorityMap.put(p, new HashSet<>());
         }
     
         // Loop over each color
-        for (Color color : Color.values()) {
+        for (CardColor card_color : CardColor.values()) {
             int maxCount = 0;
             List<Player> leaders = new ArrayList<>();
     
             // Determine the highest count of this color
             for (Player player : players) {
-                int count = countColor(player.getRiver(), color);
+                int count = countColor(player.getRiver(), card_color);
                 if (count > maxCount) {
                     maxCount = count;
                     leaders.clear();
@@ -107,7 +107,7 @@ public class ScoreCalculator {
     
             // Assign majority for this color to all leaders
             for (Player leader : leaders) {
-                majorityMap.get(leader).add(color);
+                majorityMap.get(leader).add(card_color);
             }
         }
     
@@ -122,10 +122,10 @@ public class ScoreCalculator {
      * @param color the color to count
      * @return the count of cards matching the color
      */
-    private int countColor(ArrayList<Card> cards, Color color) {
+    private int countColor(ArrayList<Card> cards, CardColor card_color) {
         int count = 0;
         for (Card c : cards) {
-            if (c.getColor() == color) {
+            if (c.getColor() == card_color) {
                 count++;
             }
         }

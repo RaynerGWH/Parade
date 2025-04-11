@@ -20,15 +20,15 @@ public class CardComparator implements Comparator<Card> {
         return c1.getValue() - c2.getValue();
     }
 
-    private int getColorScore(Color color) {
-        switch (color) {
+    private int getColorScore(CardColor card_color) {
+        switch (card_color) {
             case PURPLE: return 1;
             case BLUE: return 2;
             case RED: return 3;
             case ORANGE: return 4;
             case GREY: return 5;
             case GREEN: return 6;
-            default: throw new IllegalArgumentException("Unexpected color: " + color);
+            default: throw new IllegalArgumentException("Unexpected color: " + card_color);
         }
     }
 }

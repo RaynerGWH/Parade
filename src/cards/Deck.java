@@ -18,7 +18,7 @@ public class Deck {
         CARDS = new ArrayList<>();
         // Initialize the deck with 66 cards; adjust as needed based on game rules.
         // For each color and value combination, add a new Card.
-        for (Color color : Color.values()) {
+        for (CardColor color : CardColor.values()) {
             for (int value = 0; value <= 10; value++) {
                 // Adjust the number of cards per value if needed.
                 CARDS.add(new Card(color, value));

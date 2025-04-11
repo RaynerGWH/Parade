@@ -117,23 +117,23 @@ public class ConsoleUtils {
         try {
             // Display 3
             clear();
-            ui.broadcastMessage(GameplayConstants.COUNTDOWN_THREE);
+            ui.broadcastMessage(UIConstants.COUNTDOWN_THREE);
             Thread.sleep(1000);
             clear();
 
             // Display 2
-            ui.broadcastMessage(GameplayConstants.COUNTDOWN_TWO);
+            ui.broadcastMessage(UIConstants.COUNTDOWN_TWO);
             Thread.sleep(1000);
             clear();
 
             // Display 1
-            ui.broadcastMessage(GameplayConstants.COUNTDOWN_ONE);
+            ui.broadcastMessage(UIConstants.COUNTDOWN_ONE);
             Thread.sleep(1000);
             clear();
 
             // Game start message
             ui.broadcastMessage("\n                                               🎮 GAME START! 🎮\n");
-            ui.broadcastMessage(GameplayConstants.SEPARATOR);
+            ui.broadcastMessage(UIConstants.SEPARATOR);
 
         } catch (InterruptedException e) {
             // If interrupted, just continue with the game
@@ -220,18 +220,18 @@ public class ConsoleUtils {
                     String color = UIConstants.RAINBOW_COLORS[(i - colorShift + UIConstants.RAINBOW_COLORS.length) % UIConstants.RAINBOW_COLORS.length];
                     line.append(color)
                         .append(paradeOrder[i][row])
-                        .append(UIConstants.ANSI_RESET)
+                        .append(UIConstants.RESET_COLOR)
                         .append(" ");
                 }
                 System.out.println(line);
             }
 
-            System.out.print("\n" + GameplayConstants.PRESS_ENTER_TO_START);
+            System.out.print("\n" + UIConstants.PRESS_ENTER_TO_START);
             Thread.sleep(500);
             colorShift = (colorShift + 1) % UIConstants.RAINBOW_COLORS.length;
         }
 
-        System.out.print(UIConstants.ANSI_SHOW_CURSOR); // show cursor again
+        System.out.print(UIConstants.SHOW_CURSOR); // show cursor again
     }
 
 }

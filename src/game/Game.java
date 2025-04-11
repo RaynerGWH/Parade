@@ -43,7 +43,7 @@ public class Game {
                 gameMode = new TimedMode();
                 validGameMode = true;
                 timedMode = true;
-                System.out.println(GameplayConstants.TIMED_MODE_MESSAGE);
+                System.out.println(UIConstants.TIMED_MODE_MESSAGE);
                 System.out.println("════════════════════════════════════════════════════════════════════════════");
 
                 // Initialize time bonus tracking
@@ -55,7 +55,7 @@ public class Game {
 
             } else if (gameModeChoice.equals("1")) {
                 validGameMode = true;
-                System.out.print(GameplayConstants.CLASSIC_MODE_MESSAGE);
+                System.out.print(UIConstants.CLASSIC_MODE_MESSAGE);
                 timedMode = false;
             } else {
                 System.out.println("\nInvalid choice. Please select 1 for Classic Mode or 2 for Timed Mode.");

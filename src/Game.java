@@ -21,6 +21,7 @@ import players.*;
 import players.computer.*;
 import ui.ConsoleUtils;
 import cards.*;
+import constants.UIConstants;
 
 public class Game {
 
@@ -328,7 +329,7 @@ public class Game {
         // }
 
         int choiceValue = choice.getValue();
-        Color choiceColor = choice.getColor();
+        CardColor choiceColor = choice.getColor();
         
         // Add the current card to the parade.
         parade.add(0, choice);
@@ -348,7 +349,7 @@ public class Game {
         while (iterator.hasNext()) {
             Card checkCard = iterator.next();
             int checkValue = checkCard.getValue();
-            Color checkColor = checkCard.getColor();
+            CardColor checkColor = checkCard.getColor();
 
             if (checkColor.equals(choiceColor) || checkValue <= choiceValue) {
                 currRiver.add(checkCard);
@@ -377,7 +378,7 @@ public class Game {
         // Change to one function instead
         if (currRiver.size() != 0) {
             // create a set to store the colors of the river, avoid duplicates
-            HashSet<Color> checkColor = new HashSet<Color>();
+            HashSet<CardColor> checkColor = new HashSet<CardColor>();
             for (Card c : currRiver) {
                 checkColor.add(c.getColor());
             }

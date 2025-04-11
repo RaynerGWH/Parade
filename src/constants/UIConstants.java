@@ -30,10 +30,6 @@ public class UIConstants {
     public static final String SEPARATOR_SYMBOL = "=";
     public static final String SEPARATOR = SEPARATOR_SYMBOL.repeat(SEPARATOR_LENGTH);
 
-    // Action Messages
-    public static final String PLAY = "Play";
-    public static final String DISCARD = "Discard";
-
     // Countdown Numbers
     public static final String COUNTDOWN_THREE = 
             "                          █████    ██  \r\n" +
@@ -95,7 +91,7 @@ public class UIConstants {
                     "██║  ██║",
                     "██████╔╝",
                     "╚═════╝ "
-            }
+            },
             { // "E"
                     "███████╗",
                     "██╔════╝",
@@ -104,16 +100,20 @@ public class UIConstants {
                     "███████╗",
                     "╚══════╝"
             }
-    }
+        };
 
-        // Reset
+        // UI Utils
         public static final String RESET_COLOR = "\u001B[0m";
+        public static final String SHOW_CURSOR = "\u001B[?25h";
+        public static final String HIDE_CURSOR = "\u001B[?25l";
+
 
         // Standard Colors for text
         public static final String BLACK = "\u001B[30m";
         public static final String RED = "\u001B[31m";
         public static final String GREEN = "\u001B[32m";
         public static final String YELLOW = "\u001B[33m";
+        public static final String ORANGE = "\u001B[38;2;255;165;0m";
         public static final String BLUE = "\u001B[34m"; // Preferred Darker Blue
         public static final String PURPLE = "\u001B[35m";
         public static final String LIGHT_PURPLE = "\u001B[38;5;183m"; // Preferred Purple
@@ -125,6 +125,17 @@ public class UIConstants {
         public static final String NEON_GREEN = "\u001B[38;2;57;255;20m";
         public static final String GRAY = "\u001B[38;5;238m";
 
+        // RAINBOW COLOR
+        // Example rainbow colors array for cycling effect
+        public static final String[] RAINBOW_COLORS = {
+            RED,  // Red
+            YELLOW,  // Yellow
+            GREEN,  // Green
+            CYAN,  // Cyan
+            BLUE,  // Blue
+            PURPLE   // Purple
+        };
+
         // Background Colors
         public static final String BLACK_BACKGROUND = "\u001B[40m";
         public static final String RED_BACKGROUND = "\u001B[41m";
@@ -134,4 +145,4 @@ public class UIConstants {
         public static final String PURPLE_BACKGROUND = "\u001B[45m";
         public static final String CYAN_BACKGROUND = "\u001B[46m";
         public static final String WHITE_BACKGROUND = "\u001B[47m";
-}  
+}

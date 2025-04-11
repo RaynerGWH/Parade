@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import cards.*;
-import constants.Constants;
+import constants.UIConstants;
 import constants.GameplayConstants;
 import players.*;
 import players.human.HumanPlayer;
@@ -97,7 +97,7 @@ public class TurnManager {
         // Process the play action
         if (action.equals(GameplayConstants.PLAY)) {
             int choiceValue = choice.getValue();
-            Color choiceColor = choice.getColor();
+            CardColor choiceColor = choice.getColor();
 
             // Add the current card to the parade
             ArrayList<Card> parade = gameState.getParade();
@@ -119,7 +119,7 @@ public class TurnManager {
             while (iterator.hasNext()) {
                 Card checkCard = iterator.next();
                 int checkValue = checkCard.getValue();
-                Color checkColor = checkCard.getColor();
+                CardColor checkColor = checkCard.getColor();
 
                 // Take matching cards
                 if (checkColor.equals(choiceColor) || checkValue <= choiceValue) {
@@ -149,7 +149,7 @@ public class TurnManager {
             // Check for game over conditions
             // 1. River has all 6 colors
             if (!currRiver.isEmpty()) {
-                HashSet<Color> checkColor = new HashSet<Color>();
+                HashSet<CardColor> checkColor = new HashSet<CardColor>();
                 for (Card c : currRiver) {
                     checkColor.add(c.getColor());
                 }

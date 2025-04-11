@@ -25,4 +25,8 @@ public class GameplayConstants {
 
     // Three second extension for timed mode due to countdown
     public static final long THREE_SECOND_EXTENSION = 3 * 1000;
+
+    // Action Messages
+    public static final String PLAY = "Play";
+    public static final String DISCARD = "Discard";
 }

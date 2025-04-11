@@ -2,6 +2,8 @@ package cards;
 
 import java.util.List;
 
+import constants.UIConstants;
+
 public class CardPrinter {
     private static final String RESET = "\u001B[0m";
     private static final String LOGO = "❀";
@@ -71,26 +73,26 @@ public class CardPrinter {
         }
     }
     
-
     /**
      * Gets the ANSI color code for a card color.
      * In a terminal environment, these will show colored text.
      * In a WebSocket environment, the client may need to interpret these.
      */
-    private static String getColorCode(Color color) {
+    private static String getColorCode(CardColor color) {
         // For direct console output
-        if (color == Color.RED) {
-            return "\u001B[1;31m"; // Red
-        } else if (color == Color.BLUE) {
-            return "\u001B[1;34m"; // Blue
-        } else if (color == Color.PURPLE) {
-            return "\u001B[1;35m"; // Purple
-        } else if (color == Color.GREEN) {
-            return "\u001B[1;32m"; // Green
-        } else if (color == Color.GREY) { // GREY
-            return "\u001B[1;37m"; // White
+        if (color == CardColor.RED) {
+            return UIConstants.RED; // Red
+        } else if (color == CardColor.BLUE) {
+            return UIConstants.BLUE; // Blue
+        } else if (color == CardColor.PURPLE) {
+            return UIConstants.PURPLE; // Purple
+        } else if (color == CardColor.GREEN) {
+            return UIConstants.GREEN; // Green
+        } else if (color == CardColor.GREY) { // GREY
+            return UIConstants.WHITE; // White
         } else {
             return "\u001B[38;2;255;165;0m"; // RGB for orange
         }
     }
+
 }
