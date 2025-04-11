@@ -62,52 +62,31 @@ public class Constants {
 
     // Countdown Numbers
     public static final String COUNTDOWN_THREE = 
-            "             █████    ██  \r\n" +
-            "            ██   ██   ██  \r\n" +
-            "                 ██   ██  \r\n" +
-            "             ██████   ██  \r\n" +
-            "                 ██   ██  \r\n" +
-            "            ██   ██       \r\n" +
-            "             █████    ██  \r\n";
+            "                          █████    ██  \r\n" +
+            "                         ██   ██   ██  \r\n" +
+            "                              ██   ██  \r\n" +
+            "                          ██████   ██  \r\n" +
+            "                              ██   ██  \r\n" +
+            "                         ██   ██       \r\n" +
+            "                          █████    ██  \r\n";
 
     public static final String COUNTDOWN_TWO = 
-            "             █████    ██  \r\n" +
-            "            ██   ██   ██  \r\n" +
-            "                 ██   ██  \r\n" +
-            "             █████    ██  \r\n" +
-            "            ██        ██  \r\n" +
-            "            ██            \r\n" +
-            "            ███████   ██  \r\n";
+            "                          █████    ██  \r\n" +
+            "                         ██   ██   ██  \r\n" +
+            "                              ██   ██  \r\n" +
+            "                          █████    ██  \r\n" +
+            "                         ██        ██  \r\n" +
+            "                         ██            \r\n" +
+            "                         ███████   ██  \r\n";
 
     public static final String COUNTDOWN_ONE = 
-            "               ██    ██  \r\n" +
-            "             ████    ██  \r\n" +
-            "               ██    ██  \r\n" +
-            "               ██    ██  \r\n" +
-            "               ██    ██  \r\n" +
-            "               ██        \r\n" +
-            "             ██████  ██  \r\n";
-
-    // ANSI color codes for console text
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_ORANGE = "\u001B[91m"; // Bright red
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_HIDE_CURSOR = "\u001B[?25l";
-    public static final String ANSI_SHOW_CURSOR = "\u001B[?25h";
-
-    // Rainbow color array for easy access
-    public static final String[] RAINBOW_COLORS = {
-            ANSI_RED,
-            ANSI_ORANGE,
-            ANSI_YELLOW,
-            ANSI_GREEN,
-            ANSI_BLUE,
-            ANSI_PURPLE
-    };
+            "                            ██    ██  \r\n" +
+            "                          ████    ██  \r\n" +
+            "                            ██    ██  \r\n" +
+            "                            ██    ██  \r\n" +
+            "                            ██    ██  \r\n" +
+            "                            ██        \r\n" +
+            "                          ██████  ██  \r\n";
 
     // ASCII art letters for "PARADE"
     public static final String[][] PARADE_LETTERS = {
@@ -160,4 +139,34 @@ public class Constants {
                     "╚══════╝"
             }
     };
+
+        // Reset
+        public static final String ANSI_RESET = "\u001B[0m";
+
+        // Standard Colors for text
+        public static final String BLACK = "\u001B[30m";
+        public static final String RED = "\u001B[31m";
+        public static final String GREEN = "\u001B[32m";
+        public static final String YELLOW = "\u001B[33m";
+        public static final String BLUE = "\u001B[34m"; // Preferred Darker Blue
+        public static final String PURPLE = "\u001B[35m";
+        public static final String LIGHT_PURPLE = "\u001B[38;5;183m"; // Preferred Purple
+        public static final String CYAN = "\u001B[36m"; // Preferred Light Blue
+        public static final String WHITE = "\u001B[37m";
+        public static final String CRISP_WHITE = "\u001B[97m";
+        public static final String LIGHT_GREEN = "\u001B[92m"; // Preferred Green 
+        public static final String EXTENDED_LIGHT_GREEN = "\u001B[38;5;120m";
+        public static final String NEON_GREEN = "\u001B[38;2;57;255;20m";
+        public static final String GRAY = "\u001B[38;5;238m";
+
+        // Background Colors
+        public static final String BLACK_BACKGROUND = "\u001B[40m";
+        public static final String RED_BACKGROUND = "\u001B[41m";
+        public static final String GREEN_BACKGROUND = "\u001B[42m";
+        public static final String YELLOW_BACKGROUND = "\u001B[43m";
+        public static final String BLUE_BACKGROUND = "\u001B[44m";
+        public static final String PURPLE_BACKGROUND = "\u001B[45m";
+        public static final String CYAN_BACKGROUND = "\u001B[46m";
+        public static final String WHITE_BACKGROUND = "\u001B[47m";
+    
 }

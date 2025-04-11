@@ -1,4 +1,6 @@
-public class test {
+
+
+public class ColorTest {
         // Reset
         public static final String ANSI_RESET = "\u001B[0m";
 
@@ -7,13 +9,16 @@ public class test {
         public static final String RED = "\u001B[31m";
         public static final String GREEN = "\u001B[32m";
         public static final String YELLOW = "\u001B[33m";
-        public static final String BLUE = "\u001B[34m";
+        public static final String BLUE = "\u001B[34m"; // Preferred Darker Blue
         public static final String PURPLE = "\u001B[35m";
-        public static final String CYAN = "\u001B[36m";
+        public static final String LIGHT_PURPLE = "\u001B[38;5;183m"; // Preferred Purple
+        public static final String CYAN = "\u001B[36m"; // Preferred Light Blue
         public static final String WHITE = "\u001B[37m";
-        public static final String LIGHT_GREEN = "\u001B[92m";
+        public static final String CRISP_WHITE = "\u001B[97m";
+        public static final String LIGHT_GREEN = "\u001B[92m"; // Preferred Green 
         public static final String EXTENDED_LIGHT_GREEN = "\u001B[38;5;120m";
         public static final String NEON_GREEN = "\u001B[38;2;57;255;20m";
+        public static final String GRAY = "\u001B[38;5;238m";
 
         // Background Colors
         public static final String BLACK_BACKGROUND = "\u001B[40m";
@@ -38,6 +43,9 @@ public class test {
             System.out.println(LIGHT_GREEN + "This is LIGHT GREEN background " + ANSI_RESET);
             System.out.println(EXTENDED_LIGHT_GREEN + "This is EXTENDED LIGHT GREEN background " + ANSI_RESET);
             System.out.println(NEON_GREEN + "This is EXTENDED LIGHT GREEN background " + ANSI_RESET);
+            System.out.println(CRISP_WHITE + "This is CRISP WHITE background " + ANSI_RESET);
+            System.out.println(GRAY + "This is GRAY background " + ANSI_RESET);
+            System.out.println(LIGHT_PURPLE + "This is LIGHT PURPLE background " + ANSI_RESET);
 
             
             System.out.println("\n");
