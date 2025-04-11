@@ -2,7 +2,8 @@ package ui;
 
 import java.io.IOException;
 
-import constants.*;
+import constants.UIConstants;
+import constants.GameplayConstants;
 
 public class ConsoleUtils {
     private static final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
@@ -131,13 +132,13 @@ public class ConsoleUtils {
             clear();
 
             // Game start message
-            ui.broadcastMessage("\n🎮 GAME START! 🎮\n");
+            ui.broadcastMessage("\n                                               🎮 GAME START! 🎮\n");
             ui.broadcastMessage(GameplayConstants.SEPARATOR);
 
         } catch (InterruptedException e) {
             // If interrupted, just continue with the game
             Thread.currentThread().interrupt();
-            ui.broadcastMessage("Countdown interrupted. Starting game immediately!");
+            ui.broadcastMessage("                                  Countdown interrupted. Starting game immediately!");
         }
     }
 
@@ -151,13 +152,31 @@ public class ConsoleUtils {
         int timer = 70; // initial delay in milliseconds
 
         System.out.println("\n");
+
+        // Build the correct parade order: For "PARADE", the letters should be:
+        // Index 0: "P", 1: "A", 2: "R", then we need a second "A" (reuse index 1), 
+        // then index 3: "D" and index 4: "E".
+        String[][] paradeOrder;
+        if (UIConstants.PARADE_LETTERS.length == 5) {
+            paradeOrder = new String[6][];
+            paradeOrder[0] = UIConstants.PARADE_LETTERS[0]; // "P"
+            paradeOrder[1] = UIConstants.PARADE_LETTERS[1]; // first "A"
+            paradeOrder[2] = UIConstants.PARADE_LETTERS[2]; // "R"
+            paradeOrder[3] = UIConstants.PARADE_LETTERS[1]; // second "A" (reuse the same array)
+            paradeOrder[4] = UIConstants.PARADE_LETTERS[3]; // "D"
+            paradeOrder[5] = UIConstants.PARADE_LETTERS[4]; // "E"
+        } else {
+            paradeOrder = UIConstants.PARADE_LETTERS;
+        }
+
         // Loop through the 6 rows of the ASCII art letters.
         for (int row = 0; row < 6; row++) {
-            for (String[] letter : UIConstants.PARADE_LETTERS) {
+            for (String[] letter : paradeOrder) {
                 System.out.print(UIConstants.PURPLE + letter[row]);
                 Thread.sleep(timer);
             }
-            System.out.print(UIConstants.REST_COLOR);
+            // Corrected from REST_COLOR to RESET_COLOR.
+            System.out.print(UIConstants.RESET_COLOR);
             System.out.println();
             timer /= 1.3; // speed up for the next row
         }
@@ -172,20 +191,37 @@ public class ConsoleUtils {
      */
     public static void printParadeAnimationLoop() throws IOException, InterruptedException {
         int colorShift = 0;
-        int numRows = UIConstants.PARADE_LETTERS[0].length;
+        int numRows = 6; // we expect 6 rows for the ASCII art
 
-        System.out.print(UIConstants.ANSI_HIDE_CURSOR); // hide cursor
+        // Build the correct parade order as above.
+        String[][] paradeOrder;
+        if (UIConstants.PARADE_LETTERS.length == 5) {
+            paradeOrder = new String[6][];
+            paradeOrder[0] = UIConstants.PARADE_LETTERS[0]; // "P"
+            paradeOrder[1] = UIConstants.PARADE_LETTERS[1]; // first "A"
+            paradeOrder[2] = UIConstants.PARADE_LETTERS[2]; // "R"
+            paradeOrder[3] = UIConstants.PARADE_LETTERS[1]; // second "A"
+            paradeOrder[4] = UIConstants.PARADE_LETTERS[3]; // "D"
+            paradeOrder[5] = UIConstants.PARADE_LETTERS[4]; // "E"
+        } else {
+            paradeOrder = UIConstants.PARADE_LETTERS;
+        }
+
+        System.out.print(UIConstants.HIDE_CURSOR); // hide cursor
 
         while (System.in.available() == 0) {
-            clear();
+            clear(); // assume you have a method that clears the console
 
             System.out.println("\n");
-            // Assign each letter a color based on the current shift
+            // Print each row of the letters, applying a cycling color to each.
             for (int row = 0; row < numRows; row++) {
                 StringBuilder line = new StringBuilder();
-                for (int i = 0; i < UIConstants.PARADE_LETTERS.length; i++) {
+                for (int i = 0; i < paradeOrder.length; i++) {
                     String color = UIConstants.RAINBOW_COLORS[(i - colorShift + UIConstants.RAINBOW_COLORS.length) % UIConstants.RAINBOW_COLORS.length];
-                    line.append(color).append(UIConstants.PARADE_LETTERS[i][row]).append(UIConstants.ANSI_RESET).append(" ");
+                    line.append(color)
+                        .append(paradeOrder[i][row])
+                        .append(UIConstants.ANSI_RESET)
+                        .append(" ");
                 }
                 System.out.println(line);
             }
@@ -197,4 +233,5 @@ public class ConsoleUtils {
 
         System.out.print(UIConstants.ANSI_SHOW_CURSOR); // show cursor again
     }
+
 }
