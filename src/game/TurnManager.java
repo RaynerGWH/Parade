@@ -182,11 +182,14 @@ public class TurnManager {
      * @param isFinalTurn whether this is part of the final turns phase
      */
     private void handleTurnAdvancement(Player currentPlayer, List<Player> players, boolean isFinalTurn) {
-        if (currentPlayer instanceof HumanPlayer && ((HumanPlayer)currentPlayer).getSession().isOpen()) {
+
+        if (currentPlayer instanceof HumanPlayer) {
             HumanPlayer humanPlayer = (HumanPlayer) currentPlayer;
             Session playerSession = humanPlayer.getSession();
             
-            if (ui instanceof MultiplayerUI) {
+            // Then check if we're in multiplayer AND the session exists and is open
+            if (ui instanceof MultiplayerUI && playerSession != null && playerSession.isOpen()) {
+                // Multiplayer human player logic
                 ui.displayMessage("Hit \"ENTER\" to end turn!", playerSession);
                 
                 try {
