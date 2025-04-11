@@ -2,6 +2,8 @@ package ui;
 
 import account.Account;
 import account.LoginManager;
+import constants.UIConstants;
+
 import java.util.*;
 
 /**
@@ -62,7 +64,7 @@ public class LoginUI {
             System.out.println(Header.renderHeader(
                 List.of("[1] Login Existing Account", "[2] Create New Account")
             ));
-            System.out.print("🎭 Step into the Parade, brave soul.\nWhich path will you choose?> ");
+            System.out.print("🎭 Step into the Parade, Brave Soul...\n\n" + UIConstants.LIGHT_PURPLE + "Which path will you choose > " + UIConstants.RESET_COLOR);
 
             String choice = scanner.nextLine().trim();
 
@@ -80,9 +82,9 @@ public class LoginUI {
                     }
                     break;
                 default:
-                    System.out.println("Invalid choice. Please key in '1' or '2' only.");
+                    System.out.println("\n❌ Invalid choice. Please enter ‘1’ or ‘2’ — only the chosen paths may proceed. 🎴✨");
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }

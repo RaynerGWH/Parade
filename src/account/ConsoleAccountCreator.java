@@ -31,7 +31,7 @@ public class ConsoleAccountCreator {
         if (response.equals("Y")) {
             String username;
             while (true) {
-                System.out.print("🎮 Choose your username (letters & numbers only):\n>");
+                System.out.print("🎮 Choose your username (letters & numbers only):\n> ");
                 username = scanner.nextLine().trim().toUpperCase();
 
                 if (validateUsername(username)) {

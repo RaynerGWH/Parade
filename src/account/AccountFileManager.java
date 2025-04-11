@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import constants.UIConstants;
+
 /**
  * Manages account file reading and writing (encryption/decryption, parsing, etc.).
  */
@@ -135,11 +137,12 @@ public class AccountFileManager {
         }
 
         if (!accounts.isEmpty()) {
-            System.out.println("Available accounts:");
+            System.out.println("📜 Available accounts:\nChoose your champion to rejoin the Parade!");
+
             for (int i = 0; i < accounts.size(); i++) {
                 System.out.println("[" + (i + 1) + "] " + accounts.get(i).getUsername());
             }
-            System.out.print("Enter the number to select an account, or type [0] to create a new one: ");
+            System.out.print("🎯 Select your hero by number, or type [0] to summon a new one:\n" + UIConstants.LIGHT_PURPLE + "The stage is set — who shall step forward? 🎴" + UIConstants.RESET_COLOR);
             int choice = Integer.parseInt(sc.nextLine());
 
             if (choice > 0 && choice <= accounts.size()) {

@@ -62,7 +62,7 @@ public void openFlairShopMenu(Account account) {
         }
 
         System.out.print("\n                                [1-7] Buy or Wear 🎩           [Q] Quit Shop 🚪\n");
-        System.out.print("\n\n                             [Balance] $" + account.getBalance() + "           [Wins] " + account.getWins() + "           [Losses] " + account.getLosses() + "\n\n>");
+        System.out.print("\n\n                             [Balance] $" + account.getBalance() + "           [Wins] " + account.getWins() + "           [Losses] " + account.getLosses() + "\n\n> ");
         String input = scanner.nextLine().trim();
         if (input.equalsIgnoreCase("Q")) {
             System.out.println("Exiting shop menu.");
@@ -73,7 +73,7 @@ public void openFlairShopMenu(Account account) {
         try {
             int choice = Integer.parseInt(input);
             if (choice < 1 || choice > availableFlairs.size()) {
-                System.out.println("Invalid choice. Please try again.");
+                System.out.println("\nInvalid choice. Please try again.");
                 continue;
             }
 

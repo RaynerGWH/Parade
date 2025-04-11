@@ -108,7 +108,7 @@ public class GameClientEndpoint{
                     if (choice >= 0 && choice < handSize) {
                         session.getBasicRemote().sendText(String.valueOf(choice));
                     } else {
-                        System.out.println("Invalid choice. Using default action (0).");
+                        System.out.println("\nInvalid choice. Using default action (0).");
                         session.getBasicRemote().sendText("0");
                     }
                 } catch (InterruptedException e) {

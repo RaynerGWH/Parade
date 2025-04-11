@@ -73,7 +73,7 @@ public class HumanPlayer extends AbstractPlayer {
                             executor.shutdownNow();
                             return playCard(index);
                         } else {
-                            System.out.print("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + " >");
+                            System.out.print("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + " > ");
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input. Please enter a valid number.");

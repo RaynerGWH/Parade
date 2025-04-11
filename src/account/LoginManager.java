@@ -1,8 +1,12 @@
 package account;
 
 import exceptions.CorruptFileException;
+import ui.ConsoleUtils;
+
 import java.io.IOException;
 import java.util.*;
+
+import constants.UIConstants;
 
 /**
  * Manages the login process and authentication for multiple user accounts.
@@ -54,7 +58,7 @@ public class LoginManager {
                 case "2":
                     return handleAccountCreation();
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println("\nInvalid choice. Please try again.");
             }
         }
     }
@@ -64,7 +68,7 @@ public class LoginManager {
      */
     public Account handleLogin() {
         if (accounts.isEmpty()) {
-            System.out.print("\n🧾 No account detected in the archives.\nShall we forge a new hero for the journey? (Y/N) ⚔️ ✨\n>");
+            System.out.print("\n🧾 No account detected in the archives.\nShall we forge a new hero for the journey? (Y/N) ⚔️ ✨\n> ");
             String input = scanner.nextLine().trim().toLowerCase();
             if (input.equals("y")) {
                 handleAccountCreation();
@@ -74,13 +78,14 @@ public class LoginManager {
             }
         }
 
+        ConsoleUtils.clear();
         List<Account> accountList = new ArrayList<>(accounts.values());
-        System.out.println("\nAvailable accounts:");
+        System.out.println("\n📜 Choose your champion to rejoin the Parade!");
         for (int i = 0; i < accountList.size(); i++) {
-            System.out.printf("%d. %s%n", i + 1, accountList.get(i).getUsername());
+            System.out.printf("[%d] %s%n", i + 1, accountList.get(i).getUsername());
         }
 
-        System.out.print("\nSelect account by number (type [0] to cancel): ");
+        System.out.print("\n🎯 Select your hero by number, or type [0] to summon a new one.\n\n" + UIConstants.LIGHT_PURPLE + "Who shall step forward > " + UIConstants.RESET_COLOR);
         String input = scanner.nextLine().trim();
         try {
             int choice = Integer.parseInt(input);

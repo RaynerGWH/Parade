@@ -143,7 +143,7 @@ public class RunGame {
                         break;
                     case "Q":
                         if (confirmQuit()) {
-                            System.out.println("Exiting game. Goodbye!");
+                            System.out.println("🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
                             System.exit(0);
                         }
                         break;
