@@ -116,23 +116,23 @@ public class ConsoleUtils {
         try {
             // Display 3
             clear();
-            ui.broadcastMessage(Constants.COUNTDOWN_THREE);
+            ui.broadcastMessage(GameplayConstants.COUNTDOWN_THREE);
             Thread.sleep(1000);
             clear();
 
             // Display 2
-            ui.broadcastMessage(Constants.COUNTDOWN_TWO);
+            ui.broadcastMessage(GameplayConstants.COUNTDOWN_TWO);
             Thread.sleep(1000);
             clear();
 
             // Display 1
-            ui.broadcastMessage(Constants.COUNTDOWN_ONE);
+            ui.broadcastMessage(GameplayConstants.COUNTDOWN_ONE);
             Thread.sleep(1000);
             clear();
 
             // Game start message
             ui.broadcastMessage("\n🎮 GAME START! 🎮\n");
-            ui.broadcastMessage(Constants.SEPARATOR);
+            ui.broadcastMessage(GameplayConstants.SEPARATOR);
 
         } catch (InterruptedException e) {
             // If interrupted, just continue with the game
@@ -153,11 +153,11 @@ public class ConsoleUtils {
         System.out.println("\n");
         // Loop through the 6 rows of the ASCII art letters.
         for (int row = 0; row < 6; row++) {
-            for (String[] letter : Constants.PARADE_LETTERS) {
-                System.out.print(Constants.ANSI_PURPLE + letter[row]);
+            for (String[] letter : UIConstants.PARADE_LETTERS) {
+                System.out.print(UIConstants.PURPLE + letter[row]);
                 Thread.sleep(timer);
             }
-            System.out.print(Constants.ANSI_RESET);
+            System.out.print(UIConstants.REST_COLOR);
             System.out.println();
             timer /= 1.3; // speed up for the next row
         }
@@ -172,9 +172,9 @@ public class ConsoleUtils {
      */
     public static void printParadeAnimationLoop() throws IOException, InterruptedException {
         int colorShift = 0;
-        int numRows = Constants.PARADE_LETTERS[0].length;
+        int numRows = UIConstants.PARADE_LETTERS[0].length;
 
-        System.out.print(Constants.ANSI_HIDE_CURSOR); // hide cursor
+        System.out.print(UIConstants.ANSI_HIDE_CURSOR); // hide cursor
 
         while (System.in.available() == 0) {
             clear();
@@ -183,18 +183,18 @@ public class ConsoleUtils {
             // Assign each letter a color based on the current shift
             for (int row = 0; row < numRows; row++) {
                 StringBuilder line = new StringBuilder();
-                for (int i = 0; i < Constants.PARADE_LETTERS.length; i++) {
-                    String color = Constants.RAINBOW_COLORS[(i - colorShift + Constants.RAINBOW_COLORS.length) % Constants.RAINBOW_COLORS.length];
-                    line.append(color).append(Constants.PARADE_LETTERS[i][row]).append(Constants.ANSI_RESET).append(" ");
+                for (int i = 0; i < UIConstants.PARADE_LETTERS.length; i++) {
+                    String color = UIConstants.RAINBOW_COLORS[(i - colorShift + UIConstants.RAINBOW_COLORS.length) % UIConstants.RAINBOW_COLORS.length];
+                    line.append(color).append(UIConstants.PARADE_LETTERS[i][row]).append(UIConstants.ANSI_RESET).append(" ");
                 }
                 System.out.println(line);
             }
 
-            System.out.print("\n" + Constants.PRESS_ENTER_TO_START);
+            System.out.print("\n" + GameplayConstants.PRESS_ENTER_TO_START);
             Thread.sleep(500);
-            colorShift = (colorShift + 1) % Constants.RAINBOW_COLORS.length;
+            colorShift = (colorShift + 1) % UIConstants.RAINBOW_COLORS.length;
         }
 
-        System.out.print(Constants.ANSI_SHOW_CURSOR); // show cursor again
+        System.out.print(UIConstants.ANSI_SHOW_CURSOR); // show cursor again
     }
 }

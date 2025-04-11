@@ -1,6 +1,6 @@
 package game;
 
-import constants.Constants;
+import constants.*;
 import java.util.*;
 import players.*;
 import ui.*;
@@ -43,7 +43,7 @@ public class Game {
                 gameMode = new TimedMode();
                 validGameMode = true;
                 timedMode = true;
-                System.out.println(Constants.TIMED_MODE_MESSAGE);
+                System.out.println(GameplayConstants.TIMED_MODE_MESSAGE);
                 System.out.println("════════════════════════════════════════════════════════════════════════════");
 
                 // Initialize time bonus tracking
@@ -51,11 +51,11 @@ public class Game {
                 for (Player player : gameState.getPlayers()) {
                     timeBonus.put(player, 0);
                 }
-                gameStartTime = System.currentTimeMillis() + Constants.THREE_SECOND_EXTENSION;
+                gameStartTime = System.currentTimeMillis() + GameplayConstants.THREE_SECOND_EXTENSION;
 
             } else if (gameModeChoice.equals("1")) {
                 validGameMode = true;
-                System.out.print(Constants.CLASSIC_MODE_MESSAGE);
+                System.out.print(GameplayConstants.CLASSIC_MODE_MESSAGE);
                 timedMode = false;
             } else {
                 System.out.println("\nInvalid choice. Please select 1 for Classic Mode or 2 for Timed Mode.");
@@ -70,7 +70,7 @@ public class Game {
         ConsoleUtils.displayCountdown(ui);
         
         // Initialize parade with initial cards
-        gameState.initializeParade(Constants.INITIAL_PARADE_LENGTH);
+        gameState.initializeParade(GameplayConstants.INITIAL_PARADE_LENGTH);
         
         // Create turn manager
         TurnManager turnManager = new TurnManager(ui, scanner);
@@ -101,7 +101,7 @@ public class Game {
             long turnStartTime = System.currentTimeMillis();
 
             // Execute turn using turn manager
-            boolean turnEndedGame = turnManager.executeTurn(gameState, currentPlayer, gameMode, Constants.PLAY);
+            boolean turnEndedGame = turnManager.executeTurn(gameState, currentPlayer, gameMode, GameplayConstants.PLAY);
             if (turnEndedGame) {
                 gameState.setGameOver(true);
             }

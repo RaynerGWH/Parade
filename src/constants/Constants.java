@@ -1,8 +1,6 @@
 package constants;
 
-public class Constants {
-    // Existing constants
-
+public class GameplayConstants {
     // Game setup
     public static final int INITIAL_PARADE_LENGTH = 6;
 
@@ -11,12 +9,6 @@ public class Constants {
     public static final long FIVE_MINUTES_MILLIS = 5 * 60 * 1000;
     public static final long TEN_MINUTES_MILLIS = 10 * 60 * 1000;
 
-    // UI strings
-    public static final String TIME_UP_MESSAGE = "\n═══ TIME'S UP! ═══\n";
-
-    // UI Messages
-    public static final String PRESS_ENTER_TO_START = "                                              [Enter] Start Game 🕹️ 🕹️";
-
     // Card limits
     public static final int MAX_HAND_SIZE = 5;
     public static final int INITIAL_HAND_SIZE = 5;
@@ -24,149 +16,13 @@ public class Constants {
     // In timed mode, how many cards to discard at the end
     public static final int FINAL_DISCARD_COUNT = 2;
 
-    // In timed mode, initial turnBonus
+    // In timed mode, initial turn bonus
     public static final int INITIAL_TIMED_MODE_TURN_BONUS = 0;
 
     // Initial player count settings
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_PLAYERS = 6;
 
-    // Classic Mode Message
-    public static final String CLASSIC_MODE_MESSAGE = "\n" +
-            "                       █████╗ ██╗      █████╗  ██████╗ ██████╗██╗ █████╗     ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" +
-            "                       ██╔══██╗██║     ██╔══██╗██╔════╝██╔════╝██║██╔══██╗    ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" +
-            "                       ██║  ╚═╝██║     ███████║╚█████╗ ╚█████╗ ██║██║  ╚═╝    ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" +
-            "                       ██║  ██╗██║     ██╔══██║ ╚═══██╗ ╚═══██╗██║██║  ██╗    ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" +
-            "                       ╚█████╔╝███████╗██║  ██║██████╔╝██████╔╝██║╚█████╔╝    ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" +
-            "                        ╚════╝ ╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝ ╚════╝     ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\n";
-
-    // Timed Mode Message
-    public static final String TIMED_MODE_MESSAGE = System.lineSeparator() +
-            "                       ████████╗██╗███╗   ███╗███████╗██████╗    ███╗   ███╗ █████╗ ██████╗ ███████╗" + System.lineSeparator() +
-            "                       ╚══██╔══╝██║████╗ ████║██╔════╝██╔══██╗   ████╗ ████║██╔══██╗██╔══██╗██╔════╝" + System.lineSeparator() +
-            "                          ██║   ██║██╔████╔██║█████╗  ██║  ██║   ██╔████╔██║██║  ██║██║  ██║█████╗  " + System.lineSeparator() +
-            "                          ██║   ██║██║╚██╔╝██║██╔══╝  ██║  ██║   ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  " + System.lineSeparator() +
-            "                          ██║   ██║██║ ╚═╝ ██║███████╗██████╔╝   ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗" + System.lineSeparator() +
-            "                          ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝    ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝" + System.lineSeparator();
-
-    public static final int SEPARATOR_LENGTH = 62;
-    public static final String SEPARATOR_SYMBOL = "=";
-    public static final String SEPARATOR = SEPARATOR_SYMBOL.repeat(SEPARATOR_LENGTH);
-
-    // Action Messages
-    public static final String PLAY = "Play";
-    public static final String DISCARD = "Discard";
-
     // Three second extension for timed mode due to countdown
     public static final long THREE_SECOND_EXTENSION = 3 * 1000;
-
-    // Countdown Numbers
-    public static final String COUNTDOWN_THREE = 
-            "                          █████    ██  \r\n" +
-            "                         ██   ██   ██  \r\n" +
-            "                              ██   ██  \r\n" +
-            "                          ██████   ██  \r\n" +
-            "                              ██   ██  \r\n" +
-            "                         ██   ██       \r\n" +
-            "                          █████    ██  \r\n";
-
-    public static final String COUNTDOWN_TWO = 
-            "                          █████    ██  \r\n" +
-            "                         ██   ██   ██  \r\n" +
-            "                              ██   ██  \r\n" +
-            "                          █████    ██  \r\n" +
-            "                         ██        ██  \r\n" +
-            "                         ██            \r\n" +
-            "                         ███████   ██  \r\n";
-
-    public static final String COUNTDOWN_ONE = 
-            "                            ██    ██  \r\n" +
-            "                          ████    ██  \r\n" +
-            "                            ██    ██  \r\n" +
-            "                            ██    ██  \r\n" +
-            "                            ██    ██  \r\n" +
-            "                            ██        \r\n" +
-            "                          ██████  ██  \r\n";
-
-    // ASCII art letters for "PARADE"
-    public static final String[][] PARADE_LETTERS = {
-            { // P"
-                    "                               ██████╗ ",
-                    "                               ██╔══██╗",
-                    "                               ██████╔╝",
-                    "                               ██╔═══╝ ",
-                    "                               ██║     ",
-                    "                               ╚═╝     "
-            },
-            { // A
-                    " █████╗ ",
-                    "██╔══██╗",
-                    "███████║",
-                    "██╔══██║",
-                    "██║  ██║",
-                    "╚═╝  ╚═╝"
-            },
-            { // R
-                    "██████╗ ",
-                    "██╔══██╗",
-                    "██████╔╝",
-                    "██╔══██╗",
-                    "██║  ██║",
-                    "╚═╝  ╚═╝"
-            },
-            { // A
-                    " █████╗ ",
-                    "██╔══██╗",
-                    "███████║",
-                    "██╔══██║",
-                    "██║  ██║",
-                    "╚═╝  ╚═╝"
-            },
-            { // D
-                    "██████╗ ",
-                    "██╔══██╗",
-                    "██║  ██║",
-                    "██║  ██║",
-                    "██████╔╝",
-                    "╚═════╝ "
-            },
-            { // E
-                    "███████╗",
-                    "██╔════╝",
-                    "█████╗  ",
-                    "██╔══╝  ",
-                    "███████╗",
-                    "╚══════╝"
-            }
-    };
-
-        // Reset
-        public static final String ANSI_RESET = "\u001B[0m";
-
-        // Standard Colors for text
-        public static final String BLACK = "\u001B[30m";
-        public static final String RED = "\u001B[31m";
-        public static final String GREEN = "\u001B[32m";
-        public static final String YELLOW = "\u001B[33m";
-        public static final String BLUE = "\u001B[34m"; // Preferred Darker Blue
-        public static final String PURPLE = "\u001B[35m";
-        public static final String LIGHT_PURPLE = "\u001B[38;5;183m"; // Preferred Purple
-        public static final String CYAN = "\u001B[36m"; // Preferred Light Blue
-        public static final String WHITE = "\u001B[37m";
-        public static final String CRISP_WHITE = "\u001B[97m";
-        public static final String LIGHT_GREEN = "\u001B[92m"; // Preferred Green 
-        public static final String EXTENDED_LIGHT_GREEN = "\u001B[38;5;120m";
-        public static final String NEON_GREEN = "\u001B[38;2;57;255;20m";
-        public static final String GRAY = "\u001B[38;5;238m";
-
-        // Background Colors
-        public static final String BLACK_BACKGROUND = "\u001B[40m";
-        public static final String RED_BACKGROUND = "\u001B[41m";
-        public static final String GREEN_BACKGROUND = "\u001B[42m";
-        public static final String YELLOW_BACKGROUND = "\u001B[43m";
-        public static final String BLUE_BACKGROUND = "\u001B[44m";
-        public static final String PURPLE_BACKGROUND = "\u001B[45m";
-        public static final String CYAN_BACKGROUND = "\u001B[46m";
-        public static final String WHITE_BACKGROUND = "\u001B[47m";
-    
 }

@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import cards.*;
 import constants.Constants;
+import constants.GameplayConstants;
 import players.*;
 import players.human.HumanPlayer;
 import ui.*;
@@ -94,7 +95,7 @@ public class TurnManager {
         displayCardPlayedOrDiscarded(currentPlayer, choice, action);
 
         // Process the play action
-        if (action.equals(Constants.PLAY)) {
+        if (action.equals(GameplayConstants.PLAY)) {
             int choiceValue = choice.getValue();
             Color choiceColor = choice.getColor();
 
@@ -288,7 +289,7 @@ public class TurnManager {
     */
     public void displayCardPlayedOrDiscarded(Player currentPlayer, Card choice, String action) {
         // Move displayCardPlayedOrDiscarded logic here
-        if (action.equals(Constants.PLAY)) {
+        if (action.equals(GameplayConstants.PLAY)) {
             ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " played:");
             ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
         } else {

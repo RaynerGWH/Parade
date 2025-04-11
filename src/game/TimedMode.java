@@ -1,6 +1,8 @@
 package game;
 
 import constants.Constants;
+import constants.GameplayConstants;
+
 import java.util.*;
 import players.*;
 
@@ -9,7 +11,7 @@ import players.*;
 public class TimedMode implements GameMode {
     private long gameStartTime;
     private long timeLimit;
-    private int lastTurnBonus = Constants.INITIAL_TIMED_MODE_TURN_BONUS;
+    private int lastTurnBonus = GameplayConstants.INITIAL_TIMED_MODE_TURN_BONUS;
     private HashMap<Player, Integer> timeBonus = new HashMap<>();
 
     @Override
@@ -54,7 +56,7 @@ public class TimedMode implements GameMode {
                 break;
         }
         
-        gameStartTime = System.currentTimeMillis() + Constants.THREE_SECOND_EXTENSION;
+        gameStartTime = System.currentTimeMillis() + GameplayConstants.THREE_SECOND_EXTENSION;
     }
 
     @Override
