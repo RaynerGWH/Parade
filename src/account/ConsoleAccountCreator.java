@@ -31,13 +31,13 @@ public class ConsoleAccountCreator {
         if (response.equals("Y")) {
             String username;
             while (true) {
-                System.out.print("Enter a username (alphanumeric only): ");
+                System.out.print("🎮 Choose your username (letters & numbers only):\n>");
                 username = scanner.nextLine().trim().toUpperCase();
 
                 if (validateUsername(username)) {
                     break;
                 }
-                System.out.println("Invalid username. Please use only alphanumeric characters.");
+                System.out.println("⚠️ Invalid Username!\nOnly letters and numbers allowed — no spaces, symbols, or fancy stuff. Try again, adventurer! 🧙‍♂️✨");
             }
             return new Account(username);
         } else {

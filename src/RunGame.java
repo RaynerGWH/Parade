@@ -29,6 +29,7 @@ import java.util.concurrent.CountDownLatch;
  *   <li>Centralized definition of ASCII art for the "PARADE" animation to eliminate duplicates.</li>
  *   <li>Improved error handling and descriptive error messages.</li>
  *   <li>Separated navigation logic for the rulebook into a dedicated helper.</li>
+ *   <li>Parade animation is now shown before the login page.</li>
  * </ul>
  * </p>
  */
@@ -52,10 +53,10 @@ public class RunGame {
     /** The currently logged-in account. */
     private Account currentAccount;
 
-    /** The RulebookManager. **/
+    /** The RulebookManager. */
     private final RulebookManager rulebookManager;
 
-    /** The Interface for FlairShop.**/
+    /** The Interface for FlairShop. */
     private final FlairShopUI flairShopUI;
 
     /**
@@ -69,6 +70,7 @@ public class RunGame {
 
     /**
      * Constructor: initializes the main Scanner, accounts, managers, etc.
+     * Note: Login is deferred until after the parade animation.
      */
     public RunGame() {
         // Use a single Scanner for the program's lifecycle.
@@ -76,38 +78,27 @@ public class RunGame {
 
         // Initialize the AccountFileManager.
         this.fileMgr = new AccountFileManager(this.mainScanner);
-        
-        // Handle login and obtain the current Account.
-        LoginUI loginUI = new LoginUI(this.mainScanner, false);
-        this.currentAccount = loginUI.showLoginMenu();
-        
-        // Save the account for persistence.
-        try {
-            fileMgr.save(currentAccount);
-        } catch (IOException e) {
-            System.out.println("Error saving account: " + e.getMessage());
-        }
 
         // Initialize the local account list.
         this.accounts = new ArrayList<>();
-        this.accounts.add(this.currentAccount);
 
         // Initialize GameManager.
         this.gameMgr = new GameManager(this.mainScanner);
 
-        // Instantiate the FlairShop (purchases update Save.PG1 via the file manager).
+        // Instantiate the FlairShop.
         this.flairShop = new FlairShop(this.fileMgr);
 
-        // Initialize the RulebookManager with the path and shared scanner
+        // Initialize the RulebookManager with the path and shared scanner.
         this.rulebookManager = new RulebookManager("src/rulebook/rulebook.txt", this.mainScanner);
 
-        // Initialize the flairShopUI.
+        // Initialize the FlairShopUI.
         this.flairShopUI = new FlairShopUI(flairShop, mainScanner);
     }
 
     /**
-     * Primary run loop that offers the user the option to read the rulebook,
-     * start the game, or access the flair shop.
+     * Primary run loop that first displays the parade animation,
+     * then shows the login page, and subsequently offers the user the option
+     * to read the rulebook, start the game, or access the flair shop.
      */
     private void run() {
         try {
@@ -116,6 +107,20 @@ public class RunGame {
             ConsoleUtils.printParadeAnimation();
             ConsoleUtils.printParadeAnimationLoop();
             mainScanner.nextLine(); // Wait for user input before proceeding.
+
+            // Now, display the login page.
+            LoginUI loginUI = new LoginUI(this.mainScanner, false);
+            this.currentAccount = loginUI.showLoginMenu();
+
+            // Save the account for persistence.
+            try {
+                fileMgr.save(currentAccount);
+            } catch (IOException e) {
+                System.out.println("Error saving account: " + e.getMessage());
+            }
+
+            // Add the logged-in account to the local accounts list.
+            this.accounts.add(this.currentAccount);
 
             boolean exitRequested = false;
             while (!exitRequested) {
@@ -137,17 +142,17 @@ public class RunGame {
                         flairShopUI.openFlairShopMenu(currentAccount);
                         break;
                     case "Q":
-                    if (confirmQuit()) {
-                        System.out.println("Exiting game. Goodbye!");
-                        System.exit(0);
-                    }
-                    break;
+                        if (confirmQuit()) {
+                            System.out.println("Exiting game. Goodbye!");
+                            System.exit(0);
+                        }
+                        break;
                     default:
-                    ConsoleUtils.clear();
-                    System.out.println(Header.renderHeader(List.of(
-                        "Invalid command. Please enter [R], [S], [B] or [Q].")));
-                    System.out.print("\nPress ENTER to try again...");
-                    mainScanner.nextLine();
+                        ConsoleUtils.clear();
+                        System.out.println(Header.renderHeader(List.of(
+                            "Invalid command. Please enter [R], [S], [B] or [Q].")));
+                        System.out.print("\nPress ENTER to try again...");
+                        mainScanner.nextLine();
                 }
             }
         } catch (Exception e) {
@@ -167,7 +172,7 @@ public class RunGame {
             System.out.println(Header.renderHeader(List.of("SELECT GAMEMODE", "[S] Singleplayer 👤", "[M] Multiplayer 👥🎮", "[Q] Quit ❌")));
             System.out.print("\n> ");
             String mode = mainScanner.nextLine().trim().toUpperCase();
-    
+
             switch (mode) {
                 case "S":
                     startSinglePlayer();
@@ -190,10 +195,9 @@ public class RunGame {
             }
         }
     }
-    
 
     /**
-     * Starts single-player mode (snippet-1 approach).
+     * Starts single-player mode.
      */
     private void startSinglePlayer() {
         UserInterface ui = new SinglePlayerUI();
@@ -214,7 +218,7 @@ public class RunGame {
             )));
             System.out.print("\n> ");
             String subCmd = mainScanner.nextLine().trim().toUpperCase();
-    
+
             switch (subCmd) {
                 case "H":
                     hostMultiPlayer();
@@ -237,7 +241,7 @@ public class RunGame {
             }
         }
     }
-    
+
     /**
      * Hosts a multi-player game.
      */
@@ -277,7 +281,7 @@ public class RunGame {
     }
 
     /**
-     * Asks user to confirm quit request.
+     * Asks the user to confirm a quit request.
      * @return true if user confirms quit, false otherwise
      */
     private boolean confirmQuit() {

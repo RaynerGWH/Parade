@@ -62,7 +62,7 @@ public class LoginUI {
             System.out.println(Header.renderHeader(
                 List.of("[1] Login Existing Account", "[2] Create New Account")
             ));
-            System.out.print("Choose your path, adventurer!\n> ");
+            System.out.print("🎭 Step into the Parade, brave soul.\nWhich path will you choose?> ");
 
             String choice = scanner.nextLine().trim();
 

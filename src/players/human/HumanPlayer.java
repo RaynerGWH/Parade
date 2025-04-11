@@ -216,16 +216,17 @@ public class HumanPlayer extends AbstractPlayer {
         this.session = newSession;
     }
 
-    // New method to initialize LoginManager and prompt for login
-    public void initializeLoginManager() {
-        // Create LoginManager
-        this.loginManager = new LoginManager(this.sc);
-        // Prompt for login
-        LoginUI loginUI = new LoginUI(this.sc, false);
-        Account currentAccount = loginUI.showLoginMenu();
-        // Store the account
-        this.accounts = new ArrayList<>();
-        this.accounts.add(currentAccount);
-    }
+    // Not used
+    // // New method to initialize LoginManager and prompt for login
+    // public void initializeLoginManager() {
+    //     // Create LoginManager
+    //     this.loginManager = new LoginManager(this.sc);
+    //     // Prompt for login
+    //     LoginUI loginUI = new LoginUI(this.sc, false);
+    //     Account currentAccount = loginUI.showLoginMenu();
+    //     // Store the account
+    //     this.accounts = new ArrayList<>();
+    //     this.accounts.add(currentAccount);
+    // }
 }
 

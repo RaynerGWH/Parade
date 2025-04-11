@@ -64,7 +64,7 @@ public class LoginManager {
      */
     public Account handleLogin() {
         if (accounts.isEmpty()) {
-            System.out.println("No accounts found. Would you like to create a new one? (Y/N)");
+            System.out.print("\n🧾 No account detected in the archives.\nShall we forge a new hero for the journey? (Y/N) ⚔️ ✨\n>");
             String input = scanner.nextLine().trim().toLowerCase();
             if (input.equals("y")) {
                 handleAccountCreation();
