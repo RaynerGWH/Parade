@@ -200,7 +200,7 @@ public class GameManager {
                 MultiplayerUI MUI = (MultiplayerUI)ui;
                 ArrayList<Player> players = playerMgr.getPlayers();
                 // Multiplayer: For each winning human player, add 1 win and bonus = 100 * number of players.
-                int bonus = 100 * playerMgr.getPlayers().size();
+                double bonus = 100 * playerMgr.getPlayers().size();
 
                 for (Player p : players) {
                     if (winners.contains(p) && p instanceof HumanPlayer) {
@@ -208,7 +208,7 @@ public class GameManager {
                         Account account = hp.getAccount();
                         account.incrementWins();
                         account.addBalance(bonus);
-                        ui.displayMessage(String.format("Congratulations! You won %f credits!", bonus), hp.getSession());
+                        ui.displayMessage(String.format("Congratulations! You won %.f credits!", bonus), hp.getSession());
                         MUI.sendAccount(account,hp.getSession());
                         
                     } else if (p instanceof HumanPlayer) {
@@ -239,10 +239,10 @@ public class GameManager {
                         if (humanPlayer != null && winners.contains(humanPlayer)) {
                             account = humanPlayer.getAccount();
                             account.incrementWins();
-                            int bonus = 0;
+                            double bonus = 0;
                             bonus += (100 * bcpList.size());
                             bonus += (200 * icpList.size());
-                            ui.displayMessage(String.format("Congratulations! You won %f credits!", bonus), null);
+                            ui.displayMessage(String.format("Congratulations! You won %.f credits!", bonus), null);
                             account.addBalance(bonus);
                             acctMgr.save(account);
 

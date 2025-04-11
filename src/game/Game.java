@@ -44,6 +44,8 @@ public class Game {
                 validGameMode = true;
                 timedMode = true;
                 System.out.println(UIConstants.TIMED_MODE_MESSAGE);
+                
+                //TODO: DELETE THIS
                 System.out.println("════════════════════════════════════════════════════════════════════════════");
 
                 // Initialize time bonus tracking
