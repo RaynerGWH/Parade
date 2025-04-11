@@ -62,9 +62,9 @@ public class LoginUI {
         while (true) {
             ConsoleUtils.clear();
             System.out.println(Header.renderHeader(
-                List.of("[1] Login Existing Account", "[2] Create New Account")
+                List.of("[1] 🔐 Rejoin with an Existing Accoun", "[2] 🆕 Begin Anew — Create a New Account")
             ));
-            System.out.print("🎭 Step into the Parade, Brave Soul...\n\n" + UIConstants.LIGHT_PURPLE + "Which path will you choose > " + UIConstants.RESET_COLOR);
+            System.out.print("🎭 The Parade drums echo in the distance...\n\n" + UIConstants.LIGHT_PURPLE + "Which path shall you walk, brave soul? > " + UIConstants.RESET_COLOR);
 
             String choice = scanner.nextLine().trim();
 
