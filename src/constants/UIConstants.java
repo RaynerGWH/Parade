@@ -102,11 +102,13 @@ public class UIConstants {
             }
         };
 
+        // Card
+        public static final String CARD_LOGO = "❀";
+
         // UI Utils
         public static final String RESET_COLOR = "\u001B[0m";
         public static final String SHOW_CURSOR = "\u001B[?25h";
         public static final String HIDE_CURSOR = "\u001B[?25l";
-
 
         // Standard Colors for text
         public static final String BLACK = "\u001B[30m";

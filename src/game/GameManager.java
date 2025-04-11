@@ -19,6 +19,7 @@ import players.computer.BeginnerComputerPlayer;
 import players.computer.IntermediateComputerPlayer;
 import players.human.HumanPlayer;
 import account.*;
+import constants.UIConstants;
 import ui.*;
 
 public class GameManager {
@@ -107,7 +108,7 @@ public class GameManager {
             ConsoleUtils.clear();
             System.out.println("WebSocket server is running...");
             System.out.println("==============================");
-            System.out.println("Your Host IP: \u001B[32m" + hostIp + ":8080\u001B[0m");
+            System.out.println("Your Host IP: " + UIConstants.GREEN + hostIp + ":8080" + UIConstants.RESET_COLOR);
             System.out.println("==============================");
             System.out.println("Give this to your friends to get them to join!");
         } catch (Exception e) {

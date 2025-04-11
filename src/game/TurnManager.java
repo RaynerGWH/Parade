@@ -249,7 +249,7 @@ public class TurnManager {
             String displayName = PlayerDisplayUtils.getDisplayName(p);
             if (p.equals(currentPlayer)) {
                 // ANSI escape code for green text
-                header.append("\u001B[32m").append(displayName).append("\u001B[0m");
+                header.append(UIConstants.GREEN).append(displayName).append(UIConstants.RESET_COLOR);
             } else {
                 header.append(displayName);
             }

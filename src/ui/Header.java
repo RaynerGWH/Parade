@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import constants.UIConstants;
+
 public class Header {
     private static final int WIDTH = 159;
     private static final String TITLE = "P A R A D E";
-    private static final String BLUE = "\u001B[38;5;117m";
-    private static final String WHITE = "\u001B[97m";
     private static final List<String> mayanSymbols = new ArrayList<>(
         List.of("𓂀", "𓋡", "𓃂", "𓁾", "𓃖", "𓏞", "𓎿", "𓏢", "𓆃", "𓅓")
     );
@@ -22,7 +22,7 @@ public class Header {
         String symbolsLine = padSides(String.join("  ", mayanSymbols), WIDTH + 10);
         StringBuilder sb = new StringBuilder();
 
-        sb.append(BLUE);
+        sb.append(UIConstants.CYAN);
         sb.append("╭").append("─".repeat(WIDTH)).append("╮\n");
         sb.append("│").append(centerText("⭒   " + TITLE + "   ⭒", WIDTH)).append("│\n");
         sb.append("│").append(symbolsLine).append("│\n");
@@ -47,7 +47,7 @@ public class Header {
             }
         }
 
-        sb.append(WHITE); // reset color at the very end
+        sb.append(UIConstants.WHITE); // reset color at the very end
         return sb.toString();
     }
 

@@ -11,11 +11,6 @@ public class LoginUI {
     private final Scanner scanner;
     private final LoginManager loginManager;
     private boolean isMultiplayer;
-    final String BLUE = "\u001B[38;5;117m";
-    final String PURPLE = "\u001B[38;5;183m";
-    final String WHITE = "\u001B[97m";
-    final String GRAY = "\u001B[38;5;250m";
-    final String RESET = "\u001B[0m";
 
     private final List<String> titleVariants = List.of(
         "ᛈ ᚨ ᚱ ᚨ ᛞ ᛖ",

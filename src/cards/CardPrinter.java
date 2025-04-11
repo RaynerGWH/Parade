@@ -5,8 +5,6 @@ import java.util.List;
 import constants.UIConstants;
 
 public class CardPrinter {
-    private static final String RESET = "\u001B[0m";
-    private static final String LOGO = "❀";
 
     /**
      * Returns a string representation of cards in a row for displaying via WebSockets
@@ -41,11 +39,11 @@ public class CardPrinter {
                 String topLeft = value.length() == 1 ? value + "     " : value + "    ";
                 String bottomRight = value.length() == 1 ? "    " + value + " " : "   " + value + " ";
     
-                lines[0].append(colorCode).append("╔══─────╮").append(RESET).append(" ");
-                lines[1].append(colorCode).append("║ ").append(topLeft).append("│").append(RESET).append(" ");
-                lines[2].append(colorCode).append("│   ").append(LOGO).append("   │").append(RESET).append(" ");
-                lines[3].append(colorCode).append("│ ").append(bottomRight).append("│").append(RESET).append(" ");
-                lines[4].append(colorCode).append("╰───────╯").append(RESET).append(" ");
+                lines[0].append(colorCode).append("╔══─────╮").append(UIConstants.RESET_COLOR).append(" ");
+                lines[1].append(colorCode).append("║ ").append(topLeft).append("│").append(UIConstants.RESET_COLOR).append(" ");
+                lines[2].append(colorCode).append("│   ").append(UIConstants.CARD_LOGO).append("   │").append(UIConstants.RESET_COLOR).append(" ");
+                lines[3].append(colorCode).append("│ ").append(bottomRight).append("│").append(UIConstants.RESET_COLOR).append(" ");
+                lines[4].append(colorCode).append("╰───────╯").append(UIConstants.RESET_COLOR).append(" ");
     
                 if (cards.size() > 1 && !isParade) {
                     if (numRows > 5) {  // Check if lines[5] exists
@@ -91,7 +89,7 @@ public class CardPrinter {
         } else if (color == CardColor.GREY) { // GREY
             return UIConstants.WHITE; // White
         } else {
-            return "\u001B[38;2;255;165;0m"; // RGB for orange
+            return UIConstants.ORANGE; // RGB for orange
         }
     }
 
