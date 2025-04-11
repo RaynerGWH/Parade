@@ -173,6 +173,7 @@ public class TurnManager {
         // Handle turn advancement
         handleTurnAdvancement(currentPlayer, gameState.getPlayers(), isFinalTurn);
 
+        InputManager.clearInput();
         return gameIsOver;
     }
 

@@ -195,7 +195,6 @@ public class GameManager {
         if (!scores.isEmpty()) {
             int winningScore = scores.firstKey();
             ArrayList<Player> winners = scores.get(winningScore);
-            
             if (isMultiplayer) {
                 MultiplayerUI MUI = (MultiplayerUI)ui;
                 ArrayList<Player> players = playerMgr.getPlayers();
@@ -208,6 +207,7 @@ public class GameManager {
                         Account account = hp.getAccount();
                         account.incrementWins();
                         account.addBalance(bonus);
+                        ui.displayMessage(String.format("Congratulations! You won %f credits!", bonus), hp.getSession());
                         MUI.sendAccount(account,hp.getSession());
                         
                     } else if (p instanceof HumanPlayer) {
@@ -238,8 +238,11 @@ public class GameManager {
                         if (humanPlayer != null && winners.contains(humanPlayer)) {
                             account = humanPlayer.getAccount();
                             account.incrementWins();
-                            account.addBalance(100 * bcpList.size());
-                            account.addBalance(200 * icpList.size());
+                            int bonus = 0;
+                            bonus += (100 * bcpList.size());
+                            bonus += (200 * icpList.size());
+                            ui.displayMessage(String.format("Congratulations! You won %f credits!", bonus), null);
+                            account.addBalance(bonus);
                             acctMgr.save(account);
 
                         } else {
