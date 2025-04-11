@@ -1,20 +1,20 @@
 # 🎭 Parade Card Game (G2T5)
 
-*Presenting the popular card game, Parade, to your computer console!*
+*Presenting the popular card game, Parade, to your console!*
 
 ![App Screenshot](images/parade_banner.png)
-Parade is a strategic card game where players try avoiding taking cards from it to finish with the loweest score.  Our implementation focuses on game logic and straightforward console interaction using Nielson's Usability Heuristics for Design, based on the official rules.
+Parade is a strategic card game where players try avoiding taking cards from it to finish with the lowest score.  Our implementation focuses on game logic and straightforward console interaction using Nielson's Usability Heuristics for Design, based on the official rules.
 
 ---
 
 ## 👥 Parade Creators
 
-1.  CHAI YI KHUEN
-2.  ERNEST NG CHEN YI
-3.  GOH WOON HONG RAYNER
-4.  KHOO KAR XING
-5.  TAM KAI ZE
-6.  WINDY HENG HUI YI
+1.  KHOO KAR XING
+2.  GOH WOON HONG RAYNER
+3.  TAM KAI ZE
+4.  ERNEST NG CHEN YI
+5.  WINDY HENG HUI YI
+6.  CHAI YI KHUEN
 
 ---
 
@@ -34,14 +34,16 @@ Prerequisites:
 Open your terminal or command prompt in the project directory and run the below compile script:
 
 ```bash
-compile.bat
+compile.bat (for Windows)
+compile.sh (for MacOS and Linux)
 ```
 2. Run the Game:
 
 In the same terminal window, run the start script:
 
 ```bash
-run.bat
+run.bat (for Windows)
+run.sh (for MacOS and Linux)
 ```
 
 Source code
