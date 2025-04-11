@@ -35,16 +35,16 @@ NOTE: The game can be played on any device, but for best experience, run the gam
 Open your terminal or command prompt in the project directory and run the below compile script:
 
 ```bash
-compile.bat (for Windows)
-compile.sh (for MacOS and Linux)
+compile.bat # For Windows
+compile.sh # For MacOS and Linux
 ```
 2. Run the Game:
 
 In the same terminal window, run the start script:
 
 ```bash
-run.bat (for Windows)
-run.sh (for MacOS and Linux)
+run.bat # For Windows
+run.sh #For MacOS and Linux
 ```
 
 Source code
