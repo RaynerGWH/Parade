@@ -1,6 +1,7 @@
 import account.Account;
 import account.AccountFileManager;
 import account.FlairShop;
+import constants.UIConstants;
 import game.GameClientEndpoint;
 import game.GameManager;
 import game.GameServerEndpoint;
@@ -290,7 +291,7 @@ public class RunGame {
             "❓ Are you certain you wish to leave the Parade?",
             "[Q] Quit your journey.\n[Enter] March onward with the crowd."
         )));
-        System.out.print("\n> ");
+        System.out.print(UIConstants.LIGHT_PURPLE + "\n> " + UIConstants.RESET_COLOR);
         String confirm = mainScanner.nextLine().trim().toUpperCase();
         return confirm.equals("Q");
     }
