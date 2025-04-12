@@ -1,14 +1,9 @@
 package game;
 
-import constants.UIConstants;
 import constants.GameplayConstants;
-
-import java.util.*;
-import players.*;
-import game.GameMode;
-import game.GameState;
-import players.Player;
 import constants.UIConstants;
+import java.util.*;
+import players.Player;
 
 public class TimedMode implements GameMode {
     private long gameStartTime;
@@ -164,5 +159,19 @@ public class TimedMode implements GameMode {
      */
     public long getElapsedTime() {
         return System.currentTimeMillis() - gameStartTime;
+    }
+
+    /**
+     * Initializes time bonuses for all players in the game.
+     * Should be called after players are added to the game state.
+     * 
+     * @param players List of players in the game
+     */
+    public void initializeTimeBonuses(List<Player> players) {
+        // Initialize time bonus tracking for all players
+        timeBonus.clear();
+        for (Player player : players) {
+            timeBonus.put(player, 0);
+        }
     }
 }
