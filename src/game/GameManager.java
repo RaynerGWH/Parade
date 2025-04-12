@@ -138,10 +138,11 @@ public class GameManager {
         int maximumNumberOfBots = 8 - numPlayers;
         int minimumNumberOfBots = Math.max(2 - numPlayers, 1);
 
+        ConsoleUtils.clear();
+        System.out.println(UIConstants.GAMEMODE_SCREEN);
         while (true) {
             try {
-                ConsoleUtils.clear();
-                System.out.print(UIConstants.GAMEMODE_SCREEN + UIConstants.RESET_COLOR + "\nEnter number of Bots (" + minimumNumberOfBots + " - " + maximumNumberOfBots + ")" + UIConstants.ConsoleInput);
+                System.out.print(UIConstants.RESET_COLOR + "\nEnter number of Bots (" + minimumNumberOfBots + " - " + maximumNumberOfBots + ")" + UIConstants.ConsoleInput);
                 numBots = Integer.parseInt(sc.nextLine());
                 if (numBots > maximumNumberOfBots || numBots < minimumNumberOfBots) {
                     throw new NumberFormatException();
@@ -152,7 +153,7 @@ public class GameManager {
             } catch (NumberFormatException e) {
                 // Max number of bots able to be added : 8 - numplayers
                 // Min number of bots to be added : 2 - numplayers
-                System.out.println("Please enter a valid number! Number of total players must be between "
+                System.out.println(UIConstants.RESET_COLOR + "\n❌ Please enter a valid number! Number of total players must be between "
                                    + minimumNumberOfBots + " and " + maximumNumberOfBots);
             }
         }

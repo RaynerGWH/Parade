@@ -144,16 +144,16 @@ public class RunGame {
                         break;
                     case "Q":
                         if (confirmQuit()) {
-                            System.out.println("\n🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
+                            System.out.println("\n🚪 You’ve left the Parade.\n\nUntil next time, traveler! 🎴🌙");
                             System.exit(0);
                         }
                         break;
                     default:
                         ConsoleUtils.clear();
                         System.out.println(String.join("\n", List.of(
-                            "Invalid command. Please enter [R], [S], [B] or [Q]."
+                            "🎭 That move puzzled even the cards...\n Please enter [R], [S], [B] or [Q] to proceed."
                         )));
-                        System.out.print("\n[ENTER] Please try again!");
+                        System.out.print("\n[ENTER] Try again!");
                         mainScanner.nextLine();
                 }
             }
@@ -192,16 +192,16 @@ public class RunGame {
                     return;
                 case "Q":
                     if (confirmQuit()) {
-                        System.out.println("\n🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
+                        System.out.println("\n🚪 You’ve left the Parade.\n\nUntil next time, traveler! 🎴🌙");
                         System.exit(0);
                     }
                     break;
                 default:
                     ConsoleUtils.clear();
                     System.out.println(String.join("\n", List.of(
-                        "Invalid command. Please enter [S], [M], or [Q]."
+                        "🎭 That move puzzled even the cards...\n Please enter [S], [M], or [Q] to proceed."
                     )));
-                    System.out.print("\n[ENTER] Please try again!");
+                    System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~");
                     mainScanner.nextLine();
             }
         }
@@ -239,16 +239,16 @@ public class RunGame {
                     return;
                 case "Q":
                     if (confirmQuit()) {
-                        System.out.println("\n🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
+                        System.out.println("\n🚪 You’ve left the Parade.\n\nUntil next time, traveler! 🎴🌙");
                         System.exit(0);
                     }
                     break;
                 default:
                     ConsoleUtils.clear();
                     System.out.println(String.join("\n", List.of(
-                        "Invalid command. Please enter [H], [J], or [Q]."
+                        "🎭 That move puzzled even the cards...\nPlease enter [H], [J], or [Q] to proceed."
                     )));
-                    System.out.print("\n[ENTER] Please try again!");
+                    System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~");
                     mainScanner.nextLine();
             }
         }

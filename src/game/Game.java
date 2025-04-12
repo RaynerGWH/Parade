@@ -42,12 +42,13 @@ public class Game {
         // Game mode selection with validation
         GameMode gameMode = new ClassicMode();
         boolean validGameMode = false;
+        ConsoleUtils.clear();
+        System.out.println(UIConstants.GAMEMODE_SCREEN);
         while (!validGameMode) {
-            ConsoleUtils.clear();
-            System.out.println(UIConstants.GAMEMODE_SCREEN + UIConstants.RESET_COLOR + "\nGamemodes available:");
+            System.out.println(UIConstants.TEXT_COLOR + "\nGamemodes available:" + UIConstants.RESET_COLOR);
             System.out.println("    1. Classic");
             System.out.println("    2. Timed");
-            System.out.print("Enter '1' or '2'" + UIConstants.ConsoleInput);
+            System.out.print("\nEnter '1' or '2'" + UIConstants.ConsoleInput);
             String gameModeChoice = scanner.nextLine().trim();
 
             if (gameModeChoice.equals("2")) {
@@ -69,7 +70,7 @@ public class Game {
                 System.out.print(UIConstants.CLASSIC_MODE_MESSAGE);
                 timedMode = false;
             } else {
-                System.out.println("\nInvalid choice. Please select 1 for Classic Mode or 2 for Timed Mode.");
+                System.out.println(UIConstants.RESET_COLOR + "\n❌ Invalid choice. Please select 1 for Classic Mode or 2 for Timed Mode.");
             }
 
             gameMode.initialize(scanner);

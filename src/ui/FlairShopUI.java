@@ -72,7 +72,7 @@ public class FlairShopUI {
             try {
                 int choice = Integer.parseInt(input);
                 if (choice < 1 || choice > availableFlairs.size()) {
-                    System.out.println("\nInvalid choice. Please try again.");
+                    System.out.println("\n❌ Invalid choice. Please try again.");
                     continue;
                 }
 

@@ -59,12 +59,12 @@ public class UIConstants {
 
         // Timed Mode Message
         public static final String TIMED_MODE_MESSAGE = "\n" +
-                "                    ████████╗██╗███╗   ███╗███████╗██████╗    ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" +
-                "                    ╚══██╔══╝██║████╗ ████║██╔════╝██╔══██╗   ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" +
-                "                       ██║   ██║██╔████╔██║█████╗  ██║  ██║   ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" +
-                "                       ██║   ██║██║╚██╔╝██║██╔══╝  ██║  ██║   ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" +
-                "                       ██║   ██║██║ ╚═╝ ██║███████╗██████╔╝   ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" +
-                "                       ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝    ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\r\n\n";
+                "                        ████████╗██╗███╗   ███╗███████╗██████╗    ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" +
+                "                        ╚══██╔══╝██║████╗ ████║██╔════╝██╔══██╗   ████╗ ████║██╔══██╗██╔══██╗██╔════╝\r\n" +
+                "                           ██║   ██║██╔████╔██║█████╗  ██║  ██║   ██╔████╔██║██║  ██║██║  ██║█████╗  \r\n" +
+                "                           ██║   ██║██║╚██╔╝██║██╔══╝  ██║  ██║   ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" +
+                "                           ██║   ██║██║ ╚═╝ ██║███████╗██████╔╝   ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" +
+                "                           ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝    ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\r\n\n";
 
         // Separator for UI formatting
         public static final int SEPARATOR_LENGTH = 62;
@@ -72,32 +72,32 @@ public class UIConstants {
         public static final String SEPARATOR = SEPARATOR_SYMBOL.repeat(SEPARATOR_LENGTH);
 
         // Countdown Numbers
-        public static final String COUNTDOWN_THREE = 
-                "                          █████    ██  \r\n" +
-                "                         ██   ██   ██  \r\n" +
-                "                              ██   ██  \r\n" +
-                "                          ██████   ██  \r\n" +
-                "                              ██   ██  \r\n" +
-                "                         ██   ██       \r\n" +
-                "                          █████    ██  \r\n";
+        public static final String COUNTDOWN_THREE = LIGHT_GREEN +
+                "                                                         █████    ██  \r\n" +
+                "                                                         ██   ██   ██  \r\n" +
+                "                                                              ██   ██  \r\n" +
+                "                                                          ██████   ██  \r\n" +
+                "                                                              ██   ██  \r\n" +
+                "                                                              ██   ██       \r\n" +
+                "                                                          █████    ██  \r\n";
 
-        public static final String COUNTDOWN_TWO = 
-                "                          █████    ██  \r\n" +
-                "                         ██   ██   ██  \r\n" +
-                "                              ██   ██  \r\n" +
-                "                          █████    ██  \r\n" +
-                "                         ██        ██  \r\n" +
-                "                         ██            \r\n" +
-                "                         ███████   ██  \r\n";
+        public static final String COUNTDOWN_TWO = YELLOW + 
+                "                                                          █████    ██  \r\n" +
+                "                                                         ██   ██   ██  \r\n" +
+                "                                                              ██   ██  \r\n" +
+                "                                                          █████    ██  \r\n" +
+                "                                                         ██        ██  \r\n" +
+                "                                                         ██            \r\n" +
+                "                                                         ███████   ██  \r\n";
 
-        public static final String COUNTDOWN_ONE = 
-                "                            ██    ██  \r\n" +
-                "                          ████    ██  \r\n" +
-                "                            ██    ██  \r\n" +
-                "                            ██    ██  \r\n" +
-                "                            ██    ██  \r\n" +
-                "                            ██        \r\n" +
-                "                          ██████  ██  \r\n";
+        public static final String COUNTDOWN_ONE = RED + 
+                "                                                            ██    ██  \r\n" +
+                "                                                          ████    ██  \r\n" +
+                "                                                            ██    ██  \r\n" +
+                "                                                            ██    ██  \r\n" +
+                "                                                            ██    ██  \r\n" +
+                "                                                            ██        \r\n" +
+                "                                                          ██████  ██  \r\n" + RESET_COLOR;
 
         // ASCII art letters for "PARADE"
         public static final String[][] PARADE_LETTERS = {
@@ -172,13 +172,13 @@ public class UIConstants {
                 "                               " + CYAN + "❀*̥" + BORDER_COLOR + "　_　_|   " + CYAN + " 🎴 Welcome, adventurer!"  + "!\r\n" + BORDER_COLOR + 
                 "                              ／` ミ＿xノ  \r\n" + BORDER_COLOR +
                 "                             /　　　　 | " + CYAN + "    Shuffle your fate... the Parade awaits your hand ~  \r\n" + BORDER_COLOR +
-                "                            /　 ヽ　　 ﾉ\r\n\n\n" + 
+                "                            /　 ヽ　　 ﾉ\r\n\n\n" + RESET_COLOR +
                 "                            [S] Start Game 🎮                  [B] Buy Flairs ✨\r\n\n" +
                 "                            [R] Read Rulebook 📖               [Q] Quit ❌\r\n";
 
                 public static final String GAMEMODE_SCREEN = 
                 BORDER_COLOR + "      ___                 \r\n" +
-                "     (o o)              " + TEXT_COLOR + "One step further adventurer..." + BORDER_COLOR + " \r\n" +
+                "     (o o)                            " + TEXT_COLOR + "One step further adventurer..." + BORDER_COLOR + " \r\n" +
                 "    (  V  )\r\n" +
                 "------m-m----------" + BORDER_FLOWER + "---- " + BORDER_FLOWER + "--------------------------------" + BORDER_FLOWER + BORDER_FLOWER + BORDER_FLOWER + BORDER_FLOWER + BORDER_FLOWER + BORDER_FLOWER + BORDER_FLOWER + "\r\n";
 

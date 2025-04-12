@@ -66,7 +66,7 @@ public class PlayerManager {
                     break;
 
                 } catch (NumberFormatException e) {
-                    System.out.println("Please enter a valid number!");
+                    System.out.println(UIConstants.RESET_COLOR + "\n❌ Please enter a valid number!");
                 }
             }
         }
