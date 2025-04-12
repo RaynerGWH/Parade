@@ -151,9 +151,9 @@ public class RunGame {
                     default:
                         ConsoleUtils.clear();
                         System.out.println(String.join("\n", List.of(
-                            "🎭 That move puzzled even the cards...\n Please enter [R], [S], [B] or [Q] to proceed."
+                            "🎭 That move puzzled even the cards...\nPlease enter [R], [S], [B] or [Q] to proceed."
                         )));
-                        System.out.print("\n[ENTER] Try again!");
+                        System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~"  + UIConstants.ConsoleInput);
                         mainScanner.nextLine();
                 }
             }
@@ -199,9 +199,9 @@ public class RunGame {
                 default:
                     ConsoleUtils.clear();
                     System.out.println(String.join("\n", List.of(
-                        "🎭 That move puzzled even the cards...\n Please enter [S], [M], or [Q] to proceed."
+                        "🎭 That move puzzled even the cards...\nPlease enter [S], [M], or [Q] to proceed."
                     )));
-                    System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~\n");
+                    System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~"  + UIConstants.ConsoleInput);
                     mainScanner.nextLine();
             }
         }
@@ -248,7 +248,7 @@ public class RunGame {
                     System.out.println(String.join("\n", List.of(
                         "🎭 That move puzzled even the cards...\nPlease enter [H], [J], or [Q] to proceed."
                     )));
-                    System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~\n");
+                    System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~" + UIConstants.ConsoleInput);
                     mainScanner.nextLine();
             }
         }

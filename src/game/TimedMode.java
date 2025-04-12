@@ -8,6 +8,7 @@ import players.*;
 import game.GameMode;
 import game.GameState;
 import players.Player;
+import constants.UIConstants;
 
 
 
@@ -19,7 +20,7 @@ public class TimedMode implements GameMode {
 
     @Override
     public void initialize(Scanner scanner) {
-        System.out.println("Categories:");
+        System.out.println(UIConstants.TEXT_COLOR + "Categories:" + UIConstants.RESET_COLOR);
         System.out.println("    1. 1-minute blitz");
         System.out.println("    2. 5-minute challenge");
         System.out.println("    3. 10-minute game");
@@ -31,7 +32,7 @@ public class TimedMode implements GameMode {
 
         while (!validChoice) {
             try {
-                System.out.print("Enter category (1-3)" + UIConstants.ConsoleInput);
+                System.out.print("\nEnter mode [1-3]" + UIConstants.ConsoleInput);
                 timeChoice = Integer.parseInt(scanner.nextLine().trim());
                 if (timeChoice >= 1 && timeChoice <= 3) {
                     validChoice = true;
@@ -47,15 +48,15 @@ public class TimedMode implements GameMode {
         switch (timeChoice) {
             case 1:
                 timeLimit = 60 * 1000; // 1 minute in milliseconds
-                System.out.print("\n1-minute blitz selected!\n");
+                System.out.print(UIConstants.RESET_COLOR + "\n1-minute blitz selected!\n");
                 break;
             case 2:
                 timeLimit = 5 * 60 * 1000; // 5 minutes in milliseconds
-                System.out.print("\n5-minute challenge selected!\n");
+                System.out.print(UIConstants.RESET_COLOR + "\n5-minute challenge selected!\n");
                 break;
             case 3:
                 timeLimit = 10 * 60 * 1000; // 10 minutes in milliseconds
-                System.out.print("\n10-minute game selected!\n");
+                System.out.print(UIConstants.RESET_COLOR + "\n10-minute game selected!\n");
                 break;
         }
         
