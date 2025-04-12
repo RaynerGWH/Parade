@@ -13,18 +13,19 @@ public class PlayerDisplayUtils {
 
     /**
      * Returns a player's display name with flair appended (if available).
-     * 
+     *
      * @param player The player to get the display name for
      * @return Formatted display name, possibly including flair
      */
     public static String getDisplayName(Player player) {
+
         if (player instanceof HumanPlayer) {
             HumanPlayer hp = (HumanPlayer) player;
             Account account = hp.getAccount();
             if (account != null) {
-                List<String> flairs = account.getUnlockedFlairs();
-                if (flairs != null && !flairs.isEmpty()) {
-                    return account.getUsername() + " [" + flairs.get(0) + "]";
+                String worn = account.getWornFlair();
+                if (worn != null && !worn.isEmpty()) {
+                    return account.getUsername() + " [" + worn + "]";
                 } else {
                     return account.getUsername();
                 }
@@ -34,10 +35,10 @@ public class PlayerDisplayUtils {
     }
 
     /**
-     * Creates a formatted turn header showing all players with the current player
-     * highlighted.
-     * 
-     * @param players       List of all players in the game
+     * Creates a formatted turn header showing all players with the current
+     * player highlighted.
+     *
+     * @param players List of all players in the game
      * @param currentPlayer The player whose turn it currently is
      * @return Formatted turn header string
      */
@@ -61,7 +62,7 @@ public class PlayerDisplayUtils {
 
     /**
      * Creates a formatted turn announcement for the next player.
-     * 
+     *
      * @param nextPlayer The player whose turn is next
      * @return Formatted turn announcement string
      */
@@ -72,7 +73,6 @@ public class PlayerDisplayUtils {
         // announcement.append("===============================================================\n");
         // announcement.append("                      ").append(playerName).append("'s TURN                \n");
         // announcement.append("===============================================================");
-
         return announcement.toString();
     }
 }

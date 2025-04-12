@@ -8,15 +8,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import constants.UIConstants;
-
 /**
  * Manages account file reading and writing (encryption/decryption, parsing, etc.).
  */
 public class AccountFileManager {
 
     private static final String NAME_REGEX = "^[A-Za-z0-9]+$";
-    private static final String HEADER = "ID/NAME/WIN/LOSS/BALANCE-[FLAIR]\n";
+    private static final String HEADER = "ID/NAME/WIN/LOSS/BALANCE/WORNFLAIR-[FLAIR]\n";
 
     private final List<Account> accounts;
     private Scanner sc;
@@ -83,7 +81,7 @@ public class AccountFileManager {
         if (data.length < 2) throw new CorruptFileException("Not enough data.");
 
         String[] details = data[1].split("/");
-        if (details.length != 6) throw new CorruptFileException("Invalid format.");
+        if (details.length != 7) throw new CorruptFileException("Invalid format.");
 
         try {
             UUID uuid = UUID.fromString(details[0]);
@@ -92,7 +90,9 @@ public class AccountFileManager {
             int losses = Integer.parseInt(details[3]);
             double balance = Double.parseDouble(details[4]);
 
-            String flairData = details[5].replaceAll("[\\[\\]\"]", "").trim();
+            String flairData = details[6].replaceAll("[\\[\\]\"]", "").trim();
+            String wornFlair = details[5].trim();
+
             List<String> unlockedFlairs = new ArrayList<>();
             if (!flairData.isEmpty()) {
                 for (String flair : flairData.split(",")) {

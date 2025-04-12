@@ -1,8 +1,7 @@
 package cards;
 
-import java.util.List;
-
 import constants.UIConstants;
+import java.util.List;
 
 public class CardPrinter {
 

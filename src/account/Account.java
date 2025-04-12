@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Represents an account with a unique identifier, username, statistics (wins/losses),
- * balance, and a list of unlocked flairs.
+ * Represents an account with a unique identifier, username, statistics
+ * (wins/losses), balance, and a list of unlocked flairs.
  */
 public class Account implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     // Unique identifier for the account
@@ -30,14 +31,17 @@ public class Account implements Serializable {
     // A list of flairs that this account has unlocked
     private List<String> unlockedFlairs;
 
+    // Used to track which flair is actually worn
+    private String wornFlair;
+
     /**
      * Creates an Account with specified parameters.
      *
-     * @param id             the unique ID of the account
-     * @param username       the username of the account
-     * @param wins           the number of wins
-     * @param losses         the number of losses
-     * @param balance        the account's balance
+     * @param id the unique ID of the account
+     * @param username the username of the account
+     * @param wins the number of wins
+     * @param losses the number of losses
+     * @param balance the account's balance
      * @param unlockedFlairs list of flairs unlocked by this account
      */
     public Account(UUID id, String username, int wins, int losses, double balance, List<String> unlockedFlairs) {
@@ -50,13 +54,27 @@ public class Account implements Serializable {
     }
 
     /**
-     * Creates a new Account with default values (0 wins, 0 losses, 0 balance, empty flair list)
-     * and a randomly generated UUID.
+     * Creates a new Account with default values (0 wins, 0 losses, 0 balance,
+     * empty flair list) and a randomly generated UUID.
      *
      * @param username the username for the new account
      */
     public Account(String username) {
         this(UUID.randomUUID(), username, 0, 0, 0.0, new ArrayList<>());
+    }
+
+    /**
+     * Returns the worn flair for this account.
+     *
+     * @return a string representing the flair currently worn by this account
+     */
+    public String getWornFlair() {
+        return wornFlair;
+    }
+
+    // Sets the worn flair for this account.
+    public void setWornFlair(String flair) {
+        this.wornFlair = flair;
     }
 
     /**
@@ -127,8 +145,8 @@ public class Account implements Serializable {
     }
 
     /**
-     * Deducts a positive amount from the current balance. If the balance goes below zero,
-     * it is reset to zero.
+     * Deducts a positive amount from the current balance. If the balance goes
+     * below zero, it is reset to zero.
      *
      * @param amount the amount to deduct
      * @throws IllegalArgumentException if {@code amount} is negative
@@ -170,11 +188,12 @@ public class Account implements Serializable {
     /**
      * Attempts to unlock a new flair for this account.
      * <p>
-     * In a real-world scenario, there would be checks here to see if the account
-     * meets certain conditions (e.g., sufficient wins, balance, etc.).
+     * In a real-world scenario, there would be checks here to see if the
+     * account meets certain conditions (e.g., sufficient wins, balance, etc.).
      *
      * @param flair the flair to unlock
-     * @return {@code true} if the flair was successfully unlocked, or {@code false} if it was already unlocked
+     * @return {@code true} if the flair was successfully unlocked, or
+     * {@code false} if it was already unlocked
      */
     public boolean unlockFlair(String flair) {
         if (hasFlair(flair)) {
@@ -185,12 +204,23 @@ public class Account implements Serializable {
     }
 
     /**
-     * Returns a string representation of this account, used primarily for file saving.
+     * Returns a string representation of this account, used primarily for file
+     * saving.
      *
-     * @return the string in the format: UUID/username/wins/losses/balance/[flairs]
+     * @return the string in the format:
+     * UUID/username/wins/losses/balance/[flairs]
      */
     @Override
     public String toString() {
-        return String.format("%s/%s/%d/%d/%.0f/%s", id, username, wins, losses, balance, unlockedFlairs);
+        return String.format(
+                "%s/%s/%d/%d/%.0f/%s/%s",
+                id,
+                username,
+                wins,
+                losses,
+                balance,
+                (wornFlair == null ? "" : wornFlair),
+                unlockedFlairs
+        );
     }
 }

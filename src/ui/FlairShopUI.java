@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Manages the UI for the flair shop, allowing users to purchase and select flairs.
+ * Manages the UI for the flair shop, allowing users to purchase and select
+ * flairs.
  */
 public class FlairShopUI {
+
     private final FlairShop flairShop;
     private final Scanner scanner;
 
@@ -39,7 +41,13 @@ public class FlairShopUI {
                 String status = "";
                 if (account.hasFlair(flair.getFlairName())) {
                     List<String> ownedFlairs = account.getUnlockedFlairs();
-                    if (!ownedFlairs.isEmpty() && ownedFlairs.get(0).equalsIgnoreCase(flair.getFlairName())) {
+                    // if (!ownedFlairs.isEmpty() && ownedFlairs.get(0).equalsIgnoreCase(flair.getFlairName())) {
+                    //     status = "[Wearing]";
+                    // } else {
+                    //     status = "[OWNED]";
+                    // }
+                    String worn = account.getWornFlair();
+                    if (worn != null && worn.equalsIgnoreCase(flair.getFlairName())) {
                         status = "[Wearing]";
                     } else {
                         status = "[OWNED]";
@@ -87,16 +95,26 @@ public class FlairShopUI {
 
     private void handleExistingFlair(Account account, Flair flair) {
         List<String> ownedFlairs = account.getUnlockedFlairs();
-        if (!ownedFlairs.isEmpty() && ownedFlairs.get(0).equalsIgnoreCase(flair.getFlairName())) {
+        if (flair.getFlairName().equalsIgnoreCase(account.getWornFlair())) {
             System.out.println("This flair is already being worn.");
         } else {
-            System.out.print("You already own this flair. Do you want to wear it? (Y/N)" + UIConstants.LIGHT_PURPLE + "\n> ");
+            // System.out.print("You already own this flair. Do you want to wear it? (Y/N)" + UIConstants.LIGHT_PURPLE + "\n> ");
+            // String wearInput = scanner.nextLine().trim();
+            // if (wearInput.equalsIgnoreCase("Y")) {
+            //     boolean setWorn = flairShop.selectFlairToWear(flair.getFlairName(), account);
+            //     System.out.println(setWorn
+            //             ? "You are now wearing '" + flair.getFlairName() + "'."
+            //             : "Failed to set flair as worn.");
+            // }
+            System.out.print("You already own this flair. Do you want to wear it? (Y/N)\n> ");
             String wearInput = scanner.nextLine().trim();
             if (wearInput.equalsIgnoreCase("Y")) {
                 boolean setWorn = flairShop.selectFlairToWear(flair.getFlairName(), account);
-                System.out.println(setWorn
-                        ? "You are now wearing '" + flair.getFlairName() + "'."
-                        : "Failed to set flair as worn.");
+                if (setWorn) {
+                    System.out.println("You are now wearing '" + flair.getFlairName() + "'.");
+                } else {
+                    System.out.println("Failed to set flair as worn.");
+                }
             }
         }
     }
@@ -105,17 +123,33 @@ public class FlairShopUI {
         boolean purchased = flairShop.purchaseFlair(flair.getFlairName(), account);
         if (purchased) {
             System.out.println("Purchase successful! You now own '" + flair.getFlairName() + "'.");
-            System.out.print("Do you want to wear this flair now? (Y/N)" + UIConstants.LIGHT_PURPLE + "\n> ");
+            System.out.print("Do you want to wear this flair now? (Y/N)\n> ");
             String wearNowInput = scanner.nextLine().trim();
             if (wearNowInput.equalsIgnoreCase("Y")) {
                 boolean setWorn = flairShop.selectFlairToWear(flair.getFlairName(), account);
-                System.out.println(setWorn
-                        ? "You are now wearing '" + flair.getFlairName() + "'."
-                        : "Failed to set flair as worn.");
+                if (setWorn) {
+                    System.out.println("You are now wearing '" + flair.getFlairName() + "'.");
+                } else {
+                    System.out.println("Failed to set flair as worn.");
+                }
             }
         } else {
             System.out.println("Purchase failed. Requirements or balance may be insufficient.");
         }
+        
+        // if (purchased) {
+        //     System.out.println("Purchase successful! You now own '" + flair.getFlairName() + "'.");
+        //     System.out.print("Do you want to wear this flair now? (Y/N)" + UIConstants.LIGHT_PURPLE + "\n> ");
+        //     String wearNowInput = scanner.nextLine().trim();
+        //     if (wearNowInput.equalsIgnoreCase("Y")) {
+        //         boolean setWorn = flairShop.selectFlairToWear(flair.getFlairName(), account);
+        //         System.out.println(setWorn
+        //                 ? "You are now wearing '" + flair.getFlairName() + "'."
+        //                 : "Failed to set flair as worn.");
+        //     }
+        // } else {
+        //     System.out.println("Purchase failed. Requirements or balance may be insufficient.");
+        // }
     }
 
     private String padRight(String text, int width) {
