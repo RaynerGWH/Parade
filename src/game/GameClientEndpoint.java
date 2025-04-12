@@ -122,7 +122,7 @@ public class GameClientEndpoint{
             System.out.println(message);
             
             new Thread(() -> {
-                System.out.print("Press ENTER to end your turn (auto-advancing in 30 seconds)...");
+                System.out.print("[ENTER] Continue (30s)");
                 
                 try {
                     // Wait for ENTER with timeout
@@ -147,7 +147,7 @@ public class GameClientEndpoint{
             System.out.println(message);
             
             new Thread(() -> {
-                System.out.print("Press ENTER to continue (auto-continuing in 30 seconds)...");
+                System.out.print("[ENTER] Continue (30s)");
                 
                 try {
                     // Wait with timeout

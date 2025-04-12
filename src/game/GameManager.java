@@ -140,7 +140,8 @@ public class GameManager {
 
         while (true) {
             try {
-                System.out.print(UIConstants.RESET_COLOR + "\nEnter number of Bots (" + minimumNumberOfBots + " - " + maximumNumberOfBots + ")" + UIConstants.ConsoleInput);
+                ConsoleUtils.clear();
+                System.out.print(UIConstants.GAMEMODE_SCREEN + UIConstants.RESET_COLOR + "\nEnter number of Bots (" + minimumNumberOfBots + " - " + maximumNumberOfBots + ")" + UIConstants.ConsoleInput);
                 numBots = Integer.parseInt(sc.nextLine());
                 if (numBots > maximumNumberOfBots || numBots < minimumNumberOfBots) {
                     throw new NumberFormatException();

@@ -207,7 +207,7 @@ public class HumanPlayer extends AbstractPlayer {
      * @param scanner The scanner to use for input
      */
     public static void waitForAnyPlayerToAdvance(Scanner scanner) {
-        System.out.println("Any player can hit ENTER to continue...");
+        System.out.println("[ENTER] Continue");
 
         try {
             scanner.nextLine();
@@ -227,17 +227,5 @@ public class HumanPlayer extends AbstractPlayer {
     public void setSession(Session newSession) {
         this.session = newSession;
     }
-
-    // Not used
-    // // New method to initialize LoginManager and prompt for login
-    // public void initializeLoginManager() {
-    //     // Create LoginManager
-    //     this.loginManager = new LoginManager(this.sc);
-    //     // Prompt for login
-    //     LoginUI loginUI = new LoginUI(this.sc, false);
-    //     Account currentAccount = loginUI.showLoginMenu();
-    //     // Store the account
-    //     this.accounts = new ArrayList<>();
-    //     this.accounts.add(currentAccount);
-    // }
+    
 }

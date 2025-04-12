@@ -4,6 +4,7 @@ import account.Account;
 import account.Flair;
 import account.FlairShop;
 import constants.UIConstants;
+import ui.ConsoleUtils;
 
 import java.util.List;
 import java.util.Scanner;
@@ -23,6 +24,7 @@ public class FlairShopUI {
     public void openFlairShopMenu(Account account) {
         while (true) {
             ConsoleUtils.clear();
+            System.out.print(UIConstants.BORDER_COLOR);
             List<Flair> availableFlairs = flairShop.getAvailableFlairs();
 
             String padding = "                    ";
@@ -59,7 +61,7 @@ public class FlairShopUI {
             System.out.println(padding + "│" + padRight(statsLine, boxWidth) + "│");
             System.out.println(padding + "╰" + "─".repeat(boxWidth) + "╯");
 
-            // Left aligned input prompt at the left border
+            // Ensure prompt is visible right after the UI
             System.out.print(UIConstants.ConsoleInput);
             String input = scanner.nextLine().trim();
             if (input.equalsIgnoreCase("Q")) {

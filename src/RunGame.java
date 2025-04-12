@@ -127,15 +127,7 @@ public class RunGame {
             while (!exitRequested) {
                 ConsoleUtils.clear();
 
-                System.out.print(UIConstants.MAIN_SCREEN + "\n");
-                System.out.println(UIConstants.RESET_COLOR + String.join("\n", List.of(
-                        "[S] Start Game 🎮",
-                        "[B] Buy Flairs ✨",
-                        "[R] Read Rulebook 📖",
-                        "[Q] Quit ❌"
-                )));
-                System.out.print(UIConstants.ConsoleInput);
-
+                System.out.print(UIConstants.MAIN_SCREEN + UIConstants.ConsoleInput);
 
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
@@ -161,7 +153,7 @@ public class RunGame {
                         System.out.println(String.join("\n", List.of(
                             "Invalid command. Please enter [R], [S], [B] or [Q]."
                         )));
-                        System.out.print("\nPress ENTER to try again...");
+                        System.out.print("\n[ENTER] Please try again!");
                         mainScanner.nextLine();
                 }
             }
@@ -183,7 +175,7 @@ public class RunGame {
             System.out.println(UIConstants.GAMEMODE_SCREEN + UIConstants.RESET_COLOR);
 
             System.out.println(String.join("\n", List.of(
-                "SELECT GAMEMODE",
+                UIConstants.TEXT_COLOR + "SELECT GAMEMODE" + UIConstants.RESET_COLOR,
                 "[S] Singleplayer 👤",
                 "[M] Multiplayer 👥🎮",
                 "[Q] Quit ❌"
@@ -209,7 +201,7 @@ public class RunGame {
                     System.out.println(String.join("\n", List.of(
                         "Invalid command. Please enter [S], [M], or [Q]."
                     )));
-                    System.out.print("\nPress ENTER to try again...");
+                    System.out.print("\n[ENTER] Please try again!");
                     mainScanner.nextLine();
             }
         }
@@ -256,7 +248,7 @@ public class RunGame {
                     System.out.println(String.join("\n", List.of(
                         "Invalid command. Please enter [H], [J], or [Q]."
                     )));
-                    System.out.print("\nPress ENTER to try again...");
+                    System.out.print("\n[ENTER] Please try again!");
                     mainScanner.nextLine();
             }
         }

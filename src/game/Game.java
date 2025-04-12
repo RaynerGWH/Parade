@@ -4,6 +4,13 @@ import java.util.*;
 import constants.GameplayConstants;
 import constants.UIConstants;
 import players.Player;
+import game.ClassicMode;
+import game.EndGameHandler;
+import game.GameMode;
+import game.GameServerEndpoint;
+import game.GameState;
+import game.TimedMode;
+import game.TurnManager;
 import ui.ConsoleUtils;
 import ui.PlayerDisplayUtils;
 import ui.UserInterface;
@@ -36,7 +43,8 @@ public class Game {
         GameMode gameMode = new ClassicMode();
         boolean validGameMode = false;
         while (!validGameMode) {
-            System.out.println(UIConstants.RESET_COLOR + "Game Modes available:");
+            ConsoleUtils.clear();
+            System.out.println(UIConstants.GAMEMODE_SCREEN + UIConstants.RESET_COLOR + "\nGamemodes available:");
             System.out.println("    1. Classic");
             System.out.println("    2. Timed");
             System.out.print("Enter '1' or '2'" + UIConstants.ConsoleInput);
@@ -48,9 +56,6 @@ public class Game {
                 timedMode = true;
                 System.out.println(UIConstants.TIMED_MODE_MESSAGE);
                 
-                //TODO: DELETE THIS
-                System.out.println("════════════════════════════════════════════════════════════════════════════");
-
                 // Initialize time bonus tracking
                 timeBonus = new HashMap<>();
                 for (Player player : gameState.getPlayers()) {
@@ -60,6 +65,7 @@ public class Game {
 
             } else if (gameModeChoice.equals("1")) {
                 validGameMode = true;
+                ConsoleUtils.clear();
                 System.out.print(UIConstants.CLASSIC_MODE_MESSAGE);
                 timedMode = false;
             } else {
@@ -69,7 +75,7 @@ public class Game {
             gameMode.initialize(scanner);
         }
 
-        System.out.println("\n[ENTER] START GAME!\n\n");
+        System.out.println(UIConstants.PRESS_ENTER_TO_START);
         scanner.nextLine();
         // Countdown to game start after game mode selection
         ConsoleUtils.displayCountdown(ui);
