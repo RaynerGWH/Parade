@@ -70,6 +70,7 @@ public class GameServerEndpoint {
                             originalAccount.getWins(),
                             originalAccount.getLosses(),
                             originalAccount.getBalance(),
+                            originalAccount.getWornFlair(),
                             new ArrayList<>(originalAccount.getUnlockedFlairs())
                         );
                     } else {

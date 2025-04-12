@@ -2,7 +2,6 @@ package account;
 
 import java.util.Scanner;
 
-import account.Account;
 import constants.UIConstants;
 
 import java.io.IOException;

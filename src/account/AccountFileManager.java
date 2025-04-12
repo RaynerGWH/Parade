@@ -14,7 +14,7 @@ import java.util.*;
 public class AccountFileManager {
 
     private static final String NAME_REGEX = "^[A-Za-z0-9]+$";
-    private static final String HEADER = "ID/NAME/WIN/LOSS/BALANCE/WORNFLAIR-[FLAIR]\n";
+    private static final String HEADER = "ID/NAME/WIN/LOSS/BALANCE/WORNFLAIR/[FLAIR]\n";
 
     private final List<Account> accounts;
     private Scanner sc;
@@ -100,7 +100,7 @@ public class AccountFileManager {
                 }
             }
 
-            return new Account(uuid, name, wins, losses, balance, unlockedFlairs);
+            return new Account(uuid, name, wins, losses, balance, wornFlair, unlockedFlairs);
         } catch (IllegalArgumentException e) {
             throw new CorruptFileException("Failed to parse account data.");
         }
@@ -153,7 +153,7 @@ public class AccountFileManager {
             String name = sc.nextLine();
 
             if (name.matches(NAME_REGEX)) {
-                Account newAccount = new Account(UUID.randomUUID(), name, 0, 0, 0.0, new ArrayList<>());
+                Account newAccount = new Account(UUID.randomUUID(), name, 0, 0, 0.0, "", new ArrayList<>());
                 try {
                     save(newAccount);
                 } catch (IOException e) {

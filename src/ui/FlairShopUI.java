@@ -4,7 +4,6 @@ import account.Account;
 import account.Flair;
 import account.FlairShop;
 import constants.UIConstants;
-import ui.ConsoleUtils;
 
 import java.util.List;
 import java.util.Scanner;
@@ -39,9 +38,10 @@ public class FlairShopUI {
             for (int i = 0; i < availableFlairs.size(); i++) {
                 Flair flair = availableFlairs.get(i);
                 String status = "";
+                String wornFlair = account.getWornFlair();
                 if (account.hasFlair(flair.getFlairName())) {
                     List<String> ownedFlairs = account.getUnlockedFlairs();
-                    if (!ownedFlairs.isEmpty() && ownedFlairs.get(0).equalsIgnoreCase(flair.getFlairName())) {
+                    if (!ownedFlairs.isEmpty() && wornFlair.equalsIgnoreCase(flair.getFlairName())) {
                         status = "[Wearing]";
                     } else {
                         status = "[OWNED]";

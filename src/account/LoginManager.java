@@ -21,7 +21,6 @@ public class LoginManager {
         this.scanner = scanner;
         this.accounts = new HashMap<>();
         this.fileManager = new AccountFileManager(scanner);
-        loadAccounts();  // Load all .PG1 files at startup
     }
 
     /**
@@ -42,6 +41,7 @@ public class LoginManager {
      * Handles login by letting the user select from available accounts.
      */
     public Account handleLogin() {
+        loadAccounts(); 
         if (accounts.isEmpty()) {
             System.out.print(UIConstants.RESET_COLOR + "\n🧾 No account detected in the archives.\nShall we forge a new hero for the journey? (Y/N) ⚔️ ✨" + UIConstants.ConsoleInput);
             String input = scanner.nextLine().trim().toLowerCase();
@@ -87,6 +87,7 @@ public class LoginManager {
      * @return The newly created account or null if creation failed
      */
     public Account handleAccountCreation() {
+        loadAccounts(); 
         while (true) {
             System.out.print(UIConstants.RESET_COLOR + "\n💬 Choose your name, adventurer (letters & numbers only)" + UIConstants.ConsoleInput);
             String username = scanner.nextLine().trim();

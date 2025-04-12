@@ -44,13 +44,14 @@ public class Account implements Serializable {
      * @param balance the account's balance
      * @param unlockedFlairs list of flairs unlocked by this account
      */
-    public Account(UUID id, String username, int wins, int losses, double balance, List<String> unlockedFlairs) {
+    public Account(UUID id, String username, int wins, int losses, double balance, String wornFlair, List<String> unlockedFlairs) {
         this.id = id;
         this.username = username;
         this.wins = wins;
         this.losses = losses;
         this.balance = balance;
         this.unlockedFlairs = unlockedFlairs;
+        this.wornFlair = wornFlair;
     }
 
     /**
@@ -60,7 +61,7 @@ public class Account implements Serializable {
      * @param username the username for the new account
      */
     public Account(String username) {
-        this(UUID.randomUUID(), username, 0, 0, 0.0, new ArrayList<>());
+        this(UUID.randomUUID(), username, 0, 0, 0.0, "" , new ArrayList<>());
     }
 
     /**
@@ -219,7 +220,7 @@ public class Account implements Serializable {
                 wins,
                 losses,
                 balance,
-                (wornFlair == null ? "" : wornFlair),
+                wornFlair,
                 unlockedFlairs
         );
     }

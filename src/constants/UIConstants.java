@@ -129,8 +129,6 @@ public class UIConstants {
             "                    ║ └─────────────────────────────────────────────────────────────────────┘ ║\r\n" + //
             "                    ╚═════════════════════════════════════════════════════ " + BORDER_FLOWER + "═══ " + BORDER_FLOWER + "═════════╝\r\n");
 
-        public static final String LOGIN_BORDER = ""
-
         // General Standard Colors
         public static final String BLACK = "\u001B[30m";
         public static final String RED = "\u001B[31m";

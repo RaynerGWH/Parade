@@ -59,20 +59,20 @@ public class PlayerDisplayUtils {
         }
         return header.toString();
     }
-
+}
     /**
      * Creates a formatted turn announcement for the next player.
      *
      * @param nextPlayer The player whose turn is next
      * @return Formatted turn announcement string
      */
-    public static String createNextTurnAnnouncement(Player nextPlayer) {
-        String playerName = getDisplayName(nextPlayer);
-        StringBuilder announcement = new StringBuilder();
+//     public static String createNextTurnAnnouncement(Player nextPlayer) {
+//         String playerName = getDisplayName(nextPlayer);
+//         StringBuilder announcement = new StringBuilder();
 
-        // announcement.append("===============================================================\n");
-        // announcement.append("                      ").append(playerName).append("'s TURN                \n");
-        // announcement.append("===============================================================");
-        return announcement.toString();
-    }
-}
+//         // announcement.append("===============================================================\n");
+//         // announcement.append("                      ").append(playerName).append("'s TURN                \n");
+//         // announcement.append("===============================================================");
+//         return announcement.toString();
+//     }
+// }

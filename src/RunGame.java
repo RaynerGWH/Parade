@@ -134,6 +134,7 @@ public class RunGame {
                 )));
                 System.out.print(UIConstants.ConsoleInput);
 
+
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
                 switch (command) {
