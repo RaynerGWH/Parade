@@ -79,7 +79,7 @@ public class Game {
             gameMode.initialize(scanner);
         }
 
-        System.out.println("\n\[ENTER] START GAME!\n\n");
+        System.out.println("\n[ENTER] START GAME!\n\n");
         scanner.nextLine();
         // Countdown to game start after game mode selection
         ConsoleUtils.displayCountdown(ui);
