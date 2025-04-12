@@ -144,7 +144,7 @@ public class RunGame {
                         break;
                     case "Q":
                         if (confirmQuit()) {
-                            System.out.println("\n🚪 You’ve left the Parade.\n\nUntil next time, traveler! 🎴🌙");
+                            System.out.println("\n🚪 You’ve left the Parade.\n\nUntil next time, traveler! 🎴🌙\n");
                             System.exit(0);
                         }
                         break;
@@ -192,7 +192,7 @@ public class RunGame {
                     return;
                 case "Q":
                     if (confirmQuit()) {
-                        System.out.println("\n🚪 You’ve left the Parade.\n\nUntil next time, traveler! 🎴🌙");
+                        System.out.println("\n🚪 You’ve left the Parade.\n\nUntil next time, traveler! 🎴🌙\n");
                         System.exit(0);
                     }
                     break;
@@ -239,7 +239,7 @@ public class RunGame {
                     return;
                 case "Q":
                     if (confirmQuit()) {
-                        System.out.println("\n🚪 You’ve left the Parade.\n\nUntil next time, traveler! 🎴🌙");
+                        System.out.println("\n🚪 You’ve left the Parade.\n\nUntil next time, traveler! 🎴🌙\n");
                         System.exit(0);
                     }
                     break;
