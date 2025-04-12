@@ -82,7 +82,7 @@ public class LoginUI {
                     }
                     break;
                 default:
-                    System.out.println(UIConstants.RESET_COLOR + "\n❌ Invalid choice. Please enter [1] or [2] — only the chosen paths may proceed. 🎴✨");
+                    System.out.println(UIConstants.RESET_COLOR + "\n❌ Invalid choice. Please only enter [1] or [2] 🎴✨\n");
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {

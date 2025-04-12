@@ -127,7 +127,7 @@ public class RunGame {
             while (!exitRequested) {
                 ConsoleUtils.clear();
                 System.out.println(UIConstants.RESET_COLOR + Header.renderHeader(List.of("[R] Read Rulebook 📖", "[S] Start Game 🎮", "[B] Buy Flairs ✨", "[Q] Quit ❌")));
-                System.out.print(UIConstants.LIGHT_PURPLE + "\n> ");
+                System.out.print(UIConstants.LIGHT_PURPLE + "> ");
 
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
@@ -144,7 +144,8 @@ public class RunGame {
                         break;
                     case "Q":
                         if (confirmQuit()) {
-                            System.out.println("🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
+                            ConsoleUtils.clear();
+                            System.out.println("\n🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙\n\n");
                             System.exit(0);
                         }
                         break;
@@ -183,7 +184,8 @@ public class RunGame {
                     return;
                 case "Q":
                     if (confirmQuit()) {
-                        System.out.println("🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
+                        ConsoleUtils.clear();
+                        System.out.println("\n🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙\n\n");
                         System.exit(0);
                     }
                     break;
@@ -229,7 +231,8 @@ public class RunGame {
                     return;
                 case "Q":
                     if (confirmQuit()) {
-                        System.out.println("🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
+                        ConsoleUtils.clear();
+                        System.out.println("\n🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙\n\n");
                         System.exit(0);
                     }
                     break;
@@ -292,7 +295,8 @@ public class RunGame {
             "[Q] Quit your journey.",
             "[Enter] March onward with the crowd."
         )));
-        // System.out.print(UIConstants.LIGHT_PURPLE + "> " + UIConstants.RESET_COLOR);
+
+        System.out.print(UIConstants.LIGHT_PURPLE + "> ");
         String confirm = mainScanner.nextLine().trim().toUpperCase();
         return confirm.equals("Q");
     }
