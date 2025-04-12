@@ -176,7 +176,7 @@ public class HumanPlayer extends AbstractPlayer {
             }
         }
 
-        String prompt = displayName + ", enter the position of the card you want to " + action + " (0 - 4): ";
+        String prompt = displayName + ", enter the position of the card you want to " + action + " (0 - " + (hand.size() - 1) +"): ";
 
         // Only print directly to console in non-multiplayer contexts
         // In multiplayer mode, the Game class will handle communication with clients

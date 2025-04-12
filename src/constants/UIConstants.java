@@ -48,6 +48,23 @@ public class UIConstants {
         // UI Messages
         public static final String PRESS_ENTER_TO_START = RESET_COLOR + "                                              [Enter] Start Game 🕹️ 🕹️\n\n";
 
+        // Final Turn Message
+        public static final String BEGIN_FINAL_TURNS = "\n" + 
+        "██████╗ ███████╗ ██████╗ ██╗███╗   ██╗    ███████╗██╗███╗   ██╗ █████╗ ██╗         ████████╗██╗   ██╗██████╗ ███╗   ██╗███████╗\r\n" +
+        "██╔══██╗██╔════╝██╔════╝ ██║████╗  ██║    ██╔════╝██║████╗  ██║██╔══██╗██║         ╚══██╔══╝██║   ██║██╔══██╗████╗  ██║██╔════╝\r\n" +
+        "██████╔╝█████╗  ██║  ███╗██║██╔██╗ ██║    █████╗  ██║██╔██╗ ██║███████║██║            ██║   ██║   ██║██████╔╝██╔██╗ ██║███████╗\r\n" +
+        "██╔══██╗██╔══╝  ██║   ██║██║██║╚██╗██║    ██╔══╝  ██║██║╚██╗██║██╔══██║██║            ██║   ██║   ██║██╔══██╗██║╚██╗██║╚════██║\r\n" +
+        "██████╔╝███████╗╚██████╔╝██║██║ ╚████║    ██║     ██║██║ ╚████║██║  ██║███████╗       ██║   ╚██████╔╝██║  ██║██║ ╚████║███████║\r\n" + 
+        "╚═════╝ ╚══════╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝    ╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝       ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\n\n" +
+        "\n";
+
+        // Final Turn Banner
+        public static final String FINAL_TURN_BANNER = UIConstants.DEFAULT_LINE_SEPARATOR + 
+                                                        "                         FINAL TURN                         \n" +
+                                                        "                   NO CARDS WILL BE DRAWN                   \n" +
+                                                        UIConstants.DEFAULT_LINE_SEPARATOR;
+
+
         // Classic Mode Message
         public static final String CLASSIC_MODE_MESSAGE = RESET_COLOR + "\n" +
                 "                █████╗ ██╗      █████╗  ██████╗ ██████╗██╗ █████╗     ███╗   ███╗ █████╗ ██████╗ ███████╗\r\n" +
@@ -69,17 +86,17 @@ public class UIConstants {
         // Separator for UI formatting
         public static final int SEPARATOR_LENGTH = 62;
         public static final String SEPARATOR_SYMBOL = "=";
-        public static final String SEPARATOR = SEPARATOR_SYMBOL.repeat(SEPARATOR_LENGTH);
+        public static final String DEFAULT_LINE_SEPARATOR = SEPARATOR_SYMBOL.repeat(SEPARATOR_LENGTH) + "\n";
 
         // Countdown Numbers
         public static final String COUNTDOWN_THREE = LIGHT_GREEN +
-                "                                                         █████    ██  \r\n" +
+                "                                                         █████     ██  \r\n" +
                 "                                                         ██   ██   ██  \r\n" +
                 "                                                              ██   ██  \r\n" +
                 "                                                          ██████   ██  \r\n" +
                 "                                                              ██   ██  \r\n" +
-                "                                                              ██   ██       \r\n" +
-                "                                                          █████    ██  \r\n";
+                "                                                              ██       \r\n" +
+                "                                                         ██████    ██  \r\n";
 
         public static final String COUNTDOWN_TWO = YELLOW + 
                 "                                                          █████    ██  \r\n" +

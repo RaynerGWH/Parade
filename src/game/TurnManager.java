@@ -46,7 +46,7 @@ public class TurnManager {
     public boolean executeTurn(GameState gameState, Player currentPlayer, GameMode gameMode, String action, boolean isFinalTurn) {
         // Move turn logic from Game.turn() here
         // Return whether the game is over
-        Session s = null;
+        Session playerSession = null;
         boolean gameIsOver = false;
         Card choice = null;
 
@@ -54,34 +54,33 @@ public class TurnManager {
 
         // Handle player card selection
         if (currentPlayer instanceof HumanPlayer) {
-            HumanPlayer hp = (HumanPlayer) currentPlayer;
-            s = hp.getSession();
+            HumanPlayer currentHumanPlayer = (HumanPlayer) currentPlayer;
+            playerSession = currentHumanPlayer.getSession();
             
-            ui.displayMessage("Your turn! Number of cards:" + hp.getHand().size(), s);
+            ui.displayMessage("Your turn! Number of cards:" + currentHumanPlayer.getHand().size(), playerSession);
 
             if (ui instanceof MultiplayerUI) {
                 try {
                     //implement check if session is open: if it is not, we immediately play a pre determined card(idx 0) after 2s hard coded delay.
                     //or else, we continue as per normal
-                    if (!(s.isOpen())) {
+                    if (!(playerSession.isOpen())) {
                         Thread.sleep(2000);
-                        choice = currentPlayer.playCard(0);
+                        choice = currentPlayer.playCard(GameplayConstants.DEFAULT_CARD_CHOICE_INDEX);
                     } else {
-                        int i = 0;
-                        String playerInput = InputManager.waitForInputWithTimeout(30, TimeUnit.SECONDS);
+                        int indexOfCardToPlay = 0;
+                        String playerInput = InputManager.waitForInputWithTimeout(GameplayConstants.NUM_SECONDS_TILL_TIMEOUT, TimeUnit.SECONDS);
                         if (playerInput == null || playerInput.equals("") || !playerInput.matches("^[0-9]*$")) {
                             // timed out
-                            i = 0;
+                            indexOfCardToPlay = GameplayConstants.DEFAULT_CARD_CHOICE_INDEX;
                         } else {
-                            i = Integer.parseInt(playerInput);
+                            indexOfCardToPlay = Integer.parseInt(playerInput);
                         }
 
-                        choice = currentPlayer.playCard(i);
+                        choice = currentPlayer.playCard(indexOfCardToPlay);
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    // Default: choice = 0;
-                    choice = currentPlayer.playCard(0);
+                    choice = currentPlayer.playCard(GameplayConstants.DEFAULT_CARD_CHOICE_INDEX);
                 }
             } else {
                 // use the overloaded method to handle singleplayer input
@@ -153,12 +152,13 @@ public class TurnManager {
                 for (Card c : currRiver) {
                     checkColor.add(c.getColor());
                 }
-                if (checkColor.size() == 6) {
+
+                if (checkColor.size() == GameplayConstants.NUM_DIFF_COLORS_OF_CARDS) {
                     gameIsOver = true;
                 }
             }
 
-            // Draw a card if possible
+            // Draw a card if possible. If the deck is empty, then end the game.
             Card toDraw = gameState.getDeck().drawCard();
             if (toDraw == null) {
                 gameIsOver = true;
@@ -312,11 +312,11 @@ public class TurnManager {
     public void displayCardPlayedOrDiscarded(Player currentPlayer, Card choice, String action) {
         // Move displayCardPlayedOrDiscarded logic here
         if (action.equals(GameplayConstants.PLAY)) {
-            // ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " played:");
-            // ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
+            ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " played:");
+            ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
         } else {
-            // ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discarded:");
-            // ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
+            ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discarded:");
+            ui.broadcastMessage(CardPrinter.printCardRow(Collections.singletonList(choice), false));
         }
     }
 
@@ -343,9 +343,5 @@ public class TurnManager {
                 Thread.currentThread().interrupt();
             }
         }
-        
-        // ui.broadcastMessage("===============================================================");
-        // ui.broadcastMessage("                      " + playerName + "'s TURN                ");
-        // ui.broadcastMessage("===============================================================");
     }
 }

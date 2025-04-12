@@ -21,15 +21,12 @@ import players.human.HumanPlayer;
 import account.Account;
 import account.AccountFileManager;
 import account.LoginManager;
-import game.Game;
-import game.GameServerEndpoint;
 import ui.ConsoleUtils;
 import ui.MultiplayerUI;
 import ui.SinglePlayerUI;
 import ui.UserInterface;
-import account.*;
+import constants.GameplayConstants;
 import constants.UIConstants;
-import ui.*;
 
 public class GameManager {
     private Server websocketServer;
@@ -73,7 +70,7 @@ public class GameManager {
         Account userAcct = LoginManager.getCurrentAccount();
         sessions.put(null, userAcct);
         playerMgr.initializeHumanPlayers(sessions, isMulti);
-        botHandler(1);
+        botHandler(GameplayConstants.NUM_PLAYERS_IN_SINGLEPLAYER_MODE);
     }
 
     public void multiplayerHandler() {
@@ -89,10 +86,10 @@ public class GameManager {
                 botHandler(playerMgr.getPlayers().size());
                 break;
 
-            } else if (input.equals("N") && playerMgr.getPlayers().size() >= 2) {
+            } else if (input.equals("N") && playerMgr.getPlayers().size() >= GameplayConstants.MIN_NUM_PLAYERS) {
                 break;
 
-            } else if (input.equals("N") && playerMgr.getPlayers().size() < 2) {
+            } else if (input.equals("N") && playerMgr.getPlayers().size() < GameplayConstants.MIN_NUM_PLAYERS) {
                 System.out.println("Invalid input. Game must have 2 or more players.");
             }
             else {
@@ -135,8 +132,8 @@ public class GameManager {
 
     public int botHandler(int numPlayers) {
         int numBots = 0;
-        int maximumNumberOfBots = 8 - numPlayers;
-        int minimumNumberOfBots = Math.max(2 - numPlayers, 1);
+        int maximumNumberOfBots = GameplayConstants.MAX_NUM_PLAYERS - numPlayers;
+        int minimumNumberOfBots = Math.max(GameplayConstants.MIN_NUM_PLAYERS - numPlayers, 1);
 
         ConsoleUtils.clear();
         System.out.println(UIConstants.GAMEMODE_SCREEN);
@@ -168,7 +165,7 @@ public class GameManager {
             String command = sc.nextLine();
             if (command.toUpperCase().trim().equals("START") && GameServerEndpoint.getNumPlayers() > 0) {
                 return;
-            } else if (command.toUpperCase().trim().equals("START") && GameServerEndpoint.getNumPlayers() <= 1) {
+            } else if (command.toUpperCase().trim().equals("START") && GameServerEndpoint.getNumPlayers() < GameplayConstants.MIN_NUM_PLAYERS) {
                 System.out.println("Invalid number of players. Make sure that there is more than one!");
             } else {
                 System.out.println("Invalid command. Type \"START\" to start the game" + UIConstants.ConsoleInput);

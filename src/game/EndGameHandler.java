@@ -1,6 +1,8 @@
 package game;
 
 import cards.*;
+import constants.UIConstants;
+
 import java.util.*;
 import players.*;
 import players.human.HumanPlayer;
@@ -72,39 +74,19 @@ public class EndGameHandler {
      */
     private void executeFinalTurns(GameMode gameMode, List<Player> players) {
         // Display initial final turns banner
-        ui.broadcastMessage("\n");
-        ui.broadcastMessage("██████╗ ███████╗ ██████╗ ██╗███╗   ██╗    ███████╗██╗███╗   ██╗ █████╗ ██╗       ████████╗██╗   ██╗██████╗ ███╗   ██╗███████╗");
-        ui.broadcastMessage("██╔══██╗██╔════╝██╔════╝ ██║████╗  ██║    ██╔════╝██║████╗  ██║██╔══██╗██║       ╚══██╔══╝██║   ██║██╔══██╗████╗  ██║██╔════╝");
-        ui.broadcastMessage("██████╔╝█████╗  ██║  ███╗██║██╔██╗ ██║    █████╗  ██║██╔██╗ ██║███████║██║          ██║   ██║   ██║██████╔╝██╔██╗ ██║███████╗");
-        ui.broadcastMessage("██╔══██╗██╔══╝  ██║   ██║██║██║╚██╗██║    ██╔══╝  ██║██║╚██╗██║██╔══██║██║          ██║   ██║   ██║██╔══██╗██║╚██╗██║╚════██║");
-        ui.broadcastMessage("██████╔╝███████╗╚██████╔╝██║██║ ╚████║    ██║     ██║██║ ╚████║██║  ██║███████╗     ██║   ╚██████╔╝██║  ██║██║ ╚████║███████║");
-        ui.broadcastMessage("╚═════╝ ╚══════╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝    ╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝     ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝");
-        ui.broadcastMessage("\n");
-        
+        ui.broadcastMessage(UIConstants.BEGIN_FINAL_TURNS);
+
         // Force a delay to ensure clients receive the banner
         try {
             Thread.sleep(800);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        
+
         // Modify TurnManager to accept a boolean for final turn
         for (int i = 0; i < players.size() - 1; i++) {
             Player p = players.get(i);
-            
-            // Display final turn reminder before each player's turn
-            ui.broadcastMessage("══════════════════════════════════════════════════════════════");
-            ui.broadcastMessage("                          FINAL TURN                          ");
-            ui.broadcastMessage("                  NO CARDS WILL BE DRAWN                     ");
-            ui.broadcastMessage("══════════════════════════════════════════════════════════════");
-            
-            // Ensure clients receive this message before the turn starts
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            
+
             // Execute the turn with the final turn flag
             turnManager.executeTurn(gameState, p, gameMode, "Play", true);
         }
@@ -118,20 +100,20 @@ public class EndGameHandler {
      * @param players  List of players
      */
     private void executeDiscardPhase(GameMode gameMode, List<Player> players) {
-        ui.broadcastMessage("══════════════════════════════════════════════════════════════\n");
+        ui.broadcastMessage(UIConstants.DEFAULT_LINE_SEPARATOR);
         ui.broadcastMessage(
                 "Choose cards from your hand to discard! The remaining cards in your hand will be added to your river, so choose wisely!\n");
-        ui.broadcastMessage("══════════════════════════════════════════════════════════════\n");
+        ui.broadcastMessage(UIConstants.DEFAULT_LINE_SEPARATOR);
 
         // Each player completes both of their discards before moving to the next player
         for (Player currentPlayer : players) {
             if (currentPlayer instanceof HumanPlayer) {
                 HumanPlayer currentHumanPlayer = (HumanPlayer) currentPlayer;
-                
+
                 // First discard
                 ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their first card:");
                 turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, "Discards", true);
-                
+
                 // Second discard
                 ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their second card:");
                 turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, "Discards", true);
@@ -140,7 +122,7 @@ public class EndGameHandler {
                 ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their first card:");
                 Card firstDiscardedCard = currentPlayer.chooseCardToDiscard();
                 turnManager.displayCardPlayedOrDiscarded(currentPlayer, firstDiscardedCard, "Discards");
-                
+
                 ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their second card:");
                 Card secondDiscardedCard = currentPlayer.chooseCardToDiscard();
                 turnManager.displayCardPlayedOrDiscarded(currentPlayer, secondDiscardedCard, "Discards");
@@ -185,29 +167,29 @@ public class EndGameHandler {
      * @param players  List of players
      */
     private void applyTimeBonuses(TreeMap<Integer, ArrayList<Player>> scoreMap, List<Player> players) {
-        ui.broadcastMessage("══════════════════════════════════════════════════════════════");
+        ui.broadcastMessage(UIConstants.DEFAULT_LINE_SEPARATOR);
         ui.broadcastMessage("                    TIME BONUS POINTS                         ");
-        ui.broadcastMessage("══════════════════════════════════════════════════════════════");
-        
+        ui.broadcastMessage(UIConstants.DEFAULT_LINE_SEPARATOR);
+
         // Force a small delay to ensure clients receive this message
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        
+
         boolean anyBonusesApplied = false;
-        
+
         for (Player player : players) {
             int bonus = timeBonus.get(player);
             if (bonus > 0) {
                 anyBonusesApplied = true;
                 int logDeduction = (int) (Math.log(bonus) / Math.log(2));
-                String bonusMessage = PlayerDisplayUtils.getDisplayName(player) + " earned " + bonus + 
+                String bonusMessage = PlayerDisplayUtils.getDisplayName(player) + " earned " + bonus +
                         " bonus points, resulting in a " + logDeduction + " point deduction!";
-                
+
                 ui.broadcastMessage(bonusMessage);
-                
+
                 // Force a small delay between messages
                 try {
                     Thread.sleep(300);
@@ -227,22 +209,22 @@ public class EndGameHandler {
                             scoreMap.put(newScore, new ArrayList<>());
                         }
                         scoreMap.get(newScore).add(player);
-                        
+
                         // Display score change information
-                        ui.broadcastMessage("  → " + PlayerDisplayUtils.getDisplayName(player) + 
-                                           " score changed from " + score + " to " + newScore);
+                        ui.broadcastMessage("  → " + PlayerDisplayUtils.getDisplayName(player) +
+                                " score changed from " + score + " to " + newScore);
                         break;
                     }
                 }
             }
         }
-        
+
         if (!anyBonusesApplied) {
             ui.broadcastMessage("No time bonuses earned in this game.");
         }
-        
-        ui.broadcastMessage("══════════════════════════════════════════════════════════════");
-        
+
+        ui.broadcastMessage(UIConstants.DEFAULT_LINE_SEPARATOR);
+
         // Force a small delay after all bonus calculations
         try {
             Thread.sleep(500);

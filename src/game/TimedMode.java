@@ -10,8 +10,6 @@ import game.GameState;
 import players.Player;
 import constants.UIConstants;
 
-
-
 public class TimedMode implements GameMode {
     private long gameStartTime;
     private long timeLimit;
@@ -47,19 +45,19 @@ public class TimedMode implements GameMode {
         // Set time limit based on choice
         switch (timeChoice) {
             case 1:
-                timeLimit = 60 * 1000; // 1 minute in milliseconds
+                timeLimit = GameplayConstants.ONE_MINUTE_MILLIS;
                 System.out.print(UIConstants.RESET_COLOR + "\n1-minute blitz selected!\n");
                 break;
             case 2:
-                timeLimit = 5 * 60 * 1000; // 5 minutes in milliseconds
+                timeLimit = GameplayConstants.FIVE_MINUTES_MILLIS;
                 System.out.print(UIConstants.RESET_COLOR + "\n5-minute challenge selected!\n");
                 break;
             case 3:
-                timeLimit = 10 * 60 * 1000; // 10 minutes in milliseconds
+                timeLimit = GameplayConstants.TEN_MINUTES_MILLIS;
                 System.out.print(UIConstants.RESET_COLOR + "\n10-minute game selected!\n");
                 break;
         }
-        
+
         gameStartTime = System.currentTimeMillis() + GameplayConstants.THREE_SECOND_EXTENSION;
     }
 
@@ -77,7 +75,7 @@ public class TimedMode implements GameMode {
     public void updateAfterTurn(Player player, long turnDuration) {
         // Calculate bonus points for quick turns
         lastTurnBonus = calculateTimeBonus(turnDuration);
-        
+
         // Store the bonus for this player
         if (lastTurnBonus > 0) {
             int currentBonus = timeBonus.getOrDefault(player, 0);
@@ -93,7 +91,6 @@ public class TimedMode implements GameMode {
     public long getTimeLimit() {
         return timeLimit;
     }
-
 
     /**
      * Gets the bonus earned in the last turn.
@@ -130,22 +127,22 @@ public class TimedMode implements GameMode {
      * @return The bonus points earned for this turn
      */
     private int calculateTimeBonus(long turnDuration) {
-        if (timeLimit <= 60 * 1000) {
+        if (timeLimit <= GameplayConstants.ONE_MINUTE_MILLIS) {
             // For 1-minute games, faster bonuses
-            if (turnDuration < 8000)  // Was 3000, increased to 8 seconds
-                return 3;
-            if (turnDuration < 11000) // Was 6000, increased to 11 seconds
-                return 2;
-            if (turnDuration < 15000) // Was 10000, increased to 15 seconds
-                return 1;
+            if (turnDuration < 8 * GameplayConstants.ONE_SECOND_MILLIS)
+                return GameplayConstants.MAX_BONUS_POINTS;
+            if (turnDuration < 11 * GameplayConstants.ONE_SECOND_MILLIS)
+                return GameplayConstants.MEDIUM_BONUS_POINTS;
+            if (turnDuration < 15 * GameplayConstants.ONE_SECOND_MILLIS)
+                return GameplayConstants.MIN_BONUS_POINTS;
         } else {
             // For longer games, slightly more relaxed timing
-            if (turnDuration < 10000) // Was 5000, increased to 10 seconds
-                return 3;
-            if (turnDuration < 15000) // Was 10000, increased to 15 seconds
-                return 2;
-            if (turnDuration < 20000) // Was 15000, increased to 20 seconds
-                return 1;
+            if (turnDuration < 10 * GameplayConstants.ONE_SECOND_MILLIS)
+                return GameplayConstants.MAX_BONUS_POINTS;
+            if (turnDuration < 15 * GameplayConstants.ONE_SECOND_MILLIS)
+                return GameplayConstants.MEDIUM_BONUS_POINTS;
+            if (turnDuration < 20 * GameplayConstants.ONE_SECOND_MILLIS)
+                return GameplayConstants.MIN_BONUS_POINTS;
         }
         return 0;
     }
@@ -159,7 +156,7 @@ public class TimedMode implements GameMode {
         long elapsedTime = System.currentTimeMillis() - gameStartTime;
         return Math.max(0, timeLimit - elapsedTime);
     }
-    
+
     /**
      * Gets the elapsed time since the game started.
      * 
