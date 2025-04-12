@@ -8,7 +8,7 @@ import players.Player;
 public class TimedMode implements GameMode {
     private long gameStartTime;
     private long timeLimit;
-    private int lastTurnBonus = GameplayConstants.INITIAL_TIMED_MODE_TURN_BONUS;
+    private int lastTurnBonusPoints = GameplayConstants.INITIAL_TIMED_MODE_TURN_BONUS;
     private HashMap<Player, Integer> timeBonus = new HashMap<>();
 
     @Override
@@ -18,8 +18,6 @@ public class TimedMode implements GameMode {
         System.out.println("    2. 5-minute challenge");
         System.out.println("    3. 10-minute game");
 
-        // Code to get time choice and set timeLimit
-        // ...
         int timeChoice = 0;
         boolean validChoice = false;
 
@@ -69,12 +67,12 @@ public class TimedMode implements GameMode {
 
     public void updateAfterTurn(Player player, long turnDuration) {
         // Calculate bonus points for quick turns
-        lastTurnBonus = calculateTimeBonus(turnDuration);
+        lastTurnBonusPoints = calculateTimeBonus(turnDuration);
 
         // Store the bonus for this player
-        if (lastTurnBonus > 0) {
+        if (lastTurnBonusPoints > 0) {
             int currentBonus = timeBonus.getOrDefault(player, 0);
-            timeBonus.put(player, currentBonus + lastTurnBonus);
+            timeBonus.put(player, currentBonus + lastTurnBonusPoints);
         }
     }
 
@@ -93,7 +91,7 @@ public class TimedMode implements GameMode {
      * @return The bonus points for the most recent turn
      */
     public int getLastTurnBonus() {
-        return lastTurnBonus;
+        return lastTurnBonusPoints;
     }
 
     /**
@@ -118,25 +116,25 @@ public class TimedMode implements GameMode {
     /**
      * Calculates the time bonus based on how quickly a turn was completed.
      * 
-     * @param turnDuration The duration of the turn in milliseconds
+     * @param turnDurationMillis The duration of the turn in milliseconds
      * @return The bonus points earned for this turn
      */
-    private int calculateTimeBonus(long turnDuration) {
+    private int calculateTimeBonus(long turnDurationMillis) {
         if (timeLimit <= GameplayConstants.ONE_MINUTE_MILLIS) {
             // For 1-minute games, faster bonuses
-            if (turnDuration < 8 * GameplayConstants.ONE_SECOND_MILLIS)
+            if (turnDurationMillis < GameplayConstants.BLITZ_MAX_BONUS_THRESHOLD_SECONDS * GameplayConstants.ONE_SECOND_MILLIS)
                 return GameplayConstants.MAX_BONUS_POINTS;
-            if (turnDuration < 11 * GameplayConstants.ONE_SECOND_MILLIS)
+            if (turnDurationMillis < GameplayConstants.BLITZ_MEDIUM_BONUS_THRESHOLD_SECONDS * GameplayConstants.ONE_SECOND_MILLIS)
                 return GameplayConstants.MEDIUM_BONUS_POINTS;
-            if (turnDuration < 15 * GameplayConstants.ONE_SECOND_MILLIS)
+            if (turnDurationMillis < GameplayConstants.BLITZ_MIN_BONUS_THRESHOLD_SECONDS * GameplayConstants.ONE_SECOND_MILLIS)
                 return GameplayConstants.MIN_BONUS_POINTS;
         } else {
-            // For longer games, slightly more relaxed timing
-            if (turnDuration < 10 * GameplayConstants.ONE_SECOND_MILLIS)
+            // For longer games, more relaxed timing
+            if (turnDurationMillis < GameplayConstants.STANDARD_MAX_BONUS_THRESHOLD_SECONDS * GameplayConstants.ONE_SECOND_MILLIS)
                 return GameplayConstants.MAX_BONUS_POINTS;
-            if (turnDuration < 15 * GameplayConstants.ONE_SECOND_MILLIS)
+            if (turnDurationMillis < GameplayConstants.STANDARD_MEDIUM_BONUS_THRESHOLD_SECONDS * GameplayConstants.ONE_SECOND_MILLIS)
                 return GameplayConstants.MEDIUM_BONUS_POINTS;
-            if (turnDuration < 20 * GameplayConstants.ONE_SECOND_MILLIS)
+            if (turnDurationMillis < GameplayConstants.STANDARD_MIN_BONUS_THRESHOLD_SECONDS * GameplayConstants.ONE_SECOND_MILLIS)
                 return GameplayConstants.MIN_BONUS_POINTS;
         }
         return 0;

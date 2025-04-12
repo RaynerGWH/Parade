@@ -33,6 +33,17 @@ public class GameplayConstants {
     // In timed mode, initial turn bonus
     public static final int INITIAL_TIMED_MODE_TURN_BONUS = 0;
 
+    // Time thresholds for bonus points in timed mode (in seconds)
+    // For blitz (1-minute) games
+    public static final long BLITZ_MAX_BONUS_THRESHOLD_SECONDS = 8;
+    public static final long BLITZ_MEDIUM_BONUS_THRESHOLD_SECONDS = 11;
+    public static final long BLITZ_MIN_BONUS_THRESHOLD_SECONDS = 15;
+    
+    // For longer games
+    public static final long STANDARD_MAX_BONUS_THRESHOLD_SECONDS = 10;
+    public static final long STANDARD_MEDIUM_BONUS_THRESHOLD_SECONDS = 15;
+    public static final long STANDARD_MIN_BONUS_THRESHOLD_SECONDS = 20;
+
     // Initial player count settings
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_PLAYERS = 6;
