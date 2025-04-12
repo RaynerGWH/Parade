@@ -37,6 +37,7 @@ public class LoginUI {
 
         // Final screen: Display login menu options.
         while (true) {
+            
             ConsoleUtils.clear();
             System.out.print(UIConstants.LOGIN_BORDER);
 

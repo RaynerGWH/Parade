@@ -88,16 +88,16 @@ public class LoginManager {
      */
     public Account handleAccountCreation() {
         while (true) {
-            System.out.print("Enter a username (alphanumeric only): ");
+            System.out.print(UIConstants.RESET_COLOR + "\n💬 Choose your name, adventurer (letters & numbers only)" + UIConstants.ConsoleInput);
             String username = scanner.nextLine().trim();
 
             if (!username.matches("^[a-zA-Z0-9]+$")) {
-                System.out.println("Invalid username. Please use only alphanumeric characters.(No spaces)");
+                System.out.println(UIConstants.RESET_COLOR + "\n❌ That name breaks the magic! Please use only letters and numbers — no spaces or symbols.");
                 continue;
             }
 
             if (accounts.containsKey(username.toLowerCase())) {
-                System.out.println("Username already exists.");
+                System.out.print(UIConstants.RESET_COLOR + "\n❗ That name's already taken by another adventurer.\n");
                 continue;
             }
 

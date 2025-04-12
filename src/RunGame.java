@@ -125,10 +125,11 @@ public class RunGame {
             boolean exitRequested = false;
             while (!exitRequested) {
                 ConsoleUtils.clear();
+
                 System.out.println(UIConstants.RESET_COLOR + String.join("\n", List.of(
-                        "[R] Read Rulebook 📖",
                         "[S] Start Game 🎮",
                         "[B] Buy Flairs ✨",
+                        "[R] Read Rulebook 📖",
                         "[Q] Quit ❌"
                 )));
                 System.out.print(UIConstants.ConsoleInput);
