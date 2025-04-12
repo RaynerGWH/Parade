@@ -3,6 +3,7 @@ package constants;
 public class GameplayConstants {
     // Game setup
     public static final int INITIAL_PARADE_LENGTH = 6;
+    public static final int LINES_PER_RULEBOOK_PAGE = 15;
 
     // Time limits in milliseconds
     public static final long ONE_SECOND_MILLIS = 1000;

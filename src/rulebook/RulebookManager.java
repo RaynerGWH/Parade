@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
+import constants.GameplayConstants;
 import constants.UIConstants;
 import ui.ConsoleUtils;
 /**
@@ -27,7 +28,7 @@ public class RulebookManager {
      * @param scanner Scanner for user input
      */
     public RulebookManager(String rulebookPath, Scanner scanner) {
-        this(rulebookPath, scanner, 15); // 15 Lines per page.
+        this(rulebookPath, scanner, GameplayConstants.LINES_PER_RULEBOOK_PAGE); // 15 Lines per page.
     }
     
     /**

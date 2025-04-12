@@ -148,6 +148,7 @@ public class ConsoleUtils {
      */
     public static void printParadeAnimation() throws InterruptedException {
         int timer = 70; // initial delay in milliseconds
+        double timerDivisor = 1.3; // proportion to make timer smaller by to speed up animation of parade letter display
 
         System.out.println("\n");
 
@@ -176,7 +177,7 @@ public class ConsoleUtils {
             // Corrected from REST_COLOR to RESET_COLOR.
             System.out.print(UIConstants.RESET_COLOR);
             System.out.println();
-            timer /= 1.3; // speed up for the next row
+            timer /= timerDivisor; // speed up for the next row
         }
     }
 

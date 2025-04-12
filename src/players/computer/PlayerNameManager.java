@@ -23,9 +23,6 @@ public class PlayerNameManager {
     }
 
     public PlayerName assignName() {
-        // if (availableNames.isEmpty()) {
-        //    throw new IllegalStateException("No available player names left!");
-        // }
         // Remove and return the first available name.
         return availableNames.remove(0);
     }
