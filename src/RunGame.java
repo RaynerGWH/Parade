@@ -201,7 +201,7 @@ public class RunGame {
                     System.out.println(String.join("\n", List.of(
                         "🎭 That move puzzled even the cards...\n Please enter [S], [M], or [Q] to proceed."
                     )));
-                    System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~");
+                    System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~\n");
                     mainScanner.nextLine();
             }
         }
@@ -248,7 +248,7 @@ public class RunGame {
                     System.out.println(String.join("\n", List.of(
                         "🎭 That move puzzled even the cards...\nPlease enter [H], [J], or [Q] to proceed."
                     )));
-                    System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~");
+                    System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~\n");
                     mainScanner.nextLine();
             }
         }

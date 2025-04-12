@@ -178,7 +178,7 @@ public class UIConstants {
 
                 public static final String GAMEMODE_SCREEN = 
                 BORDER_COLOR + "      ___                 \r\n" +
-                "     (o o)                            " + TEXT_COLOR + "One step further adventurer..." + BORDER_COLOR + " \r\n" +
+                "     (o o)                            " + TEXT_COLOR + "🌙 One step further adventurer..." + BORDER_COLOR + " \r\n" +
                 "    (  V  )\r\n" +
                 "------m-m----------" + BORDER_FLOWER + "---- " + BORDER_FLOWER + "--------------------------------" + BORDER_FLOWER + BORDER_FLOWER + BORDER_FLOWER + BORDER_FLOWER + BORDER_FLOWER + BORDER_FLOWER + BORDER_FLOWER + "\r\n";
 
