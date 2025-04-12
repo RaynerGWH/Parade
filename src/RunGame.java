@@ -127,6 +127,7 @@ public class RunGame {
             while (!exitRequested) {
                 ConsoleUtils.clear();
 
+                System.out.print(UIConstants.MAIN_SCREEN + "\n");
                 System.out.println(UIConstants.RESET_COLOR + String.join("\n", List.of(
                         "[S] Start Game 🎮",
                         "[B] Buy Flairs ✨",
@@ -151,7 +152,7 @@ public class RunGame {
                         break;
                     case "Q":
                         if (confirmQuit()) {
-                            System.out.println("🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
+                            System.out.println("\n🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
                             System.exit(0);
                         }
                         break;
@@ -178,6 +179,9 @@ public class RunGame {
     private void selectGameMode() {
         while (true) {
             ConsoleUtils.clear();
+
+            System.out.println(UIConstants.GAMEMODE_SCREEN + UIConstants.RESET_COLOR);
+
             System.out.println(String.join("\n", List.of(
                 "SELECT GAMEMODE",
                 "[S] Singleplayer 👤",
@@ -196,7 +200,7 @@ public class RunGame {
                     return;
                 case "Q":
                     if (confirmQuit()) {
-                        System.out.println("🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
+                        System.out.println("\n🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
                         System.exit(0);
                     }
                     break;
@@ -243,7 +247,7 @@ public class RunGame {
                     return;
                 case "Q":
                     if (confirmQuit()) {
-                        System.out.println("🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
+                        System.out.println("\n🚪 You’ve left the Parade.\nUntil next time, traveler! 🎴🌙");
                         System.exit(0);
                     }
                     break;
@@ -302,12 +306,13 @@ public class RunGame {
      */
     private boolean confirmQuit() {
         ConsoleUtils.clear();
-        System.out.println(UIConstants.RESET_COLOR + "                                   ❓ Are you certain you wish to leave the Parade?");
+        System.out.println(UIConstants.RESET_COLOR + "❓ Are you certain you wish to leave the Parade?");
         System.out.println(String.join("\n", List.of(
             "",
-            "[Q] Quit your journey.",
-            "[Enter] March onward with the crowd."
+            "[Enter] March onward with the crowd.",
+            "[Q] Quit your journey."
         )));
+        System.out.print(UIConstants.ConsoleInput);
         String confirm = mainScanner.nextLine().trim().toUpperCase();
         return confirm.equals("Q");
     }

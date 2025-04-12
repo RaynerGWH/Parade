@@ -105,6 +105,23 @@ public class UIConstants {
         // Card
         public static final String CARD_LOGO = "❀";
 
+        // General Standard Colors
+        public static final String BLACK = "\u001B[30m";
+        public static final String RED = "\u001B[31m";
+        public static final String GREEN = "\u001B[32m";
+        public static final String YELLOW = "\u001B[33m";
+        public static final String ORANGE = "\u001B[38;2;255;165;0m";
+        public static final String BLUE = "\u001B[34m"; // Preferred Darker Blue
+        public static final String PURPLE = "\u001B[35m";
+        public static final String LIGHT_PURPLE = "\u001B[38;5;183m"; // Preferred Purple
+        public static final String CYAN = "\u001B[38;5;111m"; // Preferred Light Blue
+        public static final String WHITE = "\u001B[37m";
+        public static final String CRISP_WHITE = "\u001B[97m";
+        public static final String LIGHT_GREEN = "\u001B[92m"; // Preferred Green 
+        public static final String EXTENDED_LIGHT_GREEN = "\u001B[38;5;120m";
+        public static final String NEON_GREEN = "\u001B[38;2;57;255;20m";
+        public static final String GRAY = "\u001B[38;5;238m";
+
         // Color Utils
         public static final String TEXT_COLOR = "\u001B[38;5;183m";
         public static final String FLOWER_COLOR = "\u001B[38;5;183m";
@@ -129,25 +146,18 @@ public class UIConstants {
             "                    ║ └─────────────────────────────────────────────────────────────────────┘ ║\r\n" + //
             "                    ╚═════════════════════════════════════════════════════ " + BORDER_FLOWER + "═══ " + BORDER_FLOWER + "═════════╝\r\n");
 
-        // General Standard Colors
-        public static final String BLACK = "\u001B[30m";
-        public static final String RED = "\u001B[31m";
-        public static final String GREEN = "\u001B[32m";
-        public static final String YELLOW = "\u001B[33m";
-        public static final String ORANGE = "\u001B[38;2;255;165;0m";
-        public static final String BLUE = "\u001B[34m"; // Preferred Darker Blue
-        public static final String PURPLE = "\u001B[35m";
-        public static final String LIGHT_PURPLE = "\u001B[38;5;183m"; // Preferred Purple
-        public static final String CYAN = "\u001B[36m"; // Preferred Light Blue
-        public static final String WHITE = "\u001B[37m";
-        public static final String CRISP_WHITE = "\u001B[97m";
-        public static final String LIGHT_GREEN = "\u001B[92m"; // Preferred Green 
-        public static final String EXTENDED_LIGHT_GREEN = "\u001B[38;5;120m";
-        public static final String NEON_GREEN = "\u001B[38;2;57;255;20m";
-        public static final String GRAY = "\u001B[38;5;238m";
+        public static final String MAIN_SCREEN = 
+            "      ／＞　 フ  \r\n" + 
+            "     " + CYAN + "❀*̥" + BORDER_COLOR + "　_　_|   " + CYAN + " 🎴 Welcome, adventurer!"  + "!\r\n" + BORDER_COLOR + 
+            "    ／` ミ＿xノ  \r\n" +
+            "   /　　　　 | " + CYAN + " Shuffle your fate... the Parade awaits your hand~  \r\n" + BORDER_COLOR +
+            "  /　 ヽ　　 ﾉ\r\n";
 
-
-
+        public static final String GAMEMODE_SCREEN = 
+            BORDER_COLOR + "      ___                 \r\n" +
+            "     (o o)   " + TEXT_COLOR + "One step further adventurer..." + BORDER_COLOR + " \r\n" +
+            "    (  V  )\r\n" +
+            "------m-m----------" + BORDER_FLOWER + "---- " + BORDER_FLOWER + "------------\r\n";
 
         // RAINBOW COLOR
         // Example rainbow colors array for cycling effect
