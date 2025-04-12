@@ -275,6 +275,12 @@ public class TurnManager {
             }
         }
 
+        // Add Parade inside the box
+        boxedLines.add("");
+        boxedLines.add("The Parade:");
+        String[] paradeLines = CardPrinter.printCardRow(parade, true).split("\n");
+        boxedLines.addAll(Arrays.asList(paradeLines));
+
         // Encapsulate inside a box
         int maxLength = boxedLines.stream().mapToInt(line -> line.replaceAll("\\e\\[[;\\d]*m", "").length()).max().orElse(0);
         String top = "╭" + "─".repeat(maxLength + 2) + "╮";
@@ -285,10 +291,6 @@ public class TurnManager {
             ui.broadcastMessage("│ " + padRight(line, maxLength) + " │");
         }
         ui.broadcastMessage(bottom);
-
-        // Divider and Parade
-        ui.broadcastMessage("The Parade:");
-        ui.broadcastMessage(CardPrinter.printCardRow(parade, true));
 
         // Show hand for current human player only
         if (currentPlayer instanceof HumanPlayer) {
