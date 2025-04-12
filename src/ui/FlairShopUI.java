@@ -59,8 +59,8 @@ public class FlairShopUI {
             System.out.println(padding + "│" + padRight(statsLine, boxWidth) + "│");
             System.out.println(padding + "╰" + "─".repeat(boxWidth) + "╯");
 
-            // Ensure prompt is visible right after the UI
-            System.out.print("\n" + padding + UIConstants.ConsoleInput);
+            // Left aligned input prompt at the left border
+            System.out.print(UIConstants.ConsoleInput);
             String input = scanner.nextLine().trim();
             if (input.equalsIgnoreCase("Q")) {
                 System.out.println("Exiting shop menu.");
@@ -112,6 +112,37 @@ public class FlairShopUI {
     }
 
     private void handleFlairPurchase(Account account, Flair flair) {
+        boolean insufficientWins = account.getWins() < flair.getRequiredWins();
+        boolean insufficientFunds = account.getBalance() < flair.getCost();
+        
+        // Check for both wins and funds insufficient
+        if (insufficientWins && insufficientFunds) {
+            int winsNeeded = flair.getRequiredWins() - account.getWins();
+            double fundsNeeded = flair.getCost() - account.getBalance();
+            System.out.printf("Insufficient funds and wins, %.2f more coins and %d more wins required to purchase this item.\n", fundsNeeded, winsNeeded);
+            System.out.print("Press ENTER to continue...");
+            scanner.nextLine();
+            return;
+        }
+        
+        // Check for win requirements
+        if (insufficientWins) {
+            int winsNeeded = flair.getRequiredWins() - account.getWins();
+            System.out.println("Insufficient wins, " + winsNeeded + " more wins required to purchase this item.");
+            System.out.print("Press ENTER to continue...");
+            scanner.nextLine();
+            return;
+        }
+        
+        // Check for balance requirements
+        if (insufficientFunds) {
+            double fundsNeeded = flair.getCost() - account.getBalance();
+            System.out.printf("Insufficient funds, %.2f more coins required to purchase this item.\n", fundsNeeded);
+            System.out.print("Press ENTER to continue...");
+            scanner.nextLine();
+            return;
+        }
+        
         boolean purchased = flairShop.purchaseFlair(flair.getFlairName(), account);
         if (purchased) {
             System.out.println("Purchase successful! You now own '" + flair.getFlairName() + "'.");
@@ -124,7 +155,9 @@ public class FlairShopUI {
                         : "Failed to set flair as worn.");
             }
         } else {
-            System.out.println("Purchase failed. Requirements or balance may be insufficient.");
+            System.out.println("Purchase failed. An unexpected error occurred.");
+            System.out.print("Press ENTER to continue...");
+            scanner.nextLine();
         }
     }
 

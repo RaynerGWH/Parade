@@ -65,7 +65,7 @@ public class LoginManager {
         try {
             int choice = Integer.parseInt(input);
             if (choice == 0) {
-                return null;
+                return handleAccountCreation();
             }
             if (choice > 0 && choice <= accountList.size()) {
                 Account selected = accountList.get(choice - 1);
