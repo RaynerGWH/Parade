@@ -126,6 +126,7 @@ public class RunGame {
             while (!exitRequested) {
                 ConsoleUtils.clear();
 
+                System.out.print(UIConstants.MAIN_SCREEN + "\n");
                 System.out.println(UIConstants.RESET_COLOR + String.join("\n", List.of(
                         "[S] Start Game 🎮",
                         "[B] Buy Flairs ✨",
@@ -176,6 +177,9 @@ public class RunGame {
     private void selectGameMode() {
         while (true) {
             ConsoleUtils.clear();
+
+            System.out.println(UIConstants.GAMEMODE_SCREEN + UIConstants.RESET_COLOR);
+
             System.out.println(String.join("\n", List.of(
                 "SELECT GAMEMODE",
                 "[S] Singleplayer 👤",
