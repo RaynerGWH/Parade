@@ -46,7 +46,7 @@ public class Game {
         GameMode gameMode = new ClassicMode();
         boolean validGameMode = false;
         while (!validGameMode) {
-            System.out.println("Game Modes available:");
+            System.out.println(UIConstants.RESET_COLOR + "Game Modes available:");
             System.out.println("    1. Classic");
             System.out.println("    2. Timed");
             System.out.print("Enter '1' or '2'" + UIConstants.ConsoleInput);
@@ -79,7 +79,7 @@ public class Game {
             gameMode.initialize(scanner);
         }
 
-        System.out.println("\n\nPRESS ENTER TO START THE GAME!\n\n");
+        System.out.println("\n\[ENTER] START GAME!\n\n");
         scanner.nextLine();
         // Countdown to game start after game mode selection
         ConsoleUtils.displayCountdown(ui);
