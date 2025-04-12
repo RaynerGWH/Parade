@@ -3,6 +3,12 @@ package players;
 import players.computer.*;
 import cards.*;
 import players.human.HumanPlayer;
+import account.Account;
+import cards.Deck;
+import players.Player;
+import players.computer.BeginnerComputerPlayer;
+import players.computer.IntermediateComputerPlayer;
+import players.computer.PlayerNameManager;
 import account.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,7 +58,7 @@ public class PlayerManager {
         for (int i = 1; i <= count; i++) {
             while (true) {
                 try {
-                    System.out.print("Enter difficulty of bot " + i + " (Level 1 or 2)" + UIConstants.LIGHT_PURPLE + "\n> ");
+                    System.out.print("Enter difficulty of bot " + i + " (Level 1 or 2)" + UIConstants.ConsoleInput);
                     String difficulty = sc.nextLine();
                     int diffLvl = Integer.parseInt(difficulty);
                     Player bot = checkDiff(diffLvl);

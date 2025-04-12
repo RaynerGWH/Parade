@@ -4,15 +4,15 @@ import account.Account;
 import account.Flair;
 import account.FlairShop;
 import constants.UIConstants;
+import ui.ConsoleUtils;
+
 import java.util.List;
 import java.util.Scanner;
 
 /**
- * Manages the UI for the flair shop, allowing users to purchase and select
- * flairs.
+ * Manages the UI for the flair shop, allowing users to purchase and select flairs.
  */
 public class FlairShopUI {
-
     private final FlairShop flairShop;
     private final Scanner scanner;
 
@@ -41,8 +41,7 @@ public class FlairShopUI {
                 String status = "";
                 if (account.hasFlair(flair.getFlairName())) {
                     List<String> ownedFlairs = account.getUnlockedFlairs();
-                    String worn = account.getWornFlair();
-                    if (worn != null && worn.equalsIgnoreCase(flair.getFlairName())) {
+                    if (!ownedFlairs.isEmpty() && ownedFlairs.get(0).equalsIgnoreCase(flair.getFlairName())) {
                         status = "[Wearing]";
                     } else {
                         status = "[OWNED]";
@@ -61,7 +60,7 @@ public class FlairShopUI {
             System.out.println(padding + "╰" + "─".repeat(boxWidth) + "╯");
 
             // Ensure prompt is visible right after the UI
-            System.out.print("\n" + padding + UIConstants.LIGHT_PURPLE + "> ");
+            System.out.print("\n" + padding + UIConstants.ConsoleInput);
             String input = scanner.nextLine().trim();
             if (input.equalsIgnoreCase("Q")) {
                 System.out.println("Exiting shop menu.");
@@ -90,18 +89,16 @@ public class FlairShopUI {
 
     private void handleExistingFlair(Account account, Flair flair) {
         List<String> ownedFlairs = account.getUnlockedFlairs();
-        if (flair.getFlairName().equalsIgnoreCase(account.getWornFlair())) {
+        if (!ownedFlairs.isEmpty() && ownedFlairs.get(0).equalsIgnoreCase(flair.getFlairName())) {
             System.out.println("This flair is already being worn.");
         } else {
-            System.out.print("You already own this flair. Do you want to wear it? (Y/N)\n> ");
+            System.out.print("You already own this flair. Do you want to wear it? (Y/N)" + UIConstants.ConsoleInput);
             String wearInput = scanner.nextLine().trim();
             if (wearInput.equalsIgnoreCase("Y")) {
                 boolean setWorn = flairShop.selectFlairToWear(flair.getFlairName(), account);
-                if (setWorn) {
-                    System.out.println("You are now wearing '" + flair.getFlairName() + "'.");
-                } else {
-                    System.out.println("Failed to set flair as worn.");
-                }
+                System.out.println(setWorn
+                        ? "You are now wearing '" + flair.getFlairName() + "'."
+                        : "Failed to set flair as worn.");
             }
         }
     }
@@ -110,15 +107,13 @@ public class FlairShopUI {
         boolean purchased = flairShop.purchaseFlair(flair.getFlairName(), account);
         if (purchased) {
             System.out.println("Purchase successful! You now own '" + flair.getFlairName() + "'.");
-            System.out.print("Do you want to wear this flair now? (Y/N)\n> ");
+            System.out.print("Do you want to wear this flair now? (Y/N)" + UIConstants.ConsoleInput);
             String wearNowInput = scanner.nextLine().trim();
             if (wearNowInput.equalsIgnoreCase("Y")) {
                 boolean setWorn = flairShop.selectFlairToWear(flair.getFlairName(), account);
-                if (setWorn) {
-                    System.out.println("You are now wearing '" + flair.getFlairName() + "'.");
-                } else {
-                    System.out.println("Failed to set flair as worn.");
-                }
+                System.out.println(setWorn
+                        ? "You are now wearing '" + flair.getFlairName() + "'."
+                        : "Failed to set flair as worn.");
             }
         } else {
             System.out.println("Purchase failed. Requirements or balance may be insufficient.");

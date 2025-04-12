@@ -2,6 +2,7 @@ package players.human;
 
 import cards.*;
 import players.AbstractPlayer;
+import constants.UIConstants;
 import account.Account;  // Import the Account class
 import account.LoginManager;
 import ui.LoginUI;
@@ -74,7 +75,7 @@ public class HumanPlayer extends AbstractPlayer {
                             executor.shutdownNow();
                             return playCard(index);
                         } else {
-                            System.out.print("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + " > ");
+                            System.out.print("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + UIConstants.ConsoleInput);
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input. Please enter a valid number.");

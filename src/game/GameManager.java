@@ -18,6 +18,15 @@ import players.PlayerManager;
 import players.computer.BeginnerComputerPlayer;
 import players.computer.IntermediateComputerPlayer;
 import players.human.HumanPlayer;
+import account.Account;
+import account.AccountFileManager;
+import account.LoginManager;
+import game.Game;
+import game.GameServerEndpoint;
+import ui.ConsoleUtils;
+import ui.MultiplayerUI;
+import ui.SinglePlayerUI;
+import ui.UserInterface;
 import account.*;
 import constants.UIConstants;
 import ui.*;
@@ -74,7 +83,7 @@ public class GameManager {
         playerMgr.initializeHumanPlayers(sessions, isMulti);
 
         while (true) {
-            System.out.print("Do you want to add bots? (Y/N)" + UIConstants.LIGHT_PURPLE + "\n> ");
+            System.out.print("Do you want to add bots? (Y/N)" + UIConstants.ConsoleInput);
             String input = sc.nextLine().trim().toUpperCase();
             if (input.equals("Y")) {
                 botHandler(playerMgr.getPlayers().size());
@@ -131,7 +140,7 @@ public class GameManager {
 
         while (true) {
             try {
-                System.out.print("Enter number of Bots (" + minimumNumberOfBots + " - " + maximumNumberOfBots + ")" + UIConstants.LIGHT_PURPLE + "\n> ");
+                System.out.print("Enter number of Bots (" + minimumNumberOfBots + " - " + maximumNumberOfBots + ")" + UIConstants.ConsoleInput);
                 numBots = Integer.parseInt(sc.nextLine());
                 if (numBots > maximumNumberOfBots || numBots < minimumNumberOfBots) {
                     throw new NumberFormatException();
@@ -153,14 +162,14 @@ public class GameManager {
         ConsoleUtils.clear();
         startWebSocketServer();
         while (true) {
-            System.out.print("Waiting for players... Type \"START\" to start the game" + UIConstants.LIGHT_PURPLE + "\n> ");
+            System.out.print("Waiting for players... Type \"START\" to start the game" + UIConstants.ConsoleInput);
             String command = sc.nextLine();
             if (command.toUpperCase().trim().equals("START") && GameServerEndpoint.getNumPlayers() > 0) {
                 return;
             } else if (command.toUpperCase().trim().equals("START") && GameServerEndpoint.getNumPlayers() <= 1) {
                 System.out.println("Invalid number of players. Make sure that there is more than one!");
             } else {
-                System.out.println("Invalid command. Type \"START\" to start the game" + UIConstants.LIGHT_PURPLE + "\n> ");
+                System.out.println("Invalid command. Type \"START\" to start the game" + UIConstants.ConsoleInput);
             }
         }
     }

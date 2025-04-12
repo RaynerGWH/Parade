@@ -241,9 +241,6 @@ public class TurnManager {
         List<Player> players = gameState.getPlayers();
         ArrayList<Card> parade = gameState.getParade();
 
-        // Header
-        System.out.println(Header.renderHeader(null));
-
         // Build lines for boxed section
         List<String> boxedLines = new ArrayList<>();
 

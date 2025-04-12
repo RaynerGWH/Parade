@@ -1,6 +1,10 @@
 package account;
 
 import java.util.Scanner;
+
+import account.Account;
+import constants.UIConstants;
+
 import java.io.IOException;
 
 /**
@@ -20,18 +24,18 @@ public class ConsoleAccountCreator {
      * @throws IOException if the user chooses not to create an account
      */
     public static Account createNewAccount(Scanner scanner) throws IOException {
-        System.out.print("No existing account found. Would you like to create a new account? (Y/N) > ");
+        System.out.print("No existing account found. Would you like to create a new account? (Y/N)" + UIConstants.ConsoleInput);
         String response = scanner.nextLine().trim().toUpperCase();
 
         while (!response.equals("Y") && !response.equals("N")) {
-            System.out.print("Invalid input. Please type 'Y' or 'N': ");
+            System.out.print("Invalid input. Please type 'Y' or 'N': " + UIConstants.ConsoleInput);
             response = scanner.nextLine().trim().toUpperCase();
         }
 
         if (response.equals("Y")) {
             String username;
             while (true) {
-                System.out.print("🎮 Choose your username (letters & numbers only):\n" + UIConstants.LIGHT_PURPLE +  "> ");
+                System.out.print("🎮 Choose your username (letters & numbers only):\n" + UIConstants.ConsoleInput);
                 username = scanner.nextLine().trim().toUpperCase();
 
                 if (validateUsername(username)) {

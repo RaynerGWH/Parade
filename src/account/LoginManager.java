@@ -39,36 +39,11 @@ public class LoginManager {
     }
 
     /**
-     * Displays the login UI and manages the authentication process.
-     *
-     * @return The authenticated account or a guest account
-     */
-    public Account login() {
-        while (true) {
-            System.out.println("\n===== PARADE LOGIN =====");
-            System.out.println("1. Login with existing account");
-            System.out.println("2. Create new account");
-            System.out.print("> ");
-
-            String choice = scanner.nextLine().trim();
-
-            switch (choice) {
-                case "1":
-                    return handleLogin();
-                case "2":
-                    return handleAccountCreation();
-                default:
-                    System.out.println("\nInvalid choice. Please try again.");
-            }
-        }
-    }
-
-    /**
      * Handles login by letting the user select from available accounts.
      */
     public Account handleLogin() {
         if (accounts.isEmpty()) {
-            System.out.print("\n🧾 No account detected in the archives.\nShall we forge a new hero for the journey? (Y/N) ⚔️ ✨" + UIConstants.LIGHT_PURPLE + "\n> ");
+            System.out.print("\n🧾 No account detected in the archives.\nShall we forge a new hero for the journey? (Y/N) ⚔️ ✨" + UIConstants.ConsoleInput);
             String input = scanner.nextLine().trim().toLowerCase();
             if (input.equals("y")) {
                 handleAccountCreation();
@@ -85,7 +60,7 @@ public class LoginManager {
             System.out.printf("[%d] %s%n", i + 1, accountList.get(i).getUsername());
         }
 
-        System.out.print("\n🎯 Select your hero by number, or type [0] to summon a new one.\n" + UIConstants.LIGHT_PURPLE + "> ");
+        System.out.print("\n🎯 Select your hero by number, or type [0] to summon a new one." + UIConstants.ConsoleInput);
         String input = scanner.nextLine().trim();
         try {
             int choice = Integer.parseInt(input);

@@ -3,6 +3,19 @@ package game;
 import constants.*;
 import java.util.*;
 import players.*;
+import constants.GameplayConstants;
+import constants.UIConstants;
+import game.ClassicMode;
+import game.EndGameHandler;
+import game.GameMode;
+import game.GameServerEndpoint;
+import game.GameState;
+import game.TimedMode;
+import game.TurnManager;
+import players.Player;
+import ui.ConsoleUtils;
+import ui.PlayerDisplayUtils;
+import ui.UserInterface;
 import ui.*;
 
 public class Game {
@@ -36,7 +49,7 @@ public class Game {
             System.out.println("Game Modes available:");
             System.out.println("    1. Classic");
             System.out.println("    2. Timed");
-            System.out.print("Enter '1' or '2'" + UIConstants.LIGHT_PURPLE + "\n> ");
+            System.out.print("Enter '1' or '2'" + UIConstants.ConsoleInput);
             String gameModeChoice = scanner.nextLine().trim();
 
             if (gameModeChoice.equals("2")) {

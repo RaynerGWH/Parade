@@ -13,7 +13,6 @@ import ui.LoginUI;
 import ui.MultiplayerUI;
 import ui.SinglePlayerUI;
 import ui.UserInterface;
-import ui.Header;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -126,8 +125,14 @@ public class RunGame {
             boolean exitRequested = false;
             while (!exitRequested) {
                 ConsoleUtils.clear();
-                System.out.println(UIConstants.RESET_COLOR + Header.renderHeader(List.of("[R] Read Rulebook 📖", "[S] Start Game 🎮", "[B] Buy Flairs ✨", "[Q] Quit ❌")));
-                System.out.print(UIConstants.LIGHT_PURPLE + "\n> ");
+                // Replacing Header.renderHeader with a normal print using String.join.
+                System.out.println(UIConstants.RESET_COLOR + String.join("\n", List.of(
+                        "[R] Read Rulebook 📖",
+                        "[S] Start Game 🎮",
+                        "[B] Buy Flairs ✨",
+                        "[Q] Quit ❌"
+                )));
+                System.out.print(UIConstants.ConsoleInput);
 
                 String command = mainScanner.nextLine().trim().toUpperCase();
 
@@ -150,8 +155,9 @@ public class RunGame {
                         break;
                     default:
                         ConsoleUtils.clear();
-                        System.out.println(Header.renderHeader(List.of(
-                            "Invalid command. Please enter [R], [S], [B] or [Q].")));
+                        System.out.println(String.join("\n", List.of(
+                            "Invalid command. Please enter [R], [S], [B] or [Q]."
+                        )));
                         System.out.print("\nPress ENTER to try again...");
                         mainScanner.nextLine();
                 }
@@ -170,8 +176,13 @@ public class RunGame {
     private void selectGameMode() {
         while (true) {
             ConsoleUtils.clear();
-            System.out.println(Header.renderHeader(List.of("SELECT GAMEMODE", "[S] Singleplayer 👤", "[M] Multiplayer 👥🎮", "[Q] Quit ❌")));
-            System.out.print(UIConstants.LIGHT_PURPLE + "\n> ");
+            System.out.println(String.join("\n", List.of(
+                "SELECT GAMEMODE",
+                "[S] Singleplayer 👤",
+                "[M] Multiplayer 👥🎮",
+                "[Q] Quit ❌"
+            )));
+            System.out.print(UIConstants.ConsoleInput);
             String mode = mainScanner.nextLine().trim().toUpperCase();
 
             switch (mode) {
@@ -189,8 +200,9 @@ public class RunGame {
                     break;
                 default:
                     ConsoleUtils.clear();
-                    System.out.println(Header.renderHeader(List.of(
-                        "Invalid command. Please enter [S], [M], or [Q].")));
+                    System.out.println(String.join("\n", List.of(
+                        "Invalid command. Please enter [S], [M], or [Q]."
+                    )));
                     System.out.print("\nPress ENTER to try again...");
                     mainScanner.nextLine();
             }
@@ -211,13 +223,13 @@ public class RunGame {
     private void startMultiPlayer() {
         while (true) {
             ConsoleUtils.clear();
-            System.out.println(Header.renderHeader(List.of(
+            System.out.println(String.join("\n", List.of(
                 "SELECT CONNECTION",
                 "[H] Host Room 🛖",
                 "[J] Join Room 🔗",
                 "[Q] Quit ❌"
             )));
-            System.out.print(UIConstants.LIGHT_PURPLE + "\n> ");
+            System.out.print(UIConstants.ConsoleInput);
             String subCmd = mainScanner.nextLine().trim().toUpperCase();
 
             switch (subCmd) {
@@ -235,8 +247,9 @@ public class RunGame {
                     break;
                 default:
                     ConsoleUtils.clear();
-                    System.out.println(Header.renderHeader(List.of(
-                        "Invalid command. Please enter [H], [J], or [Q].")));
+                    System.out.println(String.join("\n", List.of(
+                        "Invalid command. Please enter [H], [J], or [Q]."
+                    )));
                     System.out.print("\nPress ENTER to try again...");
                     mainScanner.nextLine();
             }
@@ -258,7 +271,7 @@ public class RunGame {
     private void joinMultiPlayer() {
         while (true) {
             try {
-                System.out.print("Enter a valid IP Address\n" + UIConstants.LIGHT_PURPLE + "> ");
+                System.out.print("Enter a valid IP Address"  + UIConstants.ConsoleInput);
                 String ipAddress = mainScanner.nextLine().trim();
                 URI serverURI = new URI("ws://" + ipAddress + "/game");
 
@@ -287,12 +300,12 @@ public class RunGame {
      */
     private boolean confirmQuit() {
         ConsoleUtils.clear();
-        System.out.println(Header.renderHeader(List.of(
-            "❓ Are you certain you wish to leave the Parade?",
+        System.out.println(UIConstants.RESET_COLOR + "                                   ❓ Are you certain you wish to leave the Parade?");
+        System.out.println(String.join("\n", List.of(
+            "",
             "[Q] Quit your journey.",
             "[Enter] March onward with the crowd."
         )));
-        // System.out.print(UIConstants.LIGHT_PURPLE + "> " + UIConstants.RESET_COLOR);
         String confirm = mainScanner.nextLine().trim().toUpperCase();
         return confirm.equals("Q");
     }

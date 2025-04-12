@@ -105,12 +105,31 @@ public class UIConstants {
         // Card
         public static final String CARD_LOGO = "❀";
 
-        // UI Utils
-        public static final String RESET_COLOR = "\u001B[0m";
-        public static final String SHOW_CURSOR = "\u001B[?25h";
-        public static final String HIDE_CURSOR = "\u001B[?25l";
+        // Color Utils
+        public static final String TEXT_COLOR = "\u001B[38;5;183m";
+        public static final String FLOWER_COLOR = "\u001B[38;5;183m";
+        public static final String BORDER_COLOR = "\u001B[38;5;189m";
+        // Border
+        public static final String BORDER_FLOWER = FLOWER_COLOR + "❀*̥˚" + BORDER_COLOR;
+        public static final String LOGIN_BORDER = (BORDER_COLOR + "                           ^~^  \r\n" + //
+            "                          ('Y')                                                          ^ ^\r\n" + //
+            "                          /   \\/    ‿︵‿︵୨˚̣̣୧ " + TEXT_COLOR + "🎴 Welcome to the Parade! 🎭" + BORDER_COLOR + " ୨˚̣̣୧‿︵‿︵    (O,O)\r\n" + //
+            "                         (\\|||/)                                                        (   )\r\n" + //
+            "                    ╔══════════ " + BORDER_FLOWER + "═══ " + BORDER_FLOWER + "════════════════════════════════════════════════════╗\r\n" + //
+            "                    ║ ┌─────────────────────────────────────────────────────────────────────┐ ║\r\n" + // 
+            "                    ║ │                                                                     │ ║\r\n" + //    
+            "                    ║ │   " + TEXT_COLOR + "Adventurer, you've arrived! " + BORDER_COLOR + "                                      │ ║\r\n" + //
+            "                    ║ │                                                                     │ ║\r\n" + //
+            "                    ║ │   " + TEXT_COLOR + "✨ Here's what awaits you:  " + BORDER_COLOR + "                                      │ ║\r\n" + //
+            "                    ║ │   " + TEXT_COLOR + "🎨 Flair Shop — Win battles to unlock stylish customizations" + BORDER_COLOR + "      │ ║\r\n" + //
+            "                    ║ │   " + TEXT_COLOR + "⏱️  Timed Mode — Outsmart the clock in fast-paced duels" + BORDER_COLOR + "            │ ║\r\n" + //
+            "                    ║ │   " + TEXT_COLOR + "🎮 Gamemodes — Play solo, versus friends, or challenge smart bots" + BORDER_COLOR + " │ ║\r\n" + //
+            "                    ║ │   " + TEXT_COLOR + "🌈 Visual Delight — Immerse yourself in vibrant, animated art   " + BORDER_COLOR + "  │ ║\r\n" + //
+            "                    ║ │                                                                     │ ║\r\n" + //
+            "                    ║ └─────────────────────────────────────────────────────────────────────┘ ║\r\n" + //
+            "                    ╚═════════════════════════════════════════════════════ " + BORDER_FLOWER + "═══ " + BORDER_FLOWER + "═════════╝\r\n");
 
-        // Standard Colors for text
+        // General Standard Colors
         public static final String BLACK = "\u001B[30m";
         public static final String RED = "\u001B[31m";
         public static final String GREEN = "\u001B[32m";
@@ -127,6 +146,9 @@ public class UIConstants {
         public static final String NEON_GREEN = "\u001B[38;2;57;255;20m";
         public static final String GRAY = "\u001B[38;5;238m";
 
+
+
+
         // RAINBOW COLOR
         // Example rainbow colors array for cycling effect
         public static final String[] RAINBOW_COLORS = {
@@ -138,13 +160,9 @@ public class UIConstants {
             PURPLE   // Purple
         };
 
-        // Background Colors
-        public static final String BLACK_BACKGROUND = "\u001B[40m";
-        public static final String RED_BACKGROUND = "\u001B[41m";
-        public static final String GREEN_BACKGROUND = "\u001B[42m";
-        public static final String YELLOW_BACKGROUND = "\u001B[43m";
-        public static final String BLUE_BACKGROUND = "\u001B[44m";
-        public static final String PURPLE_BACKGROUND = "\u001B[45m";
-        public static final String CYAN_BACKGROUND = "\u001B[46m";
-        public static final String WHITE_BACKGROUND = "\u001B[47m";
+        // UI Utils
+        public static final String RESET_COLOR = "\u001B[0m";
+        public static final String SHOW_CURSOR = "\u001B[?25h";
+        public static final String HIDE_CURSOR = "\u001B[?25l";
+        public static final String ConsoleInput = TEXT_COLOR + "\n> ";
 }
