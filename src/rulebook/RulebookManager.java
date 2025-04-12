@@ -110,16 +110,16 @@ public class RulebookManager {
     private int updateRulebookPage(int currentPage) {
         String prompt;
         if (currentPage == 0) {
-            prompt = "\nEnter (N)ext or (Q)uit:" + UIConstants.ConsoleInput;
+            prompt = UIConstants.RESET_COLOR + "\nEnter (N)ext or (Q)uit:" + UIConstants.ConsoleInput;
         } else if (currentPage == totalPages - 1) {
-            prompt = "\nEnter (P)revious, (F)irst, or (Q)uit:" + UIConstants.ConsoleInput;
+            prompt = UIConstants.RESET_COLOR + "\nEnter (P)revious, (F)irst, or (Q)uit:" + UIConstants.ConsoleInput;
         } else {
-            prompt = "\nEnter (N)ext, (P)revious, (F)irst, or (Q)uit:" + UIConstants.ConsoleInput;
+            prompt = UIConstants.RESET_COLOR + "\nEnter (N)ext, (P)revious, (F)irst, or (Q)uit:" + UIConstants.ConsoleInput;
         }
 
         System.out.print(prompt);
         if (!scanner.hasNextLine()) {
-            System.out.println("No more input available.");
+            System.out.println(UIConstants.RESET_COLOR + "No more input available.");
             return -1;
         }
         String input = scanner.nextLine().trim().toUpperCase();
@@ -129,14 +129,14 @@ public class RulebookManager {
                 if (currentPage < totalPages - 1) {
                     return currentPage + 1;
                 } else {
-                    System.out.println("This is the last page.");
+                    System.out.println(UIConstants.RESET_COLOR + "This is the last page.");
                     return currentPage;
                 }
             case "P":
                 if (currentPage > 0) {
                     return currentPage - 1;
                 } else {
-                    System.out.println("This is the first page.");
+                    System.out.println(UIConstants.RESET_COLOR + "This is the first page.");
                     return currentPage;
                 }
             case "F":
@@ -144,7 +144,7 @@ public class RulebookManager {
             case "Q":
                 return -1;
             default:
-                System.out.println("Invalid input. Please try again.");
+                System.out.println(UIConstants.RESET_COLOR + "Invalid input. Please try again.");
                 return currentPage;
         }
     }

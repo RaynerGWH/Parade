@@ -125,7 +125,6 @@ public class RunGame {
             boolean exitRequested = false;
             while (!exitRequested) {
                 ConsoleUtils.clear();
-                // Replacing Header.renderHeader with a normal print using String.join.
                 System.out.println(UIConstants.RESET_COLOR + String.join("\n", List.of(
                         "[R] Read Rulebook 📖",
                         "[S] Start Game 🎮",

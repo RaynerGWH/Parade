@@ -43,7 +43,7 @@ public class LoginManager {
      */
     public Account handleLogin() {
         if (accounts.isEmpty()) {
-            System.out.print("\n🧾 No account detected in the archives.\nShall we forge a new hero for the journey? (Y/N) ⚔️ ✨" + UIConstants.ConsoleInput);
+            System.out.print(UIConstants.RESET_COLOR + "\n🧾 No account detected in the archives.\nShall we forge a new hero for the journey? (Y/N) ⚔️ ✨" + UIConstants.ConsoleInput);
             String input = scanner.nextLine().trim().toLowerCase();
             if (input.equals("y")) {
                 handleAccountCreation();
