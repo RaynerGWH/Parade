@@ -89,8 +89,16 @@ public class FlairShopUI {
 
     private void handleExistingFlair(Account account, Flair flair) {
         List<String> ownedFlairs = account.getUnlockedFlairs();
-        if (!ownedFlairs.isEmpty() && ownedFlairs.get(0).equalsIgnoreCase(flair.getFlairName())) {
-            System.out.println("This flair is already being worn.");
+        String wornFlair = account.getWornFlair();
+        if (!ownedFlairs.isEmpty() && wornFlair.equalsIgnoreCase(flair.getFlairName())) {
+            System.out.print("You are already equipping this flair. Would you like to unequip it?" + UIConstants.ConsoleInput);
+            String wearInput = scanner.nextLine().trim();
+            if (wearInput.equalsIgnoreCase("Y")) {
+                boolean setWorn = flairShop.selectFlairToWear(flair.getFlairName(), account);
+                System.out.println(setWorn
+                        ? "You are no longer wearing '" + flair.getFlairName() + "'."
+                        : "Failed to set flair as worn.");
+            }
         } else {
             System.out.print("You already own this flair. Do you want to wear it? (Y/N)" + UIConstants.ConsoleInput);
             String wearInput = scanner.nextLine().trim();

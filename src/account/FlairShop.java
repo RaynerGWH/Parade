@@ -116,7 +116,13 @@ public class FlairShop {
             return false;
         }
         // Simply set the worn flair instead of reordering
-        account.setWornFlair(flairName);
+        //if the account is already wearing the flair, set worn to "".
+        
+        if (account.getWornFlair().equals(flairName)) {
+            account.setWornFlair("");
+        } else {
+            account.setWornFlair(flairName);
+        }
 
         try {
             fileManager.save(account);
