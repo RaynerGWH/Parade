@@ -1,5 +1,9 @@
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ' UI Components Sequence Diagram                                        '
+'-----------------------------------------------------------------------'
+' NOTE: To view the sequence diagram, follow these steps:               '
+' 1. Install the an extension on VS Code called PlantUML by jebbs       '
+' 2. Right click on this file and click on "Preview Current Diagram"    '
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 ' Setting constants for colour schemes
