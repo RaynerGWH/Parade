@@ -2,7 +2,7 @@
 
 *Presenting the popular card game, Parade, to your console!*
 
-![App Screenshot](images/parade_banner.png)</b>
+![App Screenshot](images/parade_banner.png)<hr>
 Parade is a strategic card game where players try avoiding taking cards from it to finish with the lowest score.  Our implementation focuses on game logic and straightforward console interaction using Nielson's Usability Heuristics for Design, based on the official rules.
 
 ---
