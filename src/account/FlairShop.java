@@ -132,34 +132,5 @@ public class FlairShop {
         }
     
         return true;
-
-        // List<String> flairs = account.getUnlockedFlairs();
-        // // If already worn (flair at index 0), do nothing.
-        // if (!flairs.isEmpty() && flairs.get(0).equalsIgnoreCase(flairName)) {
-        //     return false;
-        // }
-        // // Find the flair's index in the unlocked flairs list.
-        // int index = -1;
-        // for (int i = 0; i < flairs.size(); i++) {
-        //     if (flairs.get(i).equalsIgnoreCase(flairName)) {
-        //         index = i;
-        //         break;
-        //     }
-        // }
-        // if (index == -1) {
-        //     return false;
-        // }
-        // // Remove the flair from its current position and add it to index 0.
-        // flairs.remove(index);
-        // flairs.add(0, flairName);
-        
-        // // Save the updated account so that PG1 reflects the change.
-        // try {
-        //     fileManager.save(account);
-        // } catch (IOException e) {
-        //     System.err.println("Failed to save account data: " + e.getMessage());
-        //     return false;
-        // }
-        // return true;
     }
 }

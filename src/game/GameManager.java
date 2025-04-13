@@ -216,7 +216,7 @@ public class GameManager {
                         Account account = hp.getAccount();
                         account.incrementWins();
                         account.addBalance(bonus);
-                        ui.displayMessage(String.format("Congratulations! You won %f credits!", bonus), hp.getSession());
+                        ui.displayMessage(String.format("Congratulations! You won %.1f credits!", bonus), hp.getSession());
                         MUI.sendAccount(account,hp.getSession());
                         
                     } else if (p instanceof HumanPlayer) {
@@ -242,24 +242,25 @@ public class GameManager {
                         } else {
                             humanPlayer = (HumanPlayer)player;
                         }
-    
-                        //did bro win? yes -> handle, no -> ignore
-                        if (humanPlayer != null && winners.contains(humanPlayer)) {
-                            account = humanPlayer.getAccount();
-                            account.incrementWins();
-                            double bonus = 0;
-                            bonus += (100 * bcpList.size());
-                            bonus += (200 * icpList.size());
-                            ui.displayMessage(String.format("Congratulations! You won %f credits!", bonus), null);
-                            account.addBalance(bonus);
-                            acctMgr.save(account);
-
-                        } else {
-                            account = humanPlayer.getAccount();
-                            account.incrementLosses();
-                            acctMgr.save(account);
-                        }
                     }
+
+                    //did bro win? yes -> handle, no -> ignore
+                    if (humanPlayer != null && winners.contains(humanPlayer)) {
+                        account = humanPlayer.getAccount();
+                        account.incrementWins();
+                        double bonus = 0;
+                        bonus += (100 * bcpList.size());
+                        bonus += (200 * icpList.size());
+                        ui.displayMessage(String.format("Congratulations! You won %.1f credits!", bonus), null);
+                        account.addBalance(bonus);
+                        acctMgr.save(account);
+
+                    } else {
+                        account = humanPlayer.getAccount();
+                        account.incrementLosses();
+                        acctMgr.save(account);
+                    }
+                    
                 } catch (IOException e) {
                     System.err.println("Error processing message: " + e.getMessage());
                     e.printStackTrace();

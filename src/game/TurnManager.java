@@ -84,7 +84,11 @@ public class TurnManager {
                 }
             } else {
                 // use the overloaded method to handle singleplayer input
-                choice = currentPlayer.chooseCardToPlay();
+                if (action.equals(GameplayConstants.PLAY)) {
+                    choice = currentPlayer.chooseCardToPlay();
+                } else {
+                    choice = currentPlayer.chooseCardToDiscard();
+                }
             }
         } else {
             choice = currentPlayer.chooseCardToPlay();
@@ -169,11 +173,10 @@ public class TurnManager {
             // Display updated game state
             displayGameState(gameState, currentPlayer);
         }
+        InputManager.clearInput();
 
         // Handle turn advancement
         handleTurnAdvancement(currentPlayer, gameState.getPlayers(), isFinalTurn);
-
-        InputManager.clearInput();
         return gameIsOver;
     }
 
@@ -193,6 +196,17 @@ public class TurnManager {
                 ui.displayMessage("Hit \"ENTER\" to end turn!", playerSession);
                 
                 try {
+                    InputManager.waitForEnterPress();
+                    int currentPlayerIndex = players.indexOf(currentPlayer);
+                    int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
+                    Player nextPlayer = players.get(nextPlayerIndex);
+                    broadcastNewTurn(nextPlayer, isFinalTurn);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            } else if (ui instanceof MultiplayerUI) {
+                try {
+                    ui.broadcastMessage("Any player can hit ENTER to continue...");
                     InputManager.waitForEnterPress();
                     int currentPlayerIndex = players.indexOf(currentPlayer);
                     int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
@@ -232,6 +246,8 @@ public class TurnManager {
                 broadcastNewTurn(nextPlayer, isFinalTurn);
             }
         }
+
+        InputManager.clearInput();
     }
 
     /**
@@ -331,11 +347,8 @@ public class TurnManager {
         
         // If it's a final turn, display the final turn banner first
         if (isFinalTurn) {
-            ui.broadcastMessage("═════════════════════════════════════════════════════════════");
-            ui.broadcastMessage("                         FINAL TURN                         ");
-            ui.broadcastMessage("                   NO CARDS WILL BE DRAWN                   ");
-            ui.broadcastMessage("═════════════════════════════════════════════════════════════");
-            
+            ui.broadcastMessage(UIConstants.FINAL_TURN_BANNER);
+    
             // Small delay to ensure banner is seen
             try {
                 Thread.sleep(300);

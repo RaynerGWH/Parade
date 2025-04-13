@@ -19,21 +19,6 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
-/**
- * Revised RunGame class applying Clean Code principles.
- * <p>
- * Key changes:
- * <ul>
- *   <li>Single Scanner usage for input.</li>
- *   <li>Clear, helper methods for each operation (login, rulebook scrolling, single/multi-player, flair shop, etc.).</li>
- *   <li>Centralized definition of ASCII art for the "PARADE" animation to eliminate duplicates.</li>
- *   <li>Improved error handling and descriptive error messages.</li>
- *   <li>Separated navigation logic for the rulebook into a dedicated helper.</li>
- *   <li>Parade animation is now shown before the login page.</li>
- * </ul>
- * </p>
- */
-
 public class RunGame {
 
     /** Single Scanner instance for the entire program's console input. */
@@ -151,7 +136,7 @@ public class RunGame {
                     default:
                         ConsoleUtils.clear();
                         System.out.println(String.join("\n", List.of(
-                            "🎭 That move puzzled even the cards...\nPlease enter [R], [S], [B] or [Q] to proceed."
+                            "🎭 That move puzzled even the cards...\nPlease enter [R]ulebook, [S]tart, [B]ack or [Q]uit to proceed."
                         )));
                         System.out.print("\n🔁 Tap [ENTER] to try again — the Parade is patient ~"  + UIConstants.ConsoleInput);
                         mainScanner.nextLine();

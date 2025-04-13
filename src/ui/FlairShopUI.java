@@ -4,7 +4,6 @@ import account.Account;
 import account.Flair;
 import account.FlairShop;
 import constants.UIConstants;
-import ui.ConsoleUtils;
 
 import java.util.List;
 import java.util.Scanner;

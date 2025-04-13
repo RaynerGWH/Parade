@@ -9,8 +9,6 @@ import ui.PlayerDisplayUtils;
 import ui.UserInterface;
 
 public class Game {
-    // ASSUMPTION: GAME is only started by the host, except in singleplayer
-    // instances.
 
     private UserInterface ui;
     private GameServerEndpoint gse;
@@ -104,7 +102,7 @@ public class Game {
             Player currentPlayer = gameState.getPlayers().get(currentPlayerIndex);
 
             if (gameMode.isTimeUp()) {
-                ui.broadcastMessage("\n═══ TIME'S UP! ═══\n");
+                ui.broadcastMessage(UIConstants.TIME_UP_MESSAGE);
                 gameState.setGameOver(true);
                 break;
             }

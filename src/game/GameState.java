@@ -5,6 +5,8 @@ import players.*;
 
 import java.util.*;
 
+// this class handles and tracks the current state of the game(deck status, players, game status).
+
 public class GameState {
     private Deck deck;
     private boolean gameIsOver;

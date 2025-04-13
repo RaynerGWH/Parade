@@ -11,7 +11,6 @@ import java.util.*;
 public class LoginUI {
     private final Scanner scanner;
     private final LoginManager loginManager;
-    private boolean isMultiplayer;
 
     /**
      * Creates a new LoginUI.
@@ -22,7 +21,6 @@ public class LoginUI {
     public LoginUI(Scanner scanner, boolean isMultiplayer) {
         this.scanner = scanner;
         this.loginManager = new LoginManager(scanner);
-        this.isMultiplayer = isMultiplayer;
     }
 
     /**

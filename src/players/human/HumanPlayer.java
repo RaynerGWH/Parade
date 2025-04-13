@@ -3,12 +3,8 @@ package players.human;
 import cards.*;
 import players.AbstractPlayer;
 import constants.UIConstants;
-import account.Account;  // Import the Account class
-import account.LoginManager;
-import ui.LoginUI;
-
+import account.Account;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.Executors;
@@ -29,9 +25,7 @@ public class HumanPlayer extends AbstractPlayer {
     private static final int TIMEOUT_SECONDS = 30;
 
     // New field for LoginManager
-    private LoginManager loginManager;
     // New field for accounts
-    private ArrayList<Account> accounts;
 
     public HumanPlayer(ArrayList<Card> hand, String name, Session session, Scanner sc) {
         super(hand);
@@ -156,15 +150,6 @@ public class HumanPlayer extends AbstractPlayer {
     }
 
     private void promptForCardIndex(String action) {
-        // String displayName = name;
-        // if (account != null) {
-        //     List<String> flairs = account.getUnlockedFlairs();
-        //     if (flairs != null && !flairs.isEmpty()) {
-        //         displayName = account.getUsername() + " [" + flairs.get(0) + "]";
-        //     } else {
-        //         displayName = account.getUsername();
-        //     }
-        // }
         String displayName = name;
         if (account != null) {
             // Check the worn flair instead of the first in the unlocked list

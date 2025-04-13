@@ -56,7 +56,7 @@ public class GameClientEndpoint{
         inputThread.start();
     }
 
-        @OnMessage
+    @OnMessage
     public void onMessage(String message) {
         // Check if this is a new turn marker and clear any pending input
         if (message.contains("TURN") && message.contains("===============")) {
@@ -87,24 +87,20 @@ public class GameClientEndpoint{
                     // Handle timeout case
                     if (input == null) {
                         System.out.println("\nTime's up! Using default action.");
-                        // Send default action to server (e.g., play first card)
                         session.getBasicRemote().sendText("0");
                         return;
                     }
                     
-                    // Process valid input
-                    try {
-                        choice = Integer.parseInt(input);
-                        if (choice < 0 || choice >= numCards) {
-                            throw new NumberFormatException();
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Using default action (0).");
+                    // Validate and parse input
+                    if (!isNumeric(input)) {
+                        System.out.println("❌ Invalid input (not a number). Using default action (0).");
                         session.getBasicRemote().sendText("0");
                         return;
                     }
-                    
+
                     int handSize = numCards;
+                    choice = Integer.parseInt(input);
+
                     if (choice >= 0 && choice < handSize) {
                         session.getBasicRemote().sendText(String.valueOf(choice));
                     } else {
@@ -117,12 +113,13 @@ public class GameClientEndpoint{
                     e.printStackTrace();
                 }
             }).start();
+
         } else if (message.contains("Hit \"ENTER\" to end turn!")) {
             // Handle the turn advancement prompt
             System.out.println(message);
             
             new Thread(() -> {
-                System.out.print("[ENTER] Continue (30s)");
+                System.out.println("[ENTER] Continue (30s)");
                 
                 try {
                     // Wait for ENTER with timeout
@@ -142,12 +139,13 @@ public class GameClientEndpoint{
                     e.printStackTrace();
                 }
             }).start();
+
         } else if (message.contains("Any player can hit ENTER to continue...")) {
             // Handle the prompt allowing any player to hit ENTER to continue
             System.out.println(message);
             
             new Thread(() -> {
-                System.out.print("[ENTER] Continue (30s)");
+                System.out.println("[ENTER] Continue (30s)");
                 
                 try {
                     // Wait with timeout
@@ -260,4 +258,14 @@ public class GameClientEndpoint{
             latch.countDown();
         }
     }
+
+    private static boolean isNumeric(String str) {
+        if (str == null || str.trim().isEmpty()) return false;
+        try {
+            Integer.parseInt(str.trim());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }    
 }

@@ -1,6 +1,7 @@
 package game;
 
 import cards.*;
+import constants.GameplayConstants;
 import constants.UIConstants;
 
 import java.util.*;
@@ -88,7 +89,7 @@ public class EndGameHandler {
             Player p = players.get(i);
 
             // Execute the turn with the final turn flag
-            turnManager.executeTurn(gameState, p, gameMode, "Play", true);
+            turnManager.executeTurn(gameState, p, gameMode, GameplayConstants.PLAY, true);
         }
     }
 
@@ -112,11 +113,11 @@ public class EndGameHandler {
 
                 // First discard
                 ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their first card:");
-                turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, "Discards", true);
+                turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, GameplayConstants.DISCARD, true);
 
                 // Second discard
                 ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their second card:");
-                turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, "Discards", true);
+                turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, GameplayConstants.DISCARD, true);
             } else {
                 // Bot player discards two cards in sequence
                 ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their first card:");

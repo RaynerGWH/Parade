@@ -19,6 +19,11 @@ public class UIConstants {
         public static final String NEON_GREEN = "\u001B[38;2;57;255;20m";
         public static final String GRAY = "\u001B[38;5;238m";
 
+        // Separator for UI formatting
+        public static final int SEPARATOR_LENGTH = 62;
+        public static final String SEPARATOR_SYMBOL = "=";
+        public static final String DEFAULT_LINE_SEPARATOR = SEPARATOR_SYMBOL.repeat(SEPARATOR_LENGTH) + "\n";
+
         
         // RAINBOW COLOR
         // Example rainbow colors array for cycling effect
@@ -82,11 +87,6 @@ public class UIConstants {
                 "                       ██║   ██║██║╚██╔╝██║██╔══╝  ██║  ██║   ██║╚██╔╝██║██║  ██║██║  ██║██╔══╝  \r\n" +
                 "                       ██║   ██║██║ ╚═╝ ██║███████╗██████╔╝   ██║ ╚═╝ ██║╚█████╔╝██████╔╝███████╗\r\n" +
                 "                       ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝    ╚═╝     ╚═╝ ╚════╝ ╚═════╝ ╚══════╝\r\n\n";
-
-        // Separator for UI formatting
-        public static final int SEPARATOR_LENGTH = 62;
-        public static final String SEPARATOR_SYMBOL = "=";
-        public static final String DEFAULT_LINE_SEPARATOR = SEPARATOR_SYMBOL.repeat(SEPARATOR_LENGTH) + "\n";
 
         // Countdown Numbers
         public static final String COUNTDOWN_THREE = LIGHT_GREEN +
