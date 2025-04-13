@@ -27,10 +27,9 @@ The complete game mechanics are detailed in the [official rulebook](https://cdn.
 
 In **Timed Mode**, players must act swiftly — the Parade doesn’t wait!
 
-- 🕐 **Fast Hands Get Rewarded**: The faster you play your card, the more likely you are to gain strategic advantage. Speed can help you avoid picking up unwanted cards.
-- ⌛ **Penalty for Delay**: Once the countdown reaches zero, the last player to have played **just before time expires** must take an additional card from the parade into their pile.
-  - This extra card can significantly increase your score, so beware of lingering too long on your turn!
-- 📉 **High Stakes, Low Scores**: All other standard rules apply, but with this added twist — speed becomes part of your strategy!
+- 🕐 **Fast Hands Get Rewarded**: Receive bonus points from fast moves at the end of every turn! Variable bonus points are awarded based on how fast players make their moves and conclude their turns.
+- ⌛ **Weighted Bonus**: To ensure that you maintain a steady balance of swiftness and skill, the final score weighs your accumulated speed bonus points and the raw score to produce an aggregated final score at the end. Just being fast is not enough, make sure to execute your moves strategically as well!
+- 📉 **Higher Stakes, Better Scores**: All other standard rules apply, but with an added twist — time is of the essence, tick tock. DO you think you have what it takes to be the fastest fingers in the Parade?
 ---
 
 
