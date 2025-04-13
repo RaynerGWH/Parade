@@ -20,9 +20,35 @@ Parade is a strategic card game where players try avoiding taking cards from it 
 
 ## 📜 Parade Principles
 
-The complete game mechanics are detailed in the [official rulebook](https://cdn.1j1ju.com/medias/8f/7e/8f-parade-rulebook.pdf). 🎪✨  
+The complete game mechanics are detailed in the [official rulebook](https://cdn.1j1ju.com/medias/8f/7e/8f-parade-rulebook.pdf). 🎪✨
+
+
+## ⏳ Timed Mode Rules
+
+In **Timed Mode**, players must act swiftly — the Parade doesn’t wait!
+
+- 🕐 **Fast Hands Get Rewarded**: The faster you play your card, the more likely you are to gain strategic advantage. Speed can help you avoid picking up unwanted cards.
+- ⌛ **Penalty for Delay**: Once the countdown reaches zero, the last player to have played **just before time expires** must take an additional card from the parade into their pile.
+  - This extra card can significantly increase your score, so beware of lingering too long on your turn!
+- 📉 **High Stakes, Low Scores**: All other standard rules apply, but with this added twist — speed becomes part of your strategy!
+---
+
 
 ---
+
+## ✨🎉 Parade Extras — Add-on Features
+
+To bring even more excitement and color to the already whimsical world of **Parade**, we've added a host of extra features that keep the fun going beyond the base game!
+
+- 🎭 **Account System**: Keep track of your Parade journey! Your progress, flair, and statistics are all safely stored under your player account.
+- 🤝 **Multiplayer Mode**: Host or join games with friends over the same network and compete to see whose parade will prevail!
+- 🛍️ **In-Game Shop**: Spend your hard-earned Parade Points on flairs, themes, and other customizations to truly stand out in style.
+- ⏱️ **Timed Gamemodes**: For players who like their parades *fast and furious*! Test your reflexes in a race against the clock.
+- 🧠 **Computer Opponents**: Challenge AI players of two difficulty levels — whether you're a beginner or a seasoned Parade master, there's always a worthy rival.
+
+---
+
+Let me know if you'd like a visual scoreboard mock-up or a UI blurb added too!
 
 ## ▶️ Playing Parade
 
@@ -56,11 +82,12 @@ Source code
 ---
 
 ### 🧱 UML Diagram
-We prepared a UML diagram to illustrate the relationships of the classes and how they are organized.
+We prepared a [UML diagram](https://drive.google.com/drive/folders/1jFY1PGtcB7KkmPBxeT8U-llyymSqHPKe?usp=drive_link) to illustrate the relationships of the classes and how they are organized.
 
 ---
 
 ### 🔁 Sequence Diagram
-For those interested in the program's flow, the sequence diagram shows how different parts of the code interact during gameplay. It helps visualize the process from playing a card to calculating scores.
+For those interested in the program's flow, we've provided sequence diagram files under `docs` that show how different parts of the code interact during gameplay. It helps visualize the process from playing a card to calculating scores.
+To view the sequence diagrams, please install the VS Code Extention [PlantUML](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml).
 
 
