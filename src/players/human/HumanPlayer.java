@@ -72,7 +72,7 @@ public class HumanPlayer extends AbstractPlayer {
                             System.out.print("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + UIConstants.ConsoleInput);
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println(UIConstants.RESET_COLOR + "❌ Invalid input. Please enter a valid number.");
+                        System.out.print(UIConstants.RESET_COLOR + "❌ Invalid input. Please enter a valid number.\n" + UIConstants.LIGHT_PURPLE + "> ");
                     }
                 }
                 // Small sleep to prevent CPU hogging
