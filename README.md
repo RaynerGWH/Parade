@@ -29,7 +29,7 @@ The complete game mechanics are detailed in the [official rulebook](https://cdn.
 Prerequisites: 
 💡 You need a Java Development Kit (JDK) installed to compile and run the game.
 
-**NOTE:** The game can be played on any device, but for best experience, run the game on a unix shell!
+**NOTE:** The game is playable on any device, but for the best experience, we recommend running it on WSL (Windows Subsystem for Linux)!
 
 1. Compile the Java Code:
 
