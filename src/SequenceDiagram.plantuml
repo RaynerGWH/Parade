@@ -1,0 +1,263 @@
+@startuml Parade Sequence Diagram
+
+' Setting constants for colour schemes
+!define ACTOR_BG #ffffff
+!define ACTOR_COLOR #888888
+!define PARTICIPANT_BG #E6CEFF
+!define ARROW_COLOR #888888
+!define LIFELINE_COLOR #000000
+!define NOTE_BG #FFFFCC
+!define NOTE_BORDER #999999
+
+' Styling
+skinparam Style strictuml
+skinparam backgroundColor white
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 150
+skinparam sequenceArrowThickness 1.5
+skinparam sequenceLifeLineBackgroundColor #ced4db
+
+' Styling for each entity
+skinparam actor {
+  backgroundColor ACTOR_BG
+  borderColor #9966CC
+  fontColor black
+}
+
+skinparam participant {
+  backgroundColor PARTICIPANT_BG
+  borderColor #9966CC
+  fontColor black
+}
+
+skinparam sequence {
+  ArrowColor ARROW_COLOR
+  LifeLineBorderColor LIFELINE_COLOR
+  GroupBorderColor #9966CC
+  GroupBackgroundColor #F5F5F5
+}
+
+skinparam note {
+  BackgroundColor NOTE_BG
+  BorderColor NOTE_BORDER
+}
+
+' Even spacing between the entities
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+title Parade Sequence Diagram
+
+actor User
+participant "RunGame" as RunGame
+participant "LoginUI" as LoginUI
+participant "LoginManager" as LoginManager
+participant "AccountFileManager" as AccountFileManager
+participant "Account" as Account
+participant "Game" as Game
+participant "GameState" as GameState
+participant "TurnManager" as TurnManager
+participant "PlayerManager" as PlayerManager
+participant "Player" as Player
+participant "Deck" as Deck
+participant "FlairShopUI" as FlairShopUI
+participant "FlairShop" as FlairShop
+participant "ScoreCalculator" as ScoreCalculator
+
+== Game Startup ==
+
+User -> RunGame: main()
+activate RunGame
+
+RunGame -> RunGame: new RunGame()
+activate RunGame
+RunGame -> AccountFileManager: new AccountFileManager(scanner)
+RunGame -> FlairShop: new FlairShop(fileManager)
+RunGame -> FlairShopUI: new FlairShopUI(flairShop, scanner)
+deactivate RunGame
+
+RunGame -> ConsoleUtils: printParadeAnimation()
+RunGame -> ConsoleUtils: printParadeAnimationLoop()
+User -> RunGame: Press Enter
+RunGame -> LoginUI: showLoginMenu()
+activate LoginUI
+
+LoginUI -> LoginManager: handleLogin()
+activate LoginManager
+LoginManager -> AccountFileManager: loadAllAccounts()
+activate AccountFileManager
+AccountFileManager -> AccountFileManager: processExistingFile()
+AccountFileManager -> CryptoUtils: xorCipher(encryptedData)
+AccountFileManager -> AccountFileManager: parseContent()
+AccountFileManager --> LoginManager: loaded accounts
+deactivate AccountFileManager
+
+alt User selects existing account
+    LoginManager --> LoginUI: selected account
+else User creates new account
+    LoginManager -> LoginManager: handleAccountCreation()
+    LoginManager -> Account: new Account(username)
+    LoginManager -> AccountFileManager: save(newAccount)
+    LoginManager --> LoginUI: created account
+end
+deactivate LoginManager
+
+LoginUI --> RunGame: currentAccount
+deactivate LoginUI
+
+RunGame -> AccountFileManager: save(currentAccount)
+
+== Main Menu Selection ==
+
+loop until game starts or exit
+    RunGame -> User: Display main menu options
+    User -> RunGame: Select option
+    
+    alt User selects "R" (Rulebook)
+        RunGame -> RulebookManager: displayRulebook()
+    else User selects "S" (Start Game)
+        RunGame -> RunGame: selectGameMode()
+        break
+    else User selects "B" (Flair Shop)
+        RunGame -> FlairShopUI: openFlairShopMenu(currentAccount)
+        activate FlairShopUI
+        
+        FlairShopUI -> FlairShop: getAvailableFlairs()
+        
+        alt User purchases flair
+            FlairShopUI -> FlairShop: purchaseFlair(flairName, account)
+            FlairShop -> Account: deductBalance(cost)
+            FlairShop -> Account: unlockFlair(flairName)
+            FlairShop -> AccountFileManager: save(account)
+        else User selects flair to wear
+            FlairShopUI -> FlairShop: selectFlairToWear(flairName, account)
+            FlairShop -> Account: setWornFlair(flairName)
+            FlairShop -> AccountFileManager: save(account)
+        end
+        
+        FlairShopUI --> RunGame: return to main menu
+        deactivate FlairShopUI
+    else User selects "Q" (Quit)
+        RunGame -> RunGame: confirmQuit()
+        alt User confirms quit
+            RunGame -> System: exit(0)
+        end
+    end
+end
+
+== Game Initialization ==
+
+alt User selects Singleplayer
+    RunGame -> RunGame: startSinglePlayer()
+    RunGame -> UserInterface: new SinglePlayerUI()
+else User selects Multiplayer
+    RunGame -> RunGame: startMultiPlayer()
+    alt User hosts game
+        RunGame -> RunGame: hostMultiPlayer()
+        RunGame -> GameServerEndpoint: new GameServerEndpoint()
+        RunGame -> UserInterface: new MultiplayerUI(serverEndpoint)
+    else User joins game
+        RunGame -> RunGame: joinMultiPlayer()
+        RunGame -> GameClientEndpoint: new GameClientEndpoint(serverURI, scanner)
+    end
+end
+
+RunGame -> GameManager: start(ui, serverEndpoint)
+activate GameManager
+
+GameManager -> Game: new Game(players, ui, gse, scanner)
+GameManager -> Game: startGame()
+activate Game
+
+== Game Mode Selection ==
+
+Game -> User: Display game mode options
+User -> Game: Select game mode
+alt User selects Classic Mode
+    Game -> GameMode: new ClassicMode()
+    Game -> GameMode: initialize(scanner)
+else User selects Timed Mode
+    Game -> GameMode: new TimedMode()
+    Game -> GameMode: initialize(scanner)
+    Game -> TimedMode: initializeTimeBonuses(players)
+end
+
+Game -> ConsoleUtils: displayCountdown(ui)
+Game -> GameState: initializeParade(initialLength)
+activate GameState
+GameState -> Deck: drawCard()
+GameState --> Game: parade initialized
+deactivate GameState
+
+Game -> TurnManager: new TurnManager(ui, scanner)
+
+== Game Loop ==
+
+loop until game is over
+    Game -> GameState: getPlayers()
+    Game -> GameMode: isTimeUp()
+    
+    alt time is not up
+        Game -> TurnManager: executeTurn(gameState, currentPlayer, gameMode, action)
+        activate TurnManager
+        
+        TurnManager -> Player: chooseCardToPlay()
+        activate Player
+        
+        alt Player is HumanPlayer
+            Player -> User: Display hand and prompt for card
+            User -> Player: Select card index
+            Player -> Player: playCard(index)
+        else Player is ComputerPlayer
+            Player -> Player: Select card based on AI logic
+            Player -> Player: playCard(index)
+        end
+        
+        Player --> TurnManager: selected card
+        deactivate Player
+        
+        TurnManager -> GameState: getParade()
+        TurnManager -> TurnManager: processCardPlacement(card, parade)
+        TurnManager -> Deck: drawCard()
+        TurnManager -> Player: drawCard(newCard)
+        
+        TurnManager --> Game: turn completed
+        deactivate TurnManager
+        
+        Game -> GameMode: updateAfterTurn(player, turnDuration)
+    else time is up
+        Game -> GameState: setGameOver(true)
+        break
+    end
+end
+
+== Game End and Scoring ==
+
+Game -> EndGameHandler: new EndGameHandler(gameState, ui, turnManager, timeBonusMap, timedMode)
+Game -> EndGameHandler: handleFinalRoundAndScoring(gameMode)
+activate EndGameHandler
+
+EndGameHandler -> ScoreCalculator: new ScoreCalculator(players)
+activate ScoreCalculator
+ScoreCalculator -> ScoreCalculator: calculateMajorities()
+ScoreCalculator --> EndGameHandler: scoreMap
+deactivate ScoreCalculator
+
+EndGameHandler -> User: Display final scores and winner
+EndGameHandler -> Account: incrementWins() or incrementLosses()
+EndGameHandler -> Account: addBalance(winnings)
+EndGameHandler -> AccountFileManager: save(account)
+
+EndGameHandler --> Game: final results
+deactivate EndGameHandler
+
+Game --> GameManager: game completed
+deactivate Game
+
+GameManager --> RunGame: return to main menu
+deactivate GameManager
+
+RunGame -> System: exit
+deactivate RunGame
+
+@enduml
