@@ -1,12 +1,10 @@
 package account;
 
+import constants.UIConstants;
 import exceptions.CorruptFileException;
-import ui.ConsoleUtils;
-
 import java.io.IOException;
 import java.util.*;
-
-import constants.UIConstants;
+import ui.ConsoleUtils;
 
 /**
  * Manages the login process and authentication for multiple user accounts.
@@ -49,6 +47,12 @@ public class LoginManager {
                 handleAccountCreation();
                 return null;
             } else {
+                System.out.println(UIConstants.RESET_COLOR + "\n❌ Invalid choice. Please enter [Y] or [N] — only the chosen paths may proceed. 🎴✨");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 return null;
             }
         }
