@@ -1,0 +1,103 @@
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+' Account Sequence Diagram                                  '
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' Setting constants for colour schemes
+!define ACTOR_BG #ffffff
+!define ACTOR_COLOR #888888
+!define PARTICIPANT_BG #E6CEFF
+!define ARROW_COLOR #888888
+!define LIFELINE_COLOR #000000
+!define NOTE_BG #FFFFCC
+!define NOTE_BORDER #9966CC
+
+' Styling
+skinparam Style strictuml
+skinparam backgroundColor white
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 150
+skinparam sequenceArrowThickness 1.5
+skinparam sequenceLifeLineBackgroundColor #ced4db
+skinparam sequenceLifeLineBorderThickness 2
+skinparam lifelineStrategy solid
+
+' Styling for each entity
+skinparam actor {
+  backgroundColor ACTOR_BG
+  borderColor #9966CC
+  fontColor black
+}
+
+skinparam participant {
+  backgroundColor PARTICIPANT_BG
+  borderColor #9966CC
+  fontColor black
+}
+
+skinparam sequence {
+  ArrowColor ARROW_COLOR
+  LifeLineBorderColor LIFELINE_COLOR
+  GroupBorderColor #9966CC
+  GroupBackgroundColor #F5F5F5
+}
+
+skinparam note {
+  BackgroundColor NOTE_BG
+  BorderColor NOTE_BORDER
+}
+
+' Even spacing between the entities
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+' Numbering for the sequence diagram
+autonumber 1
+
+title Parade Account Sequence Diagram
+
+actor User
+participant "RunGame" as RunGame
+participant "LoginUI" as LoginUI
+participant "LoginManager" as LoginManager
+participant "AccountFileManager" as AccountFileManager
+participant "Account" as Account
+participant "EndGameHandler" as EndGameHandler
+participant "CryptoUtils" as CryptoUtils
+
+== Account Login/Creation ==
+
+RunGame -> AccountFileManager: <<create>>
+RunGame -> LoginUI: showLoginMenu()
+activate LoginUI 
+
+LoginUI -> LoginManager: handleLogin()
+activate LoginManager 
+
+LoginManager -> AccountFileManager: loadAllAccounts()
+activate AccountFileManager 
+AccountFileManager -> AccountFileManager: processExistingFile()
+AccountFileManager -> CryptoUtils: xorCipher(encryptedData)
+AccountFileManager -> AccountFileManager: parseContent()
+AccountFileManager --> LoginManager: loaded accounts
+deactivate AccountFileManager
+
+alt User selects existing account
+    LoginManager --> LoginUI: selected account
+else User creates new account
+    LoginManager -> LoginManager: handleAccountCreation()
+    LoginManager -> Account: <<create>>
+    LoginManager -> AccountFileManager: save(newAccount)
+    LoginManager --> LoginUI: created account
+end
+deactivate LoginManager
+
+LoginUI --> RunGame: currentAccount
+deactivate LoginUI
+
+RunGame -> AccountFileManager: save(currentAccount)
+
+== Account Updates After Game ==
+
+EndGameHandler -> Account: incrementWins() or incrementLosses()
+EndGameHandler -> Account: addBalance(winnings)
+EndGameHandler -> AccountFileManager: save(account)

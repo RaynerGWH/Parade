@@ -1,3 +1,6 @@
+
+
+
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ' NOTE: To view the sequence diagram, follow these steps:               '
 ' 1. Install the an extension on VS Code called PlantUML by jebbs       '
@@ -11,7 +14,7 @@
 !define ARROW_COLOR #888888
 !define LIFELINE_COLOR #000000
 !define NOTE_BG #FFFFCC
-!define NOTE_BORDER #999999
+!define NOTE_BORDER #9966CC
 
 ' Styling
 skinparam Style strictuml
@@ -20,6 +23,8 @@ skinparam responseMessageBelowArrow true
 skinparam maxMessageSize 150
 skinparam sequenceArrowThickness 1.5
 skinparam sequenceLifeLineBackgroundColor #ced4db
+skinparam sequenceLifeLineBorderThickness 2
+skinparam lifelineStrategy solid
 
 ' Styling for each entity
 skinparam actor {
@@ -50,6 +55,9 @@ skinparam note {
 skinparam ParticipantPadding 20
 skinparam BoxPadding 10
 
+' Numbering for the sequence diagram
+autonumber 1
+
 title Parade Sequence Diagram
 
 actor User
@@ -67,29 +75,31 @@ participant "Deck" as Deck
 participant "FlairShopUI" as FlairShopUI
 participant "FlairShop" as FlairShop
 participant "ScoreCalculator" as ScoreCalculator
+participant "CryptoUtils" as CryptoUtils
 
 == Game Startup ==
 
 User -> RunGame: main()
-activate RunGame
+activate RunGame 
 
-RunGame -> RunGame: new RunGame()
-activate RunGame
-RunGame -> AccountFileManager: new AccountFileManager(scanner)
-RunGame -> FlairShop: new FlairShop(fileManager)
-RunGame -> FlairShopUI: new FlairShopUI(flairShop, scanner)
+RunGame -> RunGame: <<create>>
+activate RunGame 
+RunGame -> AccountFileManager: <<create>>
+RunGame -> FlairShop: <<create>>
+RunGame -> FlairShopUI: <<create>>
 deactivate RunGame
 
 RunGame -> ConsoleUtils: printParadeAnimation()
 RunGame -> ConsoleUtils: printParadeAnimationLoop()
 User -> RunGame: Press Enter
 RunGame -> LoginUI: showLoginMenu()
-activate LoginUI
+activate LoginUI 
 
 LoginUI -> LoginManager: handleLogin()
-activate LoginManager
+activate LoginManager 
+
 LoginManager -> AccountFileManager: loadAllAccounts()
-activate AccountFileManager
+activate AccountFileManager 
 AccountFileManager -> AccountFileManager: processExistingFile()
 AccountFileManager -> CryptoUtils: xorCipher(encryptedData)
 AccountFileManager -> AccountFileManager: parseContent()
@@ -100,7 +110,7 @@ alt User selects existing account
     LoginManager --> LoginUI: selected account
 else User creates new account
     LoginManager -> LoginManager: handleAccountCreation()
-    LoginManager -> Account: new Account(username)
+    LoginManager -> Account: <<create>>
     LoginManager -> AccountFileManager: save(newAccount)
     LoginManager --> LoginUI: created account
 end
@@ -113,39 +123,48 @@ RunGame -> AccountFileManager: save(currentAccount)
 
 == Main Menu Selection ==
 
-loop until game starts or exit
+loop Menu Loop until game starts or exit
     RunGame -> User: Display main menu options
     User -> RunGame: Select option
+end loop
+
+note right of RunGame
+  Menu options are handled as follows:
+  - R: Display rulebook
+  - S: Start game (breaks loop)
+  - B: Open flair shop
+  - Q: Confirm and quit
+end note
+
+RunGame -> User: User selects option
+
+alt User selects "R" (Rulebook)
+    RunGame -> RulebookManager: displayRulebook()
+else User selects "S" (Start Game)
+    RunGame -> RunGame: selectGameMode()
+else User selects "B" (Flair Shop)
+    RunGame -> FlairShopUI: openFlairShopMenu(currentAccount)
+    activate FlairShopUI 
     
-    alt User selects "R" (Rulebook)
-        RunGame -> RulebookManager: displayRulebook()
-    else User selects "S" (Start Game)
-        RunGame -> RunGame: selectGameMode()
-        break
-    else User selects "B" (Flair Shop)
-        RunGame -> FlairShopUI: openFlairShopMenu(currentAccount)
-        activate FlairShopUI
-        
-        FlairShopUI -> FlairShop: getAvailableFlairs()
-        
-        alt User purchases flair
-            FlairShopUI -> FlairShop: purchaseFlair(flairName, account)
-            FlairShop -> Account: deductBalance(cost)
-            FlairShop -> Account: unlockFlair(flairName)
-            FlairShop -> AccountFileManager: save(account)
-        else User selects flair to wear
-            FlairShopUI -> FlairShop: selectFlairToWear(flairName, account)
-            FlairShop -> Account: setWornFlair(flairName)
-            FlairShop -> AccountFileManager: save(account)
-        end
-        
-        FlairShopUI --> RunGame: return to main menu
-        deactivate FlairShopUI
-    else User selects "Q" (Quit)
-        RunGame -> RunGame: confirmQuit()
-        alt User confirms quit
-            RunGame -> System: exit(0)
-        end
+    FlairShopUI -> FlairShop: getAvailableFlairs()
+    
+    alt User purchases flair
+        FlairShopUI -> FlairShop: purchaseFlair(flairName, account)
+        FlairShop -> Account: deductBalance(cost)
+        FlairShop -> Account: unlockFlair(flairName)
+        FlairShop -> AccountFileManager: save(account)
+    else User selects flair to wear
+        FlairShopUI -> FlairShop: selectFlairToWear(flairName, account)
+        FlairShop -> Account: setWornFlair(flairName)
+        FlairShop -> AccountFileManager: save(account)
+    end
+    
+    FlairShopUI --> RunGame: return to main menu
+    deactivate FlairShopUI
+else User selects "Q" (Quit)
+    RunGame -> RunGame: confirmQuit()
+    alt User confirms quit
+        RunGame -> System: exit(0)
     end
 end
 
@@ -153,96 +172,122 @@ end
 
 alt User selects Singleplayer
     RunGame -> RunGame: startSinglePlayer()
-    RunGame -> UserInterface: new SinglePlayerUI()
+    RunGame -> PlayerManager: <<create>>
+    activate PlayerManager 
+    RunGame -> PlayerManager: initializeComputerPlayers(numBots)
+    PlayerManager -> PlayerNameManager: assignName()
+    PlayerManager -> Deck: initialiseHand()
+    PlayerManager --> RunGame: players
+    deactivate PlayerManager
+    RunGame -> UserInterface: <<create>> SinglePlayerUI
 else User selects Multiplayer
     RunGame -> RunGame: startMultiPlayer()
     alt User hosts game
         RunGame -> RunGame: hostMultiPlayer()
-        RunGame -> GameServerEndpoint: new GameServerEndpoint()
-        RunGame -> UserInterface: new MultiplayerUI(serverEndpoint)
+        RunGame -> GameServerEndpoint: <<create>>
+        RunGame -> PlayerManager: initializeHumanPlayers(sessions, true)
+        RunGame -> UserInterface: <<create>> MultiplayerUI(serverEndpoint)
     else User joins game
         RunGame -> RunGame: joinMultiPlayer()
-        RunGame -> GameClientEndpoint: new GameClientEndpoint(serverURI, scanner)
+        RunGame -> GameClientEndpoint: <<create>>
     end
 end
 
 RunGame -> GameManager: start(ui, serverEndpoint)
-activate GameManager
+activate GameManager 
 
-GameManager -> Game: new Game(players, ui, gse, scanner)
+GameManager -> Game: <<create>>
 GameManager -> Game: startGame()
-activate Game
+activate Game 
 
 == Game Mode Selection ==
 
 Game -> User: Display game mode options
 User -> Game: Select game mode
 alt User selects Classic Mode
-    Game -> GameMode: new ClassicMode()
+    Game -> GameMode: <<create>> ClassicMode
     Game -> GameMode: initialize(scanner)
 else User selects Timed Mode
-    Game -> GameMode: new TimedMode()
+    Game -> GameMode: <<create>> TimedMode
     Game -> GameMode: initialize(scanner)
     Game -> TimedMode: initializeTimeBonuses(players)
 end
 
 Game -> ConsoleUtils: displayCountdown(ui)
+Game -> GameState: <<create>>
 Game -> GameState: initializeParade(initialLength)
-activate GameState
+activate GameState 
 GameState -> Deck: drawCard()
 GameState --> Game: parade initialized
 deactivate GameState
 
-Game -> TurnManager: new TurnManager(ui, scanner)
+Game -> TurnManager: <<create>>
 
 == Game Loop ==
 
-loop until game is over
+loop Game turns until game over
     Game -> GameState: getPlayers()
     Game -> GameMode: isTimeUp()
+end loop
+
+note right of Game
+  For each turn in the game loop:
+  1. Check if time is up
+  2. Execute player's turn
+  3. Update game state
+end note
+
+Game -> GameState: Current player's turn
+alt Time is not up
+    Game -> TurnManager: executeTurn(gameState, currentPlayer, gameMode, action)
+    activate TurnManager 
     
-    alt time is not up
-        Game -> TurnManager: executeTurn(gameState, currentPlayer, gameMode, action)
-        activate TurnManager
-        
-        TurnManager -> Player: chooseCardToPlay()
-        activate Player
-        
-        alt Player is HumanPlayer
-            Player -> User: Display hand and prompt for card
-            User -> Player: Select card index
-            Player -> Player: playCard(index)
-        else Player is ComputerPlayer
-            Player -> Player: Select card based on AI logic
-            Player -> Player: playCard(index)
+    TurnManager -> Player: chooseCardToPlay()
+    activate Player 
+    
+    alt Player is HumanPlayer
+        Player -> User: Display hand and prompt for card
+        User -> Player: Select card index
+        Player -> Player: playCard(index)
+    else Player is ComputerPlayer
+        alt Player is BeginnerComputerPlayer
+            Player -> Player: Random card selection
+            Player -> Player: playCard(random index)
+        else Player is IntermediateComputerPlayer
+            Player -> Player: Sort hand by value
+            Player -> Player: playCard(highest value)
         end
-        
-        Player --> TurnManager: selected card
-        deactivate Player
-        
-        TurnManager -> GameState: getParade()
-        TurnManager -> TurnManager: processCardPlacement(card, parade)
-        TurnManager -> Deck: drawCard()
-        TurnManager -> Player: drawCard(newCard)
-        
-        TurnManager --> Game: turn completed
-        deactivate TurnManager
-        
-        Game -> GameMode: updateAfterTurn(player, turnDuration)
-    else time is up
-        Game -> GameState: setGameOver(true)
-        break
     end
+    
+    Player --> TurnManager: selected card
+    deactivate Player
+    
+    TurnManager -> GameState: getParade()
+    TurnManager -> TurnManager: processCardPlacement(card, parade)
+    TurnManager -> Deck: drawCard()
+    TurnManager -> Player: drawCard(newCard)
+    
+    TurnManager --> Game: turn completed
+    deactivate TurnManager
+    
+    Game -> GameMode: updateAfterTurn(player, turnDuration)
+    
+    alt GameMode is TimedMode
+        Game -> TimedMode: calculateTimeBonus(turnDuration)
+        Game -> TimedMode: getLastTurnBonus()
+    end
+else Time is up
+    Game -> GameState: setGameOver(true)
 end
 
 == Game End and Scoring ==
 
-Game -> EndGameHandler: new EndGameHandler(gameState, ui, turnManager, timeBonusMap, timedMode)
+Game -> EndGameHandler: <<create>>
 Game -> EndGameHandler: handleFinalRoundAndScoring(gameMode)
-activate EndGameHandler
+activate EndGameHandler 
 
-EndGameHandler -> ScoreCalculator: new ScoreCalculator(players)
-activate ScoreCalculator
+EndGameHandler -> ScoreCalculator: <<create>>
+activate ScoreCalculator 
 ScoreCalculator -> ScoreCalculator: calculateMajorities()
 ScoreCalculator --> EndGameHandler: scoreMap
 deactivate ScoreCalculator
@@ -263,5 +308,3 @@ deactivate GameManager
 
 RunGame -> System: exit
 deactivate RunGame
-
-@enduml

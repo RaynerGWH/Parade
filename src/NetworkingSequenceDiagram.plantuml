@@ -1,0 +1,93 @@
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+' Networking Components Sequence Diagram                               '
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' Setting constants for colour schemes
+!define ACTOR_BG #ffffff
+!define ACTOR_COLOR #888888
+!define PARTICIPANT_BG #E6CEFF
+!define ARROW_COLOR #888888
+!define LIFELINE_COLOR #000000
+!define NOTE_BG #FFFFCC
+!define NOTE_BORDER #9966CC
+
+' Styling
+skinparam Style strictuml
+skinparam backgroundColor white
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 150
+skinparam sequenceArrowThickness 1.5
+skinparam sequenceLifeLineBackgroundColor #ced4db
+skinparam sequenceLifeLineBorderThickness 2
+skinparam lifelineStrategy solid
+
+' Styling for each entity
+skinparam actor {
+  backgroundColor ACTOR_BG
+  borderColor #9966CC
+  fontColor black
+}
+
+skinparam participant {
+  backgroundColor PARTICIPANT_BG
+  borderColor #9966CC
+  fontColor black
+}
+
+skinparam sequence {
+  ArrowColor ARROW_COLOR
+  LifeLineBorderColor LIFELINE_COLOR
+  GroupBorderColor #9966CC
+  GroupBackgroundColor #F5F5F5
+}
+
+skinparam note {
+  BackgroundColor NOTE_BG
+  BorderColor NOTE_BORDER
+}
+
+' Even spacing between the entities
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+' Numbering for the sequence diagram
+autonumber 1
+
+title Parade Networking Sequence Diagram
+
+actor User
+participant "RunGame" as RunGame
+participant "GameManager" as GameManager
+participant "Game" as Game
+participant "GameServerEndpoint" as Server
+participant "GameClientEndpoint" as Client
+participant "PlayerManager" as PlayerManager
+participant "UserInterface" as UI
+
+== Multiplayer Game Initialization ==
+
+alt User selects Multiplayer
+    RunGame -> RunGame: startMultiPlayer()
+    alt User hosts game
+        RunGame -> RunGame: hostMultiPlayer()
+        RunGame -> Server: <<create>>
+        RunGame -> PlayerManager: initializeHumanPlayers(sessions, true)
+        RunGame -> UI: <<create>> MultiplayerUI(serverEndpoint)
+    else User joins game
+        RunGame -> RunGame: joinMultiPlayer()
+        RunGame -> Client: <<create>>
+    end
+end
+
+RunGame -> GameManager: start(ui, serverEndpoint)
+activate GameManager
+
+GameManager -> Game: <<create>>
+GameManager -> Game: startGame()
+activate Game
+
+Game --> GameManager: game completed
+deactivate Game
+
+GameManager --> RunGame: return to main menu
+deactivate GameManager

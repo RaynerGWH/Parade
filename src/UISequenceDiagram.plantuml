@@ -1,0 +1,137 @@
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+' UI Components Sequence Diagram                                        '
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' Setting constants for colour schemes
+!define ACTOR_BG #ffffff
+!define ACTOR_COLOR #888888
+!define PARTICIPANT_BG #E6CEFF
+!define ARROW_COLOR #888888
+!define LIFELINE_COLOR #000000
+!define NOTE_BG #FFFFCC
+!define NOTE_BORDER #9966CC
+
+' Styling
+skinparam Style strictuml
+skinparam backgroundColor white
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 150
+skinparam sequenceArrowThickness 1.5
+skinparam sequenceLifeLineBackgroundColor #ced4db
+skinparam sequenceLifeLineBorderThickness 2
+skinparam lifelineStrategy solid
+
+' Styling for each entity
+skinparam actor {
+  backgroundColor ACTOR_BG
+  borderColor #9966CC
+  fontColor black
+}
+
+skinparam participant {
+  backgroundColor PARTICIPANT_BG
+  borderColor #9966CC
+  fontColor black
+}
+
+skinparam sequence {
+  ArrowColor ARROW_COLOR
+  LifeLineBorderColor LIFELINE_COLOR
+  GroupBorderColor #9966CC
+  GroupBackgroundColor #F5F5F5
+}
+
+skinparam note {
+  BackgroundColor NOTE_BG
+  BorderColor NOTE_BORDER
+}
+
+' Even spacing between the entities
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+' Numbering for the sequence diagram
+autonumber 1
+
+title Parade UI Sequence Diagram
+
+actor User
+participant "RunGame" as RunGame
+participant "LoginUI" as LoginUI
+participant "ConsoleUtils" as ConsoleUtils
+participant "Game" as Game
+participant "Player" as Player
+participant "RulebookManager" as RulebookManager
+participant "UserInterface" as UI
+
+== Game Startup UI ==
+
+User -> RunGame: main()
+activate RunGame 
+
+RunGame -> RunGame: <<create>>
+activate RunGame 
+deactivate RunGame
+
+RunGame -> ConsoleUtils: printParadeAnimation()
+RunGame -> ConsoleUtils: printParadeAnimationLoop()
+User -> RunGame: Press Enter
+RunGame -> LoginUI: showLoginMenu()
+activate LoginUI 
+LoginUI --> RunGame: currentAccount
+deactivate LoginUI
+
+== Main Menu Selection ==
+
+loop Menu Loop until game starts or exit
+    RunGame -> User: Display main menu options
+    User -> RunGame: Select option
+end loop
+
+note right of RunGame
+  Menu options are handled as follows:
+  - R: Display rulebook
+  - S: Start game (breaks loop)
+  - B: Open flair shop
+  - Q: Confirm and quit
+end note
+
+alt User selects "R" (Rulebook)
+    RunGame -> RulebookManager: displayRulebook()
+else User selects "S" (Start Game)
+    RunGame -> RunGame: selectGameMode()
+else User selects "B" (Flair Shop)
+    RunGame -> FlairShopUI: openFlairShopMenu(currentAccount)
+else User selects "Q" (Quit)
+    RunGame -> RunGame: confirmQuit()
+    alt User confirms quit
+        RunGame -> System: exit(0)
+    end
+end
+
+== UI Game Initialization ==
+
+alt User selects Singleplayer
+    RunGame -> RunGame: startSinglePlayer()
+    RunGame -> UserInterface: <<create>> SinglePlayerUI
+else User selects Multiplayer
+    RunGame -> RunGame: startMultiPlayer()
+    alt User hosts game
+        RunGame -> UserInterface: <<create>> MultiplayerUI(serverEndpoint)
+    else User joins game
+        RunGame -> GameClientEndpoint: <<create>>
+    end
+end
+
+Game -> ConsoleUtils: displayCountdown(ui)
+
+== Player UI Interaction ==
+
+Player -> User: Display hand and prompt for card
+User -> Player: Select card index
+
+== Game End UI ==
+
+EndGameHandler -> User: Display final scores and winner
+RunGame -> System: exit
+deactivate RunGame

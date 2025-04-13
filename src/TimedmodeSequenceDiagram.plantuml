@@ -1,0 +1,161 @@
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+' Timed mode Sequence Diagram                        '
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' Setting constants for colour schemes
+!define ACTOR_BG #ffffff
+!define ACTOR_COLOR #888888
+!define PARTICIPANT_BG #E6CEFF
+!define ARROW_COLOR #888888
+!define LIFELINE_COLOR #000000
+!define NOTE_BG #FFFFCC
+!define NOTE_BORDER #9966CC
+
+' Styling
+skinparam Style strictuml
+skinparam backgroundColor white
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 150
+skinparam sequenceArrowThickness 1.5
+skinparam sequenceLifeLineBackgroundColor #ced4db
+skinparam sequenceLifeLineBorderThickness 2
+skinparam lifelineStrategy solid
+
+' Styling for each entity
+skinparam actor {
+  backgroundColor ACTOR_BG
+  borderColor #9966CC
+  fontColor black
+}
+
+skinparam participant {
+  backgroundColor PARTICIPANT_BG
+  borderColor #9966CC
+  fontColor black
+}
+
+skinparam sequence {
+  ArrowColor ARROW_COLOR
+  LifeLineBorderColor LIFELINE_COLOR
+  GroupBorderColor #9966CC
+  GroupBackgroundColor #F5F5F5
+}
+
+skinparam note {
+  BackgroundColor NOTE_BG
+  BorderColor NOTE_BORDER
+}
+
+' Even spacing between the entities
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+' Numbering for the sequence diagram
+autonumber 1
+
+title Parade Timed Mode Sequence Diagram
+
+actor User
+participant "Game" as Game
+participant "GameMode" as GameMode
+participant "GameState" as GameState
+participant "TurnManager" as TurnManager
+participant "Player" as Player
+participant "Deck" as Deck
+participant "EndGameHandler" as EndGameHandler
+participant "ScoreCalculator" as ScoreCalculator
+
+== Game Mode Selection ==
+
+Game -> User: Display game mode options
+User -> Game: Select game mode
+alt User selects Classic Mode
+    Game -> GameMode: <<create>> ClassicMode
+    Game -> GameMode: initialize(scanner)
+else User selects Timed Mode
+    Game -> GameMode: <<create>> TimedMode
+    Game -> GameMode: initialize(scanner)
+    Game -> TimedMode: initializeTimeBonuses(players)
+end
+
+Game -> GameState: <<create>>
+Game -> GameState: initializeParade(initialLength)
+activate GameState 
+GameState -> Deck: drawCard()
+GameState --> Game: parade initialized
+deactivate GameState
+
+Game -> TurnManager: <<create>>
+
+== Game Loop ==
+
+loop Game turns until game over
+    Game -> GameState: getPlayers()
+    Game -> GameMode: isTimeUp()
+end loop
+
+note right of Game
+  For each turn in the game loop:
+  1. Check if time is up
+  2. Execute player's turn
+  3. Update game state
+end note
+
+Game -> GameState: Current player's turn
+alt Time is not up
+    Game -> TurnManager: executeTurn(gameState, currentPlayer, gameMode, action)
+    activate TurnManager 
+    
+    TurnManager -> Player: chooseCardToPlay()
+    activate Player 
+    
+    alt Player is HumanPlayer
+        Player -> User: Display hand and prompt for card
+        User -> Player: Select card index
+        Player -> Player: playCard(index)
+    else Player is ComputerPlayer
+        alt Player is BeginnerComputerPlayer
+            Player -> Player: Random card selection
+            Player -> Player: playCard(random index)
+        else Player is IntermediateComputerPlayer
+            Player -> Player: Sort hand by value
+            Player -> Player: playCard(highest value)
+        end
+    end
+    
+    Player --> TurnManager: selected card
+    deactivate Player
+    
+    TurnManager -> GameState: getParade()
+    TurnManager -> TurnManager: processCardPlacement(card, parade)
+    TurnManager -> Deck: drawCard()
+    TurnManager -> Player: drawCard(newCard)
+    
+    TurnManager --> Game: turn completed
+    deactivate TurnManager
+    
+    Game -> GameMode: updateAfterTurn(player, turnDuration)
+    
+    alt GameMode is TimedMode
+        Game -> TimedMode: calculateTimeBonus(turnDuration)
+        Game -> TimedMode: getLastTurnBonus()
+    end
+else Time is up
+    Game -> GameState: setGameOver(true)
+end
+
+== Game End and Scoring ==
+
+Game -> EndGameHandler: <<create>>
+Game -> EndGameHandler: handleFinalRoundAndScoring(gameMode)
+activate EndGameHandler 
+
+EndGameHandler -> ScoreCalculator: <<create>>
+activate ScoreCalculator 
+ScoreCalculator -> ScoreCalculator: calculateMajorities()
+ScoreCalculator --> EndGameHandler: scoreMap
+deactivate ScoreCalculator
+
+EndGameHandler -> User: Display final scores and winner
+EndGameHandler --> Game: final results
+deactivate EndGameHandler
