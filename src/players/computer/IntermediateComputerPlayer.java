@@ -52,7 +52,6 @@ public class IntermediateComputerPlayer extends AbstractPlayer {
         // Will discard cards with the highest value
         int index = hand.size() - 1;
         Card card = playCard(index);
-        System.out.println(name + " (Intermediate) discards: " + card);
         CardPrinter.printCardRow(Collections.singletonList(card), false);
         return card;
     }

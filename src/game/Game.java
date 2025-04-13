@@ -43,9 +43,9 @@ public class Game {
         ConsoleUtils.clear();
         System.out.println(UIConstants.GAMEMODE_SCREEN);
         while (!validGameMode) {
-            System.out.println(UIConstants.TEXT_COLOR + "\nGamemodes available:" + UIConstants.RESET_COLOR);
-            System.out.println("    1. Classic");
-            System.out.println("    2. Timed");
+            System.out.println(UIConstants.TEXT_COLOR + "\n\nGamemodes available:" + UIConstants.RESET_COLOR);
+            System.out.println("    1. Classic 🍂");
+            System.out.println("    2. Timed ⌛");
             System.out.print("\nEnter '1' or '2'" + UIConstants.ConsoleInput);
             String gameModeChoice = scanner.nextLine().trim();
 

@@ -3,7 +3,6 @@ package game;
 import cards.*;
 import constants.GameplayConstants;
 import constants.UIConstants;
-
 import java.util.*;
 import players.*;
 import players.human.HumanPlayer;
@@ -112,19 +111,19 @@ public class EndGameHandler {
                 HumanPlayer currentHumanPlayer = (HumanPlayer) currentPlayer;
 
                 // First discard
-                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their first card:");
+                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their first card!");
                 turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, GameplayConstants.DISCARD, true);
 
                 // Second discard
-                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their second card:");
+                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their second card!");
                 turnManager.executeTurn(gameState, currentHumanPlayer, gameMode, GameplayConstants.DISCARD, true);
             } else {
                 // Bot player discards two cards in sequence
-                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their first card:");
+                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their first card!");
                 Card firstDiscardedCard = currentPlayer.chooseCardToDiscard();
                 turnManager.displayCardPlayedOrDiscarded(currentPlayer, firstDiscardedCard, "Discards");
 
-                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their second card:");
+                ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + " discards their second card!");
                 Card secondDiscardedCard = currentPlayer.chooseCardToDiscard();
                 turnManager.displayCardPlayedOrDiscarded(currentPlayer, secondDiscardedCard, "Discards");
             }
@@ -150,7 +149,39 @@ public class EndGameHandler {
      * Displays the game over banner.
      */
     private void displayGameOverBanner() {
-        ui.broadcastMessage("\n");
+        System.out.println(                 "                     ████░▓█░░████████████████▓████                       \r\n" + //
+                                            "                       █████████▓█░▓░░░▓░▓█▒██████████                    \r\n" + //
+                                            "               ░░░▒████████░░░░░░░░░░░░░░░░░░░░░▓███████░░░               \r\n" + //
+                                            "               ░░░░▒█████░▓███████████████████░░░░▒▓███▒░░░░              \r\n" + //
+                                            "              █░░▓░░░████████████▓██████▓█████████████░░░▓░░              \r\n" + //
+                                            "             ███░███░░░█████████▒▓████▒▒████████████░░▒███░░█▓            \r\n" + //
+                                            "           █████░████░░░██▓▒██░██▒░░▓█░▓░▓██░▓█▒░██░░░████░██▓█           \r\n" + //
+                                            "         ███████░██░░░██████░░▓░█░▒░░█░░░░█░░▓░██████▒░░██░█████          \r\n" + //
+                                            "         ███████░░░██████▒░░███░░░░░░░░░░░█░███░░░██████░░░████▓          \r\n" + //
+                                            "       ░███░▓██░░░░░░░░████▒░░██░░░░░░░░░░░██░░▓████▓░░░░░░░███░▓█        \r\n" + //
+                                            "      ░▒███▒██░░░░░█████▒░░██████░░░░░░░░░██████░░░█████▓░░░░░▒░█▓        \r\n" + //
+                                            "     ▓░▒███░░░░░█████░░░░░░░░░░██░░░░░░░░░██░░░░░░░░░░██░██▓░░░░█▓▒       \r\n" + //
+                                            "     ░░██▓░░░░░█████▓░░░░░░░█░░░█░░░░▓░░░░█░░░█░░░░░░░░█░█▒█░░░░░▒█       \r\n" + //
+                                            "    █░███▒░░░░▓█░░█▒█░░░░░░██░░░▒░░░███░░░▒░░░░█░░░░░░▒██▓░▓▓░░░░░░█      \r\n" + //
+                                            "   ██████░░░░░██░░████░░░░░█░░░░░░░█████░░░░░░░▓░░░░░██▓█░░▓█░░░░░██      \r\n" + //
+                                            "   ██████░░░░░▓░░░██░░░███░░░░░░░░███████▓░░░░░░░██▓░░░▓█░░░█░░░░░██████  \r\n" + //
+                                            "   ██████▓░█▓░████░█▒▓█░░░▒██░░░███████████░░░███░░░█▒░█▒░███░░█░▒██████  \r\n" + //
+                                            "   ███████░█░░█░░░░██▒███████████░░░░░░░░░█████████▓█▒██░░░░█░░▓░███████  \r\n" + //
+                                            "      █▓███░▒░██░██░░█░████░░░░░░░▓█░░░██░░░░░░░████░█▓░▒█░▓█░░░██▓░▒███  \r\n" + //
+                                            "      ███████░░██░░░░██▓░░▒█░▓▓▓▒░░░███░░░░▒█▒▒▓▒▒░░██▓░░░██▒░███████▓██  \r\n" + //
+                                            "      ░░░░░███▓██░░▓▓░░███░░░░░░░░██▓█▒██░░▒░░░░░███▓░░█░░███████▓▒▒███   \r\n" + //
+                                            "     █▒████████████░░░█░░░████████░░░█░░░████████▓░░█░░░████████████░██   \r\n" + //
+                                            "     ████▒▒████████░░▓█░░▓░░░█░░░█░░░█░░░▒░░░█░░░█░░░█░░████▒▒███░▒███    \r\n" + //
+                                            "      ██████▓▓▒▒▒█████░░░▓░░░█░░░█░░░█░░░▒▒░░█▒░░█░░░████▓█░▒▒███████     \r\n" + //
+                                            "       ███▒░▓██▒░░░░██░░░█░░░█░░░█░░░█░░░▓▒░░█▓░░█░░░██▒░░░▒███░▒▒██      \r\n" + //
+                                            "        ██░░░░▓█░░░░░█████░░░█░░░█░░░█░░░█▒░░▒█░░█▓███▒░░░░█▓░░░▒██       \r\n" + //
+                                            "         ██░░░░░██░░██████████░░░█░░░█░░░▒░░░▒██████████░██░░░░░██        \r\n" + //
+                                            "           ░░░░░█████░████████████████████████████████▒█████░░░░          \r\n" + //
+                                            "             ░░░█░█████ ███████▓▓░░░░░░░░░▓▒███████ █████░▒░░░            \r\n" + //
+                                            "                  ░       ██████░░░░░░░░░░░▓██████      ░▓                \r\n" + //
+                                            "                              ████████████████                            \r\n" + //
+                                            "                                     █                                    \r\n" + //
+                                            "                                                                          ");
         ui.broadcastMessage(" _____                        _____                 ");
         ui.broadcastMessage("|  __ \\                      |  _  |                ");
         ui.broadcastMessage("| |  \\/ __ _ _ __ ___   ___  | | | |_   _____ _ __  ");

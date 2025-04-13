@@ -67,7 +67,7 @@ public class GameClientEndpoint{
         if (message.contains("Your turn! Number of cards:") || message.contains("Your turn to discard! Number of cards:")) {
             // Handle the number of cards prompt
             String[] messageArr = message.split(":");
-            int numCards = Integer.parseInt(messageArr[messageArr.length - 1]);
+            int numCards = Integer.parseInt(messageArr[messageArr.length - 1].trim());
             
             new Thread(() -> {
                 String input;

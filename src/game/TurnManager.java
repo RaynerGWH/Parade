@@ -57,7 +57,7 @@ public class TurnManager {
             HumanPlayer currentHumanPlayer = (HumanPlayer) currentPlayer;
             playerSession = currentHumanPlayer.getSession();
             
-            ui.displayMessage("Your turn! Number of cards:" + currentHumanPlayer.getHand().size(), playerSession);
+            ui.displayMessage("Your turn! Number of cards: " + currentHumanPlayer.getHand().size(), playerSession);
 
             if (ui instanceof MultiplayerUI) {
                 try {

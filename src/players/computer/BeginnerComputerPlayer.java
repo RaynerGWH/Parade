@@ -45,7 +45,6 @@ public class BeginnerComputerPlayer extends AbstractPlayer {
         // Completely random selection
         int randomCardIndex = random.nextInt(hand.size());
         Card card = playCard(randomCardIndex);
-        System.out.println(name + " (Beginner) discards: ");
         CardPrinter.printCardRow(Collections.singletonList(card), false);
         return card;
     }
