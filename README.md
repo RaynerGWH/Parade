@@ -1,4 +1,4 @@
-# 🎭 Parade Card Game (G2T5)
+# 🎭 Parade Card Game (G3T5)
 
 *Presenting the popular card game, Parade, to your console!*
 
