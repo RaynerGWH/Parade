@@ -47,8 +47,6 @@ To bring even more excitement and color to the already whimsical world of **Para
 
 ---
 
-Let me know if you'd like a visual scoreboard mock-up or a UI blurb added too!
-
 ## ▶️ Playing Parade
 
 Prerequisites:
