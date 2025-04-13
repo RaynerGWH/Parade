@@ -29,7 +29,7 @@ In **Timed Mode**, players must act swiftly — the Parade doesn’t wait!
 
 - 🕐 **Fast Hands Get Rewarded**: Receive bonus points from fast moves at the end of every turn! Variable bonus points are awarded based on how fast players make their moves and conclude their turns.
 - ⌛ **Weighted Bonus**: To ensure that you maintain a steady balance of swiftness and skill, a scoring function weighs your accumulated speed bonus points and the raw score to produce an aggregated final score at the end. Just being fast is not enough, make sure to execute your moves strategically as well!
-- 📉 **Higher Stakes, Better Scores**: All other standard rules apply, but with an added twist — time is of the essence, tick tock. DO you think you have what it takes to be the fastest fingers in the Parade?
+- 📉 **Higher Stakes, Better Scores**: All other standard rules apply, but with an added twist — time is of the essence, tick tock. Do you think you have what it takes to be the fastest fingers in the Parade?
 ---
 
 
