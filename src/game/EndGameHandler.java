@@ -140,7 +140,7 @@ public class EndGameHandler {
             Collections.sort(currentPlayerRiver, new CardComparator());
             ui.broadcastMessage("\n");
             ui.broadcastMessage(PlayerDisplayUtils.getDisplayName(currentPlayer) + "'s River: ");
-            ui.broadcastMessage(CardPrinter.printCardRow(currentPlayerRiver, false));
+            ui.broadcastMessage(CardPrinter.printCardRow(currentPlayerRiver, true));
             ui.broadcastMessage("\n");
         }
     }
