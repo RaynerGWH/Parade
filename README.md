@@ -33,8 +33,6 @@ Prerequisites:
 
 Also, use `Ctrl +` or `Ctrl -` to zoom in or out and center the Parade display for a more balanced and immersive game display.
 
-\n\n
-
 1. Compile the Java Code:
 
 Open your terminal or command prompt in the project directory and run the below compile script:
