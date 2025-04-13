@@ -53,6 +53,7 @@ public class Game {
                 gameMode = new TimedMode();
                 validGameMode = true;
                 timedMode = true;
+                ConsoleUtils.clear();
                 System.out.println(UIConstants.TIMED_MODE_MESSAGE);
                 
                 // Initialize the game mode

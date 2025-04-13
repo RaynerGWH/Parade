@@ -27,7 +27,7 @@ public class ConsoleAccountCreator {
         String response = scanner.nextLine().trim().toUpperCase();
 
         while (!response.equals("Y") && !response.equals("N")) {
-            System.out.print("Invalid input. Please type 'Y' or 'N': " + UIConstants.ConsoleInput);
+            System.out.print(UIConstants.RESET_COLOR + "❌ Invalid input. Please type 'Y' or 'N': " + UIConstants.ConsoleInput);
             response = scanner.nextLine().trim().toUpperCase();
         }
 

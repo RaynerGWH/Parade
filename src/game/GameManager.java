@@ -90,10 +90,10 @@ public class GameManager {
                 break;
 
             } else if (input.equals("N") && playerMgr.getPlayers().size() < GameplayConstants.MIN_NUM_PLAYERS) {
-                System.out.println("Invalid input. Game must have 2 or more players.");
+                System.out.println(UIConstants.RESET_COLOR + "❌ Invalid input. Game must have 2 or more players.");
             }
             else {
-                System.out.println("Invalid input. Please type Y or N.");
+                System.out.println(UIConstants.RESET_COLOR + "❌ Invalid input. Please type Y or N.");
             }
         }
     }

@@ -193,7 +193,7 @@ public class TurnManager {
             // Then check if we're in multiplayer AND the session exists and is open
             if (ui instanceof MultiplayerUI && playerSession != null && playerSession.isOpen()) {
                 // Multiplayer human player logic
-                ui.displayMessage("Hit \"ENTER\" to end turn!", playerSession);
+                ui.displayMessage("[ENTER] End Turn", playerSession);
                 
                 try {
                     InputManager.waitForEnterPress();

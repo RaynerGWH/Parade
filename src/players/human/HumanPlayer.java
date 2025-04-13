@@ -55,7 +55,7 @@ public class HumanPlayer extends AbstractPlayer {
         executor.schedule(() -> {
             timeoutOccurred.set(true);
             // Add a newline to ensure scanner doesn't block
-            System.out.println("\nTimeout reached! Automatically playing first card. Press enter to continue.");
+            System.out.println(UIConstants.RESET_COLOR + "\n\n⌛ Timeout reached! Automatically playing first card. Press enter to continue.");
         }, TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
         int index = -1;
@@ -72,7 +72,7 @@ public class HumanPlayer extends AbstractPlayer {
                             System.out.print("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + UIConstants.ConsoleInput);
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a valid number.");
+                        System.out.println(UIConstants.RESET_COLOR + "❌ Invalid input. Please enter a valid number.");
                     }
                 }
                 // Small sleep to prevent CPU hogging
@@ -103,7 +103,7 @@ public class HumanPlayer extends AbstractPlayer {
         executor.schedule(() -> {
             timeoutOccurred.set(true);
             // Add a newline to ensure scanner doesn't block
-            System.out.println("\nTimeout reached! Automatically discarding first card.");
+            System.out.println(UIConstants.RESET_COLOR + "\n\n⌛ Timeout reached! Automatically discarding first card.");
         }, TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
         int index = -1;
@@ -120,7 +120,7 @@ public class HumanPlayer extends AbstractPlayer {
                             System.out.println("Invalid index. Please enter a number between 0 and " + (hand.size() - 1) + ".");
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a valid number.");
+                        System.out.println(UIConstants.RESET_COLOR + "❌ Invalid input. Please enter a valid number.");
                     }
                 }
                 // Small sleep to prevent CPU hogging
@@ -161,7 +161,7 @@ public class HumanPlayer extends AbstractPlayer {
             }
         }
 
-        String prompt = displayName + ", enter the position of the card you want to " + action + " (0 - " + (hand.size() - 1) +"): ";
+        String prompt = displayName + ", enter the position of the card you want to " + action + " (0 - " + (hand.size() - 1) +")" + UIConstants.ConsoleInput;
 
         // Only print directly to console in non-multiplayer contexts
         // In multiplayer mode, the Game class will handle communication with clients
@@ -175,7 +175,7 @@ public class HumanPlayer extends AbstractPlayer {
      * Only the current player should see this prompt.
      */
     public void waitForEnterToEndTurn() {
-        System.out.println("Hit \"ENTER\" to end turn!");
+        System.out.println("[ENTER] End Turn");
 
         // Wait for the ENTER key
         try {

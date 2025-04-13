@@ -1,6 +1,7 @@
 package game;
 
 import account.*;
+import constants.UIConstants;
 
 import java.io.*;
 import jakarta.websocket.*;
@@ -10,6 +11,8 @@ import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import javax.swing.UIClientPropertyKey;
 
 @ClientEndpoint
 public class GameClientEndpoint{
@@ -76,9 +79,9 @@ public class GameClientEndpoint{
                 System.out.println(message);
                 
                 if (message.contains("discard")) {
-                    System.out.print("Enter the position of the card you want to discard: ");
+                    System.out.print("Enter the position of the card you want to discard: " + UIConstants.ConsoleInput);
                 } else {
-                    System.out.print("Enter your input: ");
+                    System.out.print("Enter your input" + UIConstants.ConsoleInput);
                 }
                 
                 try {
@@ -114,7 +117,7 @@ public class GameClientEndpoint{
                 }
             }).start();
 
-        } else if (message.contains("Hit \"ENTER\" to end turn!")) {
+        } else if (message.contains("[ENTER] End Turn")) {
             // Handle the turn advancement prompt
             System.out.println(message);
             

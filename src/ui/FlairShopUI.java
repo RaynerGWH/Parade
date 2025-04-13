@@ -83,7 +83,7 @@ public class FlairShopUI {
                     handleFlairPurchase(account, chosenFlair);
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number or Q.\n");
+                System.out.println(UIConstants.RESET_COLOR + "❌ Invalid input. Please enter a number or Q.\n");
             }
         }
     }

@@ -145,7 +145,7 @@ public class RulebookManager {
             case "Q":
                 return -1;
             default:
-                System.out.println(UIConstants.RESET_COLOR + "Invalid input. Please try again.");
+                System.out.println(UIConstants.RESET_COLOR + "❌ Invalid input. Please try again.");
                 return currentPage;
         }
     }
