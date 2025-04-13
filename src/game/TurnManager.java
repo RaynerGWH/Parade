@@ -200,7 +200,7 @@ public class TurnManager {
                     int currentPlayerIndex = players.indexOf(currentPlayer);
                     int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
                     Player nextPlayer = players.get(nextPlayerIndex);
-                    broadcastNewTurn(nextPlayer, isFinalTurn);
+                    displayFinalTurnBannerIfNeeded(nextPlayer, isFinalTurn);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -211,7 +211,7 @@ public class TurnManager {
                     int currentPlayerIndex = players.indexOf(currentPlayer);
                     int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
                     Player nextPlayer = players.get(nextPlayerIndex);
-                    broadcastNewTurn(nextPlayer, isFinalTurn);
+                    displayFinalTurnBannerIfNeeded(nextPlayer, isFinalTurn);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -222,7 +222,7 @@ public class TurnManager {
                 int currentPlayerIndex = players.indexOf(currentPlayer);
                 int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
                 Player nextPlayer = players.get(nextPlayerIndex);
-                broadcastNewTurn(nextPlayer, isFinalTurn);
+                displayFinalTurnBannerIfNeeded(nextPlayer, isFinalTurn);
             }
         } else {
             if (ui instanceof MultiplayerUI) {
@@ -232,7 +232,7 @@ public class TurnManager {
                     int currentPlayerIndex = players.indexOf(currentPlayer);
                     int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
                     Player nextPlayer = players.get(nextPlayerIndex);
-                    broadcastNewTurn(nextPlayer, isFinalTurn);
+                    displayFinalTurnBannerIfNeeded(nextPlayer, isFinalTurn);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -243,7 +243,7 @@ public class TurnManager {
                 int currentPlayerIndex = players.indexOf(currentPlayer);
                 int nextPlayerIndex = (currentPlayerIndex + 1) % players.size();
                 Player nextPlayer = players.get(nextPlayerIndex);
-                broadcastNewTurn(nextPlayer, isFinalTurn);
+                displayFinalTurnBannerIfNeeded(nextPlayer, isFinalTurn);
             }
         }
 
@@ -338,14 +338,12 @@ public class TurnManager {
 
 
     /**
-     * Broadcasts a message indicating the next player's turn.
+     * Broadcasts the final turn banner once a player's turn's turn activates the game end conditions.
      * @param nextPlayer the player whose turn is starting
      * @param isFinalTurn whether this is part of the final turns phase
      */
-    private void broadcastNewTurn(Player nextPlayer, boolean isFinalTurn) {
-        String playerName = PlayerDisplayUtils.getDisplayName(nextPlayer);
-        
-        // If it's a final turn, display the final turn banner first
+    private void displayFinalTurnBannerIfNeeded(Player nextPlayer, boolean isFinalTurn) {
+        // If it's a final turn, display the final turn banner.
         if (isFinalTurn) {
             ui.broadcastMessage(UIConstants.FINAL_TURN_BANNER);
     

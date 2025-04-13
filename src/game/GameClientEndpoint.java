@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
 import javax.swing.UIClientPropertyKey;
 
 @ClientEndpoint
