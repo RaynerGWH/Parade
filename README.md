@@ -26,12 +26,13 @@ The complete game mechanics are detailed in the [official rulebook](https://cdn.
 
 ## ▶️ Playing Parade
 
-Prerequisites: 
+Prerequisites:
 💡 You need a Java Development Kit (JDK) installed to compile and run the game.
 
 **NOTE:** The game is playable on any device, but for the best experience, we recommend running it on a unix shell.
 
 Also, use `Ctrl +` or `Ctrl -` to zoom in or out and center the Parade display for a more balanced and immersive game display.
+
 
 
 1. Compile the Java Code:
