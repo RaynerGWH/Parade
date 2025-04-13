@@ -33,8 +33,6 @@ In **Timed Mode**, players must act swiftly — the Parade doesn’t wait!
 ---
 
 
----
-
 ## ✨🎉 Parade Extras — Add-on Features
 
 To bring even more excitement and color to the already whimsical world of **Parade**, we've added a host of extra features that keep the fun going beyond the base game!
